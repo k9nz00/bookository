@@ -27,6 +27,7 @@
 
         <!-- components versions -->
         <junit.version>3.8.1</junit.version>
+        <hikari.version>5.0.1</hikari.version>
 
     </properties>
 <!--    <dependencies>-->

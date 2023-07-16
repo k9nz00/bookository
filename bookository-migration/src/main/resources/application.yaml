@@ -1,0 +1,15 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:${CHANGE_LOG_FILE_PATH:db/changelog/changelog-default.yml}
+    default-schema: public
+
+databaseConnectionProperties:
+  driverClassName: ${DB_DRIVER_CLASS_NAME:org.postgresql.Driver}
+  jdbcUrl: ${DB_URL:jdbc:postgresql://localhost:5432/bookository}
+  database: ${DB_NAME:bookository}
+  schema: ${DB_SCHEMA:bookository}
+  login: ${DB_USER:postgres}
+  password: ${DB_PASS:postgres}
+  poolName: ${DB_POOL_NAME:HikariCPPool}
+  maxPoolSize: ${DB_POOL_SIZE:1}
