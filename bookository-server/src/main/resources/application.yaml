@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: Bookository - учебный проект. Сайт электронной библиотеки
+  datasource:
+    url: ${DB_JDBC_URL:jdbc:postgresql://localhost:5432/bookository}?currentSchema=bookository
+    hikari:
+      driver-class-name: org.postgresql.Driver
+      pool-name: HikariCpPoolName
+      username: ${DB_USER:postgres}
+      password: ${DB_PWD:postgres}
+      connectionTimeout: ${DB_TIMEOUT:30000}
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+
+server:
+  port: "8020"
+
+springdoc:
+  swagger-ui:
+    path: "/bookository-swagger"
+  api-docs:
+    path: "/v1/bookository-api-docs"
+    enabled: true

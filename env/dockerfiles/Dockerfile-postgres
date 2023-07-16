@@ -1,8 +1,6 @@
 FROM postgres:15.3
-
 WORKDIR /opt
-
 RUN apt-get update; \
-    apt-get install -y openjdk-17-jdk
+    apt-get install -y openjdk-17-jre
 COPY ./bookository-migration/target/bookository-migration-*.jar ./migration.jar
 COPY ./env/dockerfiles/postgres-migration-1.sh /docker-entrypoint-initdb.d/
