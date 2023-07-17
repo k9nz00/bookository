@@ -10,9 +10,16 @@ spring:
       password: ${DB_PWD:postgres}
       connectionTimeout: ${DB_TIMEOUT:30000}
       maximum-pool-size: ${DB_POOL_SIZE:10}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 25MB
+      max-request-size: 50MB
+      location:
 
 server:
   port: "8020"
+
 
 springdoc:
   swagger-ui:
