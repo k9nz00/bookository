@@ -1,0 +1,5 @@
+target/
+## Log files
+*.log
+*.log.gz
+
