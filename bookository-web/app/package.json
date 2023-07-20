@@ -2,7 +2,7 @@
   "name": "app",
   "private": true,
   "version": "0.0.1",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -15,7 +15,6 @@
     "@vitejs/plugin-vue": "^4.2.3",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.45.0",
-    "eslint-config-google": "^0.14.0",
     "eslint-plugin-vue": "^9.15.1",
     "lodash.clonedeep": "^4.5.0",
     "postcss": "^8.4.24",
