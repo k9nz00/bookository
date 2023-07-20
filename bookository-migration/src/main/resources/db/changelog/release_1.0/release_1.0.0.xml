@@ -8,4 +8,198 @@
     <changeSet id="20230715_2142" author="ASemka">
         <sqlFile path="db/changelog/release_1.0/sql/0000.sql"/>
     </changeSet>
+    <changeSet id="20230717_2212" author="ASemka">
+        <preConditions>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM information_schema.sequences
+                WHERE sequence_schema = 'bookository'
+                  AND sequence_name = 'seq_book_id'</sqlCheck>
+        </preConditions>
+        <createSequence
+                schemaName="bookository"
+                startValue="1"
+                incrementBy="1"
+                sequenceName="seq_book_id"/>
+    </changeSet>
+    <changeSet id="20230717_2213" author="ASemka">
+        <preConditions>
+            <not>
+                <tableExists schemaName="bookository" tableName="book"/>
+            </not>
+        </preConditions>
+        <createTable schemaName="bookository" tableName="book">
+            <column name="id" type="int" defaultValue="nextval('seq_book_id')">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="file_name" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="size" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_available" type="boolean" defaultValue="true"/>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addPrimaryKey schemaName="bookository"
+                       tableName="book"
+                       columnNames="id"
+                       constraintName="book_id_pkey"/>
+    </changeSet>
+
+    <changeSet id="20230717_2314" author="ASemka">
+        <preConditions>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM information_schema.sequences
+                WHERE sequence_schema = 'bookository'
+                  AND sequence_name = 'seq_book_metadata_id'</sqlCheck>
+        </preConditions>
+        <createSequence
+                schemaName="bookository"
+                startValue="1"
+                incrementBy="1"
+                sequenceName="seq_book_metadata_id"/>
+    </changeSet>
+    <changeSet id="20230717_2315" author="ASemka">
+        <preConditions>
+            <not>
+                <tableExists schemaName="bookository" tableName="book_metadata"/>
+            </not>
+        </preConditions>
+        <createTable schemaName="bookository" tableName="book_metadata">
+            <column name="id" type="int" defaultValue="nextval('seq_book_metadata_id')">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="book_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author" type="varchar"/>
+            <column name="description" type="varchar"/>
+            <column name="genre" type="varchar"/>
+            <column name="title" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="annotation" type="varchar"/>
+            <column name="publisher" type="varchar"/>
+            <column name="city" type="varchar"/>
+            <column name="year" type="int"/>
+            <column name="isbn" type="varchar"/>
+        </createTable>
+        <addPrimaryKey schemaName="bookository"
+                       tableName="book_metadata"
+                       columnNames="id"
+                       constraintName="book_metadata_id_pkey"/>
+        <createIndex schemaName="bookository" tableName="book_metadata" indexName="book_metadata_title_idx">
+            <column name="title"/>
+        </createIndex>
+        <createIndex schemaName="bookository" tableName="book_metadata" indexName="book_metadata_author_idx">
+            <column name="author"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20230717_2316" author="ASemka">
+        <preConditions>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM information_schema.sequences
+                WHERE sequence_schema = 'bookository'
+                  AND sequence_name = 'seq_book_big_preview_id'</sqlCheck>
+        </preConditions>
+        <createSequence
+                schemaName="bookository"
+                startValue="1"
+                incrementBy="1"
+                sequenceName="seq_book_big_preview_id"/>
+    </changeSet>
+    <changeSet id="20230717_2317" author="ASemka">
+        <preConditions>
+            <not>
+                <tableExists schemaName="bookository" tableName="book_big_preview"/>
+            </not>
+        </preConditions>
+        <createTable schemaName="bookository" tableName="book_big_preview">
+            <column name="id" type="int" defaultValue="nextval('seq_book_big_preview_id')">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="book_id" type="int"/>
+            <column name="size" type="bigint"/>
+            <column name="preview" type="bytea"/>
+        </createTable>
+        <addPrimaryKey schemaName="bookository"
+                       tableName="book_big_preview"
+                       columnNames="id"
+                       constraintName="book_big_preview_id_pkey"/>
+    </changeSet>
+    <changeSet id="20230717_2318" author="ASemka">
+        <preConditions>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM information_schema.sequences
+                WHERE sequence_schema = 'bookository'
+                  AND sequence_name = 'seq_book_small_preview_id'</sqlCheck>
+        </preConditions>
+        <createSequence
+                schemaName="bookository"
+                startValue="1"
+                incrementBy="1"
+                sequenceName="seq_book_small_preview_id"/>
+    </changeSet>
+    <changeSet id="20230717_2319" author="ASemka">
+        <preConditions>
+            <not>
+                <tableExists schemaName="bookository" tableName="book_small_preview"/>
+            </not>
+        </preConditions>
+        <createTable schemaName="bookository" tableName="book_small_preview">
+            <column name="id" type="int" defaultValue="nextval('seq_book_small_preview_id')">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="book_id" type="int"/>
+            <column name="size" type="bigint"/>
+            <column name="preview" type="bytea"/>
+        </createTable>
+        <addPrimaryKey schemaName="bookository"
+                       tableName="book_small_preview"
+                       columnNames="id"
+                       constraintName="book_small_preview_id_pkey"/>
+    </changeSet>
+    <changeSet id="20230717_2320" author="ASemka">
+        <preConditions>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM information_schema.sequences
+                WHERE sequence_schema = 'bookository'
+                  AND sequence_name = 'seq_book_content_id'</sqlCheck>
+        </preConditions>
+        <createSequence
+                schemaName="bookository"
+                startValue="1"
+                incrementBy="1"
+                sequenceName="seq_book_content_id"/>
+    </changeSet>
+    <changeSet id="20230717_2321" author="ASemka">
+        <preConditions>
+            <not>
+                <tableExists schemaName="bookository" tableName="book_content"/>
+            </not>
+        </preConditions>
+        <createTable schemaName="bookository" tableName="book_content">
+            <column name="id" type="int" defaultValue="nextval('seq_book_content_id')">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="book_id" type="int"/>
+            <column name="size" type="bigint"/>
+            <column name="content" type="bytea"/>
+        </createTable>
+        <addPrimaryKey schemaName="bookository"
+                       tableName="book_content"
+                       columnNames="id, book_id"
+                       constraintName="book_content_id_book_id_pkey"/>
+    </changeSet>
 </databaseChangeLog>
