@@ -109,11 +109,12 @@ const createCard = (card) => {
     return shelf
   })
 }
-
 </script>
 
 <style lang="css">
 .board {
-  @apply bg-blue-900 p-4 h-full overflow-auto;
+  @apply p-4 h-full overflow-auto;
+  background: no-repeat url('../assets/book-cafe.png');
+  background-size: cover;
 }
 </style>
