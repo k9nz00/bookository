@@ -3,7 +3,7 @@ package ru.semka.bookository.server.dao.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "book_content")
+@Table(schema = "bookository", name = "book_content")
 public class BookContentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_book_content_id")

@@ -7,7 +7,7 @@ import ru.semka.bookository.server.rest.dto.BookCategoryUiDto;
 import ru.semka.bookository.server.service.BookCategoryService;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Comparator;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +23,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
     public Collection<BookCategoryUiDto> getAll() {
         return bookCategoryDao.getAll().stream()
                 .map(entity -> new BookCategoryUiDto(entity.getId(), entity.getName()))
-                .collect(Collectors.toUnmodifiableSet());
+                .sorted(Comparator.comparing(BookCategoryUiDto::getId))
+                .toList();
     }
 }

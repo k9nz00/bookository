@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "book_small_preview")
+@Table(schema = "bookository", name = "book_small_preview")
 @Data
 public class BookSmallPreviewEntity {
     @Id
