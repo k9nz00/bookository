@@ -10,12 +10,19 @@ spring:
       password: ${DB_PWD:postgres}
       connectionTimeout: ${DB_TIMEOUT:30000}
       maximum-pool-size: ${DB_POOL_SIZE:10}
+      schema: bookository
   servlet:
     multipart:
       enabled: true
       max-file-size: 25MB
       max-request-size: 50MB
       location:
+  jpa:
+    show-sql: true
+#    hibernate:
+#      ddl-auto: validate
+
+
 
 server:
   port: "8020"

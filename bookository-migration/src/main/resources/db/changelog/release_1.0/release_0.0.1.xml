@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20230715_2142" author="ASemka">
+        <sqlFile path="db/changelog/release_1.0/sql/0000.sql"/>
+    </changeSet>
+
+    <changeSet id="20230710_2142" author="ASemka">
+        <sql>
+            CREATE TYPE bookository.language AS enum ('RU', 'EN');
+        </sql>
+    </changeSet>
+
+    <changeSet id="20230722_1516" author="ASemka">
+        <preConditions>
+            <not>
+                <tableExists tableName="category"/>
+            </not>
+        </preConditions>
+        <createTable schemaName="bookository" tableName="category">
+            <column name="id" type="serial"/>
+            <column name="name" type="varchar"/>
+        </createTable>
+        <sql>
+            INSERT INTO bookository.category (name)
+            VALUES ('Зарубежная литература'),
+                   ('Русская литература'),
+                   ('Художественная литература'),
+                   ('Научно-популярная литература'),
+                   ('Учебная литература'),
+                   ('классическая литература'),
+                   ('Классическая литература'),
+                   ('Современная литература')
+        </sql>
+    </changeSet>
+</databaseChangeLog>
