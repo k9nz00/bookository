@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(schema = "bookository", name = "book")
 @Data
-public class BookEntity {
+public class BookDetailsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_book_id")
     @SequenceGenerator(schema = "bookository", name = "seq_book_id", allocationSize = 1)
@@ -49,5 +49,5 @@ public class BookEntity {
     private Timestamp deletedAt;
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "book_id")
-    private BookSmallPreviewEntity smallPreview;
+    private BookBigPreviewEntity bigPreview;
 }

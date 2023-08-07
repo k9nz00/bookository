@@ -1,4 +1,4 @@
-package ru.semka.bookository.server.rest.dto;
+package ru.semka.bookository.server.rest.dto.book;
 
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;

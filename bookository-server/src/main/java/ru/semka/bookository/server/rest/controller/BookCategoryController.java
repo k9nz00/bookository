@@ -4,8 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.semka.bookository.server.rest.dto.BookCategoryUiDto;
-import ru.semka.bookository.server.rest.dto.CreateBookCategoriesRequestDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.CreateBookCategoriesRequestDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.UpdateBookCategoriesRequestDto;
 import ru.semka.bookository.server.service.BookCategoryService;
 
 import java.util.Collection;
@@ -23,7 +24,13 @@ public class BookCategoryController {
     }
 
     @PostMapping
-    public void save(@Valid @RequestBody CreateBookCategoriesRequestDto dto) {
-        bookCategoryService.save(dto.getName());
+    public BookCategoryUiDto save(@Valid @RequestBody CreateBookCategoriesRequestDto dto) {
+        return bookCategoryService.save(dto.getName());
+    }
+
+    @PutMapping("/{categoryId}")
+    public void update(@PathVariable int categoryId,
+                       @Valid @RequestBody UpdateBookCategoriesRequestDto dto) {
+        bookCategoryService.update(categoryId, dto.getName());
     }
 }

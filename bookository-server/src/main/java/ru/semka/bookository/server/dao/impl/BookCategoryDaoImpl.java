@@ -15,11 +15,19 @@ public class BookCategoryDaoImpl implements BookCategoryDao {
     private final EntityManager entityManager;
 
     @Override
-    public void save(String categoryName) {
+    public CategoryEntity save(String categoryName) {
         CategoryEntity entity = new CategoryEntity();
         entity.setName(categoryName);
         entityManager.persist(entity);
-        entityManager.merge(entity);
+        return entityManager.merge(entity);
+    }
+
+    @Override
+    public void update(int categoryId, String categoryName) {
+        Query query = entityManager.createNativeQuery("UPDATE bookository.category SET name = :name WHERE id = :id", CategoryEntity.class);
+        query.setParameter("name", categoryName);
+        query.setParameter("id", categoryId);
+        query.executeUpdate();
     }
 
     @Override

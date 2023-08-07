@@ -1,11 +1,13 @@
 package ru.semka.bookository.server.service;
 
-import ru.semka.bookository.server.rest.dto.BookCategoryUiDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
 
 import java.util.Collection;
 
 public interface BookCategoryService {
-    void save(String categoryName);
+    BookCategoryUiDto save(String categoryName);
+
+    void update(int categoryId, String categoryName);
 
     Collection<BookCategoryUiDto> getAll();
 }

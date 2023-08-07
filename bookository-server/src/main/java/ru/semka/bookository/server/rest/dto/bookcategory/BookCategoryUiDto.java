@@ -1,4 +1,4 @@
-package ru.semka.bookository.server.rest.dto;
+package ru.semka.bookository.server.rest.dto.bookcategory;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

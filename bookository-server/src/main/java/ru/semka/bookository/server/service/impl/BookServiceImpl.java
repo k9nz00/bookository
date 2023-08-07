@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.dao.BookDao;
+import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
-import ru.semka.bookository.server.rest.dto.BookUiDto;
-import ru.semka.bookository.server.rest.dto.CreateBookRequestDto;
+import ru.semka.bookository.server.rest.dto.book.BookUiDto;
+import ru.semka.bookository.server.rest.dto.book.CreateBookRequestDto;
 import ru.semka.bookository.server.service.BookCoverService;
 import ru.semka.bookository.server.service.BookService;
 import ru.semka.bookository.server.transformers.Transformer;
@@ -18,17 +19,18 @@ import java.io.IOException;
 public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final BookCoverService bookCoverService;
-    private final Transformer<BookEntity, BookUiDto> bookDetailsTransformer;
+    private final Transformer<BookDetailsEntity, BookUiDto> bookDetailsTransformer;
 
     @Override
-    public void save(CreateBookRequestDto dto, MultipartFile bookCover) throws IOException {
+    public void save(CreateBookRequestDto dto, MultipartFile book, MultipartFile bookCover) throws IOException {
         BookEntity bookEntity = bookDao.save(dto);
         bookCoverService.saveCover(bookEntity.getId(), bookCover);
+        bookDao.saveBookContent(bookEntity.getId(), book);
     }
 
     @Override
     public BookUiDto getDetails(int bookId) {
-        BookEntity entity = bookDao.find(bookId);
+        BookDetailsEntity entity = bookDao.find(bookId);
         return bookDetailsTransformer.transform(entity);
     }
 }

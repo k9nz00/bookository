@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Objects;
+import java.util.Optional;
 
 public class LanguageType implements UserType<Language> {
     @Override
@@ -56,8 +57,10 @@ public class LanguageType implements UserType<Language> {
 
     @Override
     public Language deepCopy(Language language) {
-        String name = language.name();
-        return Language.valueOf(name);
+        return Optional.ofNullable(language)
+                .map(Language::name)
+                .map(Language::valueOf)
+                .orElse(null);
     }
 
     @Override

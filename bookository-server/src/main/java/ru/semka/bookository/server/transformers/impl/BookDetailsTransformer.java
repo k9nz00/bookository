@@ -1,9 +1,9 @@
 package ru.semka.bookository.server.transformers.impl;
 
 import org.springframework.stereotype.Component;
-import ru.semka.bookository.server.dao.entity.BookEntity;
+import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
-import ru.semka.bookository.server.rest.dto.BookUiDto;
+import ru.semka.bookository.server.rest.dto.book.BookUiDto;
 import ru.semka.bookository.server.transformers.Transformer;
 
 import java.util.Base64;
@@ -12,11 +12,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class BookDetailsTransformer implements Transformer<BookEntity, BookUiDto> {
+public class BookDetailsTransformer implements Transformer<BookDetailsEntity, BookUiDto> {
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
-    public BookUiDto transform(BookEntity input) {
+    public BookUiDto transform(BookDetailsEntity input) {
         return new BookUiDto(
                 input.getId(),
                 input.getName(),

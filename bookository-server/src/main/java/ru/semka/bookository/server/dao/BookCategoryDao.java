@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface BookCategoryDao {
     @Transactional
-    void save(String categoryName);
+    CategoryEntity save(String categoryName);
+
+    @Transactional
+    void update(int categoryId, String categoryName);
 
     List<CategoryEntity> getAll();
 }
