@@ -6,7 +6,7 @@ import ru.semka.bookository.server.dao.entity.BookContentInfoEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.rest.dto.book.BookContentInfoUiDto;
-import ru.semka.bookository.server.rest.dto.book.BookUiDto;
+import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.transformers.Transformer;
 import ru.semka.bookository.server.transformers.wrapper.BookDetailsWrapper;
 
@@ -17,14 +17,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, BookUiDto> {
+public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, BookDetailsUiDto> {
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
-    public BookUiDto transform(BookDetailsWrapper input) {
+    public BookDetailsUiDto transform(BookDetailsWrapper input) {
         BookDetailsEntity book = input.getBook();
 
-        return new BookUiDto(
+        return new BookDetailsUiDto(
                 book.getId(),
                 book.getName(),
                 book.getAuthor(),
