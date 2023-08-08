@@ -21,34 +21,25 @@
       </p>
     </AppDrag>
   </AppDrop>
-
-  <BookCardView
-    v-if="!!openedCard"
-    :card="openedCard"
-    @close="closeCard"
-  />
 </template>
 
 <script setup>
-import BookCardView from '../components/BookCardView.vue'
 import AppDrag from './AppDrag.vue'
 import AppDrop from './AppDrop.vue'
-import { ref } from 'vue'
 import clonedeep from 'lodash.clonedeep'
+import { useRouter } from 'vue-router'
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
   cards: Array
 })
 
+const router = useRouter()
+
 const emit = defineEmits(['move-card'])
 
-const openedCard = ref(null)
 const openCard = (card) => {
-  openedCard.value = card
-}
-const closeCard = () => {
-  openedCard.value = null
+  router.push(`/books/${card.shelfId}/${card.id}`)
 }
 
 const move = (card, toCard) => {

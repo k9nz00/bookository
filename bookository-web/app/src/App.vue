@@ -1,10 +1,7 @@
 <template>
-  <BookBoard />
+  <router-view />
 </template>
 
-<script setup>
-import BookBoard from '../src/views/BookBoard.vue'
-</script>
 
 <style>
 body, html {
