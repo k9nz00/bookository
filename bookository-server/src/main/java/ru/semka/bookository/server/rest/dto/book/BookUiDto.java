@@ -5,6 +5,7 @@ import lombok.Data;
 import ru.semka.bookository.server.common.enums.Language;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.Set;
 
 @Data
@@ -22,5 +23,6 @@ public class BookUiDto {
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
     private final Timestamp deletedAt;
+    private final Collection<BookContentInfoUiDto> bookContentInfo;
     private final String bigPreview;
 }

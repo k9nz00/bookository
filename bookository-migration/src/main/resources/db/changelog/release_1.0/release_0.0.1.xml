@@ -15,6 +15,12 @@
         </sql>
     </changeSet>
 
+    <changeSet id="20230710_2143" author="ASemka">
+        <sql>
+            CREATE TYPE bookository.book_format AS enum ('TXT', 'EPUB', 'FB2', 'PDF');
+        </sql>
+    </changeSet>
+
     <changeSet id="20230722_1516" author="ASemka">
         <preConditions>
             <not>

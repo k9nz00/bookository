@@ -24,6 +24,11 @@ public class BookController {
         return bookService.getDetails(bookId);
     }
 
+    @GetMapping("/{bookId}/book-content/{bookContentId}")
+    public String getBookContent(@PathVariable int bookId, @PathVariable int bookContentId) {
+        return bookService.getBookContent(bookId, bookContentId);
+    }
+
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public void saveBook(@Valid CreateBookRequestDto dto,
                          @RequestPart(name = "book", required = false) MultipartFile book,

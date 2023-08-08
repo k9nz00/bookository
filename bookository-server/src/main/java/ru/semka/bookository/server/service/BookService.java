@@ -10,4 +10,6 @@ public interface BookService {
     void save(CreateBookRequestDto dto, MultipartFile book, MultipartFile bookCover) throws IOException;
 
     BookUiDto getDetails(int bookId);
+
+    String getBookContent(int bookId, int bookContentId);
 }

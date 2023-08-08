@@ -9,7 +9,7 @@ import ru.semka.bookository.server.dao.type.BookFormatType;
 @Entity
 @Table(schema = "bookository", name = "book_content")
 @Data
-public class BookContentEntity {
+public class BookContentInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_book_content_id")
     @SequenceGenerator(name = "seq_book_content_id", allocationSize = 1)
@@ -22,6 +22,4 @@ public class BookContentEntity {
     @Column(name = "format")
     @Type(value = BookFormatType.class)
     private BookFormat bookFormat;
-    @Column(name = "content")
-    private byte[] content;
 }
