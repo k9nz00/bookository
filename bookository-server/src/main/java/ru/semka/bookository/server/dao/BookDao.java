@@ -6,6 +6,7 @@ import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.dao.entity.BookContentInfoEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
+import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.CreateBookRequestDto;
 
 import java.io.IOException;
@@ -17,6 +18,8 @@ public interface BookDao {
 
     @Transactional
     void saveBookContent(int bookId, MultipartFile book, BookFormat bookFormat) throws IOException;
+
+    Collection<BookEntity> getBooks(BookCriteriaDto criteriaDto);
 
     BookDetailsEntity find(int bookId);
 

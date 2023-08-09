@@ -2,14 +2,17 @@ package ru.semka.bookository.server.dao.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
+import ru.semka.bookository.server.dao.AbstractDao;
 import ru.semka.bookository.server.dao.BookDao;
+import ru.semka.bookository.server.dao.dto.SearchCriteriaDto;
 import ru.semka.bookository.server.dao.entity.*;
+import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.CreateBookRequestDto;
 import ru.semka.bookository.server.util.CommonUtil;
+import ru.semka.bookository.server.util.DaoUtil;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -19,9 +22,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-@RequiredArgsConstructor
-public class BookDaoImpl implements BookDao {
-    private final EntityManager entityManager;
+public class BookDaoImpl extends AbstractDao implements BookDao {
+
+    public BookDaoImpl(EntityManager entityManager) {
+        super(entityManager);
+    }
 
     @Override
     public BookEntity save(CreateBookRequestDto dto) {
@@ -39,6 +44,12 @@ public class BookDaoImpl implements BookDao {
         entity.setLanguage(dto.getLanguage());
         entityManager.persist(entity);
         return entityManager.merge(entity);
+    }
+
+    @Override
+    public Collection<BookEntity> getBooks(BookCriteriaDto criteriaDto) {
+        SearchCriteriaDto<BookEntity> searchCriteria = DaoUtil.createCriteria(criteriaDto, BookEntity.class);
+        return execute(searchCriteria);
     }
 
     @Override

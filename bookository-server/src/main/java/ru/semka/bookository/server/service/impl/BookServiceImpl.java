@@ -8,7 +8,9 @@ import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.entity.BookContentInfoEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
+import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
+import ru.semka.bookository.server.rest.dto.book.BookUiDto;
 import ru.semka.bookository.server.rest.dto.book.CreateBookRequestDto;
 import ru.semka.bookository.server.service.BookCoverService;
 import ru.semka.bookository.server.service.BookService;
@@ -25,6 +27,7 @@ public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final BookCoverService bookCoverService;
     private final Transformer<BookDetailsWrapper, BookDetailsUiDto> bookDetailsTransformer;
+    private final Transformer<BookEntity, BookUiDto> booksTransformer;
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
@@ -34,6 +37,14 @@ public class BookServiceImpl implements BookService {
 
         BookFormat type = getType(book);
         bookDao.saveBookContent(bookEntity.getId(), book, type);
+    }
+
+    @Override
+    public Collection<BookUiDto> getBooks(BookCriteriaDto criteriaDto) {
+        Collection<BookEntity> books = bookDao.getBooks(criteriaDto);
+        return books.stream()
+                .map(booksTransformer::transform)
+                .toList();
     }
 
     @Override

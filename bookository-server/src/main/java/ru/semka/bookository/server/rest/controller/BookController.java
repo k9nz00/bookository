@@ -2,10 +2,12 @@ package ru.semka.bookository.server.rest.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookUiDto;
 import ru.semka.bookository.server.rest.dto.book.CreateBookRequestDto;
@@ -22,8 +24,8 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public Collection<BookUiDto> getBook() {
-        return null;
+    public Collection<BookUiDto> getBook(@Valid @ParameterObject final BookCriteriaDto criteriaDto) {
+        return bookService.getBooks(criteriaDto);
     }
 
     @GetMapping("/{bookId}")

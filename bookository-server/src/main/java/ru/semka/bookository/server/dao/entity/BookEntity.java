@@ -8,7 +8,7 @@ import ru.semka.bookository.server.dao.type.LanguageType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 @Entity
 @Table(schema = "bookository", name = "book")
@@ -40,7 +40,7 @@ public class BookEntity {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private List<CategoryEntity> categories = new ArrayList<>();
+    private Collection<CategoryEntity> categories = new ArrayList<>();
     @Column(name = "created_at")
     private Timestamp createdAt;
     @Column(name = "updated_at")

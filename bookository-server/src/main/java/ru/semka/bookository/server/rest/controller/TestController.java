@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class TestController {
 
     @GetMapping("/api/test/hello")
-    public String testMethod(){
+    public String testMethod() {
         return "Hello. Current time is " + LocalDateTime.now();
     }
 }
