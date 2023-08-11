@@ -1,5 +1,3 @@
-import { uuid } from './utils'
-
 export default {
   name: 'workshop',
   shelves: [
@@ -16,7 +14,7 @@ export default {
           genre: 'Роман',
           category: 'Русская литература',
           language: 'RU',
-          id: uuid(),
+          id: '336a061d-ad60-4ddf-8096-261cb0430ba2',
           shelfId: 'todo',
           color: 'bg-green-200'
         },
@@ -28,7 +26,7 @@ export default {
           genre: 'Роман',
           category: 'Русская литература',
           language: 'RU',
-          id: uuid(),
+          id: 'b347785a-836b-4a34-815d-f68f66db3114',
           shelfId: 'todo',
           color: 'bg-green-200'
         },
@@ -40,7 +38,7 @@ export default {
           genre: 'Роман',
           category: 'Русская литература',
           language: 'RU',
-          id: uuid(),
+          id: '021c10a2-09c6-44f6-b87d-852ae78b4da5',
           shelfId: 'todo',
           color: 'bg-green-200'
         }
@@ -59,7 +57,7 @@ export default {
           genre: 'Роман',
           category: 'Русская литература',
           language: 'RU',
-          id: uuid(),
+          id: '1191c2de-87fc-4281-a9ff-70fa9bd3ca2c',
           shelfId: 'in-progress',
           color: 'bg-purple-200'
         }
@@ -78,7 +76,7 @@ export default {
           genre: 'Поэма',
           category: 'Русская литература',
           language: 'RU',
-          id: uuid(),
+          id: 'fab818fc-c152-490a-bf13-d3e2c1de01f0',
           shelfId: 'done',
           color: 'bg-sky-300'
         }
