@@ -1,6 +1,6 @@
 import BookBoard from './views/BookBoard.vue'
 import BookCardView from './components/BookCardView.vue'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   { path: '/', component: BookBoard },
@@ -8,6 +8,6 @@ const routes = [
 ]
 
 export const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 })
