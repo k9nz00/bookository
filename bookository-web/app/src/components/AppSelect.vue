@@ -1,7 +1,7 @@
 <template>
-  <div class="app-select w-full">
+  <div class="app-select w-full relative">
     <Listbox>
-      <div class="relative flex item-center">
+      <div class="flex item-center">
         <ListboxButton class="listbox-button">
           <span class="block truncate">{{ selected }}</span>
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -87,13 +87,15 @@ const props = defineProps({
 
 <style>
 .listbox-button {
-  @apply relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left sm:text-sm;
+  @apply w-full cursor-default text-left sm:text-sm;
   @apply focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white;
   @apply focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300;
 }
 
 .listbox-options {
-  @apply absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base;
+  @apply absolute max-h-60 w-full overflow-auto bg-white py-1 text-base;
   @apply shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10;
+  top: 38px;
+  right: 0;
 }
 </style>
