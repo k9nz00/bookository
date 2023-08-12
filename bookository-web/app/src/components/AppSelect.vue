@@ -1,9 +1,16 @@
 <template>
   <div class="app-select w-full relative">
-    <Listbox>
+    <Listbox v-model="selectedLocal">
       <div class="flex item-center">
         <ListboxButton class="listbox-button">
-          <span class="block truncate">{{ selected }}</span>
+          <span
+            v-if="selectedLocal[nameField]"
+            class="block truncate">
+            {{ selectedLocal[nameField] }}
+          </span>
+
+          <span v-else class="block truncate text-gray-400">{{ placeholder }}</span>
+
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon
               class="h-5 w-5 text-gray-400"
@@ -17,23 +24,34 @@
           leave-from-class="opacity-100"
           leave-to-class="opacity-0"
         >
-          <ListboxOptions
-            class="listbox-options"
-          >
+          <ListboxOptions class="listbox-options">
+            <ListboxOption v-if="!optionsLocal.length" as="div">
+              <li class="relative cursor-default select-none p-2">
+                <span class="block truncate">
+                  Нет данных для отображения
+                </span>
+              </li>
+            </ListboxOption>
+
             <ListboxOption
-              v-for="option in options"
+              v-else
+              v-for="option in optionsLocal"
               :key="option[valueField]"
-              :value="option[valueField]"
-              v-slot="{ active, selected }"
+              :value="option"
+              :disabled="option[disabledField]"
+              v-slot="{ active, selected, disabled }"
               as="template"
             >
               <li
                 class="relative cursor-default select-none py-2 pl-10 pr-4"
-                :class="{ 'bg-blue-100' : active }"
+                :class="{
+                'bg-blue-100' : active,
+                'text-gray-300' : disabled
+              }"
               >
                 <span
                   class="block truncate"
-                  :class="selected ? 'font-medium' : 'font-normal'"
+                  :class="selected ? 'font-bold' : 'font-normal'"
                 >
                   {{ option[nameField] }}
                 </span>
@@ -65,14 +83,20 @@ import {
 
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
+import { ref } from 'vue'
+import clonedeep from 'lodash.clonedeep'
+
 const props = defineProps({
   options: {
     type: Array,
     default: () => []
   },
   selected: {
-    type: String,
-    default: ''
+    type: Object,
+    default: () => ({
+      name: '',
+      id: ''
+    })
   },
   nameField: {
     type: String,
@@ -81,20 +105,31 @@ const props = defineProps({
   valueField: {
     type: String,
     default: 'id'
+  },
+  disabledField: {
+    type: String,
+    default: 'disabled'
+  },
+  placeholder: {
+    type: String,
+    default: 'Выберите что-нибудь'
   }
 })
+
+const optionsLocal = ref(clonedeep(props.options))
+const selectedLocal = ref(clonedeep(props.selected))
 </script>
 
 <style>
 .listbox-button {
-  @apply w-full py-2 cursor-default text-left sm:text-sm;
+  @apply w-full text-left;
   @apply focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white;
   @apply focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300;
 }
 
 .listbox-options {
-  @apply absolute max-h-60 w-full overflow-auto bg-white py-1 text-base;
-  @apply shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10;
+  @apply absolute max-h-60 w-full overflow-auto bg-white py-1;
+  @apply shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10;
   top: 38px;
   right: 0;
 }
