@@ -10,6 +10,7 @@
 
     <form v-else action="">
       <div class="app-fields-container">
+        <!-- ОБЛОЖКА MOBILE -->
         <img
           class="book-cover-small"
           :src="cover"
@@ -17,12 +18,14 @@
         >
 
         <div class="flex gap-5">
+         <!-- ОБЛОЖКА DESKTOP -->
           <img
             class="book-cover-large"
             :src="cover"
             alt=""
           >
 
+          <!-- НАЗВАНИЕ -->
           <div class="w-full space-y-2">
             <div class="app-field-wrapper">
               <label for="name">Название</label>
@@ -30,65 +33,76 @@
                 id="name"
                 type="text"
                 class="app-field"
+                placeholder="Укажите название"
                 :value="book.name"
               >
             </div>
 
+            <!-- АВТОР -->
             <div class="app-field-wrapper">
               <label for="author">Автор</label>
               <input
                 id="author"
                 type="text"
                 class="app-field"
+                placeholder="Укажите автора"
                 :value="book.author"
               >
             </div>
 
+            <!-- ЖАНР -->
             <div class="app-field-wrapper">
               <label for="genre">Жанр</label>
               <input
                 id="genre"
                 type="text"
                 class="app-field"
+                placeholder="Укажите жанр"
                 :value="book.genre"
               >
             </div>
 
+            <!-- КАТЕГОРИЯ -->
             <div class="app-field-wrapper">
               <label>Категории</label>
               <AppSelect
                 class="app-field"
+                placeholder="Выберите категории"
                 :options="categories"
-                :selected="book.categories"
               />
             </div>
 
+            <!-- ЯЗЫК ОРИГИНАЛА -->
             <div class="app-field-wrapper">
               <label>Язык оригинала</label>
               <AppSelect
                 class="app-field"
+                placeholder="Выберите язык"
                 :options="languages"
-                :selected="book.language"
               />
             </div>
 
+            <!-- ФОРМАТЫ -->
             <div class="app-field-wrapper">
-              <label>Скачать в формате</label>
+              <label>Форматы</label>
               <AppSelect
                 class="app-field"
+                placeholder="Выберите форматы для скачивания"
                 :options="formats"
-                :selected="book.formats"
               />
             </div>
           </div>
         </div>
 
+        <!-- АННОТАЦИЯ -->
         <textarea
           rows="5"
-          class="border border-blue-300 rounded-md p-5"
+          class="border border-gray-300 rounded-md p-5"
+          placeholder="Добавьте аннотацию"
           :value="book.annotation"
         />
 
+        <!-- СОХРАНИТЬ -->
         <div class="app-buttons-container">
           <button type="button" class="app-button border border-blue-100 flex items-center gap-2">
             <ArrowLeftIcon class="h-5 w-5" />
@@ -112,35 +126,65 @@ import { useRoute } from 'vue-router'
 
 import { BOOK_MODEL } from '../constants.js'
 
-
 const route = useRoute()
 const bookId = route.params.bookId
 
 const loading = ref(false)
 
 const book = ref(BOOK_MODEL)
-const getBook = () => {}
+const getBook = () => {
+  if(bookId) {
+    return Promise.resolve()
+  }
 
-// TODO: getReferences
-const categories = ref([])
-const formats = ref([])
-const languages = ref([])
-
-const getFormats = () => {}
-const getLanguages = () => {}
-const getCategories = () => {}
+  return Promise.resolve()
+}
 
 const cover = computed(() => {
-  return `data:image/gpeg;base64,${book.value.bigPreview}` || ''
+  return book.value.bigPreview ? `data:image/gpeg;base64,${book.value.bigPreview}` : ''
 })
 
+// TODO: getReferences
+const categories = ref([
+  { id: 1, name: 'русская литература' },
+  { id: 2, name: 'зарубежная литература' },
+  { id: 3, name: 'классика'},
+  { id: 5, name: 'поэзия' }
+])
+const formats = ref([
+  { id: 1, name: 'txt', disabled: false },
+  { id: 2, name: 'fb2', disabled: false },
+  { id: 3, name: 'pdf', disabled: true },
+  { id: 4, name: 'epub', disabled: true },
+  { id: 5, name: 'doc', disabled: true }
+])
+const languages = ref([
+  { id: 'EN', name: 'английский' },
+  { id: 'RU', name: 'русский' },
+])
+
+const getFormats = () => {
+  return Promise.resolve()
+}
+const getLanguages = () => {
+  return Promise.resolve()
+}
+const getCategories = () => {
+  return Promise.resolve()
+}
+
 onMounted(() => {
-  // Promise.all([getBook(), getCategories(), getLanguages(), getFormats()])
-  //   .catch((error) => {
-  //     console.log(error)
-  //   }).finally(() => {
-  //     loading.value = false
-  //   })
+  Promise.all([
+    getBook(),
+    getCategories(),
+    getLanguages(),
+    getFormats()]
+  )
+    .catch((error) => {
+      console.log(error)
+    }).finally(() => {
+      loading.value = false
+    })
 })
 </script>
 
@@ -162,19 +206,19 @@ onMounted(() => {
   }
 }
 
-/* Маленькие экраны */
+/* tablet, mobile */
 .app-fields-container {
   @apply flex flex-col gap-y-4;
 }
 
 .app-field-wrapper {
   @apply flex flex-col;
-  @apply text-sm text-left font-bold;
+  @apply text-left font-bold;
 }
 
 .app-field {
-  @apply pb-2 text-base font-normal;
-  @apply border-b border-blue-300;
+  @apply pb-2 font-normal;
+  @apply border-b border-gray-300;
   height: 32px;
 }
 
@@ -199,7 +243,7 @@ onMounted(() => {
   @apply p-2;
 }
 
-/* Большие экраны */
+/* desktop */
 @media (min-width: 768px) {
   .app-buttons-container {
     @apply flex-row;
@@ -211,7 +255,7 @@ onMounted(() => {
 
   .app-field-wrapper {
     @apply grid grid-flow-col items-center gap-4;
-    @apply text-sm font-bold;
+    @apply font-bold;
     grid-template-columns: 1fr 5fr;
     text-align: left;
   }
