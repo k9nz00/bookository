@@ -7,7 +7,7 @@ import { BASE_URL } from '../constants.js'
  */
 
 /**
- * @return {Promise<Category[]>}
+ * @returns {Promise<Category[]>}
  */
 export default {
   getCategories() {

@@ -10,13 +10,13 @@
       <div class="list-reset">
         <slot/>
 
-        <input
-          v-model="newCard"
-          type="text"
-          class="block p-2 w-full bg-transparent"
-          placeholder="+ Добавить книгу"
-          @keyup.enter="createCard"
-        />
+        <button
+          type="button"
+          class="block p-2 w-full text-gray-400 text-left"
+          @click="createBookCard"
+        >
+          + Добавить книгу
+        </button>
       </div>
     </AppDrag>
   </AppDrop>
@@ -24,11 +24,9 @@
 
 
 <script setup>
-import { ref } from 'vue'
 import AppDrag from './AppDrag.vue'
 import AppDrop from './AppDrop.vue'
 import clonedeep from 'lodash.clonedeep'
-import { uuid } from '../utils.js'
 
 const props = defineProps({
   shelf: Object
@@ -53,23 +51,8 @@ const move = (fromData, toData) => {
   }
 }
 
-const newCard = ref('')
-
-const createCard = () => {
-  if (!newCard.value) {
-    return
-  }
-
-  const payload = {
-    type: 'card',
-    description: '',
-    name: newCard.value,
-    id: uuid(),
-    shelfId: props.shelf.id,
-    color: 'bg-red-200'
-  }
-
-  emit('create-card', payload)
+const createBookCard = () => {
+  emit('create-card', props.shelf.id)
 }
 </script>
 

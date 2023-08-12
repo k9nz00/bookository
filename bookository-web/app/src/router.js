@@ -5,6 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   { path: '/', component: BookBoard },
   { path: '/books/:shelfId/:bookId', component: BookCardView },
+  { path: '/books/:shelfId', component: BookCardView },
 ]
 
 export const router = createRouter({

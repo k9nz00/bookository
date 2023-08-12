@@ -62,7 +62,7 @@
               >
             </div>
 
-            <!-- КАТЕГОРИЯ -->
+            <!-- КАТЕГОРИИ -->
             <div class="app-field-wrapper">
               <label>Категории</label>
               <AppSelect
@@ -104,7 +104,11 @@
 
         <!-- СОХРАНИТЬ -->
         <div class="app-buttons-container">
-          <button type="button" class="app-button border border-blue-100 flex items-center gap-2">
+          <button
+            type="button"
+            class="app-button border border-blue-100 flex items-center gap-2"
+            @click="router.push('/')"
+          >
             <ArrowLeftIcon class="h-5 w-5" />
             <span>Назад к списку книг</span>
           </button>
@@ -122,11 +126,12 @@ import { computed, ref, onMounted } from 'vue'
 import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
 import AppSelect from './AppSelect.vue'
 
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { BOOK_MODEL } from '../constants.js'
 
 const route = useRoute()
+const router = useRouter()
 const bookId = route.params.bookId
 
 const loading = ref(false)

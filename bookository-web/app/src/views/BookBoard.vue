@@ -33,6 +33,7 @@ import BookShelf from '../components/BookShelf.vue'
 import BookCards from '../components/BookCards.vue'
 import defaultBoard from '../default-board.js'
 import clonedeep from 'lodash.clonedeep'
+import { router } from '../router.js'
 
 const board = ref(defaultBoard)
 const shelves = computed(() => {
@@ -100,14 +101,8 @@ const moveCardToShelf = ({ card, toShelf }) => {
   })
 }
 
-const createCard = (card) => {
-  board.value.shelves = board.value.shelves.map(shelf => {
-    if(shelf.id === card.shelfId) {
-      shelf.cards.push(card)
-    }
-
-    return shelf
-  })
+const createCard = (shelfId) => {
+  router.push(`/books/${shelfId}`)
 }
 </script>
 
