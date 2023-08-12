@@ -87,7 +87,7 @@ const props = defineProps({
 
 <style>
 .listbox-button {
-  @apply w-full cursor-default text-left sm:text-sm;
+  @apply w-full py-2 cursor-default text-left sm:text-sm;
   @apply focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white;
   @apply focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300;
 }

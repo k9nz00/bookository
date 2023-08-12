@@ -55,29 +55,29 @@
             </div>
 
             <div class="app-field-wrapper">
-              <label for="category">Категории</label>
+              <label>Категории</label>
               <AppSelect
                 class="app-field"
                 :options="categories"
-                :selected="selectedCategory"
+                :selected="book.categories"
               />
             </div>
 
             <div class="app-field-wrapper">
-              <label for="category">Язык оригинала</label>
+              <label>Язык оригинала</label>
               <AppSelect
                 class="app-field"
-                :options="categories"
-                :selected="selectedCategory"
+                :options="languages"
+                :selected="book.language"
               />
             </div>
 
             <div class="app-field-wrapper">
-              <label for="category">Скачать в формате</label>
+              <label>Скачать в формате</label>
               <AppSelect
                 class="app-field"
-                :options="categories"
-                :selected="selectedCategory"
+                :options="formats"
+                :selected="book.formats"
               />
             </div>
           </div>
@@ -103,78 +103,44 @@
 </template>
 
 <script setup>
-import defaultBoard from '../default-board.js'
 import { computed, ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
 
+import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
 import AppSelect from './AppSelect.vue'
 
-const languages = [{
-  name: 'Русский',
-  code: 'RU'
-},
-{
-  name: 'Английский',
-  code: 'ENG'
-}]
+import { useRoute } from 'vue-router'
 
-const BOOK_MODEL = {
-  type: '',
-  annotation: '',
-  name: '',
-  author: '',
-  genre: '',
-  category: '',
-  language: '',
-  id:'',
-  shelfId: '',
-  color: ''
-}
+import { BOOK_MODEL } from '../constants.js'
+
 
 const route = useRoute()
 const bookId = route.params.bookId
 
 const loading = ref(false)
-const book = ref(null)
-const getBook = () => {
-  return fetch('http://192.168.1.110:8020/api/books/1')
-    .then((response) => response.json())
-    .then((response) => (book.value = response || null))
-}
 
-const selectedCategory = ref('русская литература, классика')
+const book = ref(BOOK_MODEL)
+const getBook = () => {}
+
+// TODO: getReferences
 const categories = ref([])
-const getCategories = () => {
-  return fetch('http://192.168.1.110:8020/api/book-categories')
-    .then((response) => response.json())
-    .then((response) => (categories.value = response))
-}
+const formats = ref([])
+const languages = ref([])
+
+const getFormats = () => {}
+const getLanguages = () => {}
+const getCategories = () => {}
 
 const cover = computed(() => {
   return `data:image/gpeg;base64,${book.value.bigPreview}` || ''
 })
 
 onMounted(() => {
-  // Promise.all([getBook(), getCategories()])
+  // Promise.all([getBook(), getCategories(), getLanguages(), getFormats()])
   //   .catch((error) => {
   //     console.log(error)
   //   }).finally(() => {
   //     loading.value = false
   //   })
-
-  book.value = defaultBoard.shelves[0].cards[0]
-
-  categories.value = [
-    {
-      name: 'Русская литература',
-      id: '1'
-    },
-    {
-      name: 'Зарубежная литература',
-      id: '2'
-    },
-  ]
 })
 </script>
 
@@ -209,6 +175,7 @@ onMounted(() => {
 .app-field {
   @apply pb-2 text-base font-normal;
   @apply border-b border-blue-300;
+  height: 32px;
 }
 
 .book-cover-large {
