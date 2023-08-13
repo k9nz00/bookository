@@ -6,7 +6,7 @@ import ru.semka.bookository.server.common.enums.Language;
 
 @Data
 @Validated
-public class CreateBookRequestDto {
+public class BookRequestDto {
     private String name;
     private String author;
     private String genre;

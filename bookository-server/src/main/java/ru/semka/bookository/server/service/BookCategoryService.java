@@ -9,5 +9,7 @@ public interface BookCategoryService {
 
     void update(int categoryId, String categoryName);
 
+    void delete(int categoryId);
+
     Collection<BookCategoryUiDto> getAll();
 }

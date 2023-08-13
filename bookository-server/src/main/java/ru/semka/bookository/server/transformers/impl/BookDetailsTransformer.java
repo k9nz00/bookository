@@ -7,14 +7,13 @@ import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.rest.dto.book.BookContentInfoUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
 import ru.semka.bookository.server.transformers.Transformer;
 import ru.semka.bookository.server.transformers.wrapper.BookDetailsWrapper;
 
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, BookDetailsUiDto> {
@@ -23,7 +22,6 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
     @Override
     public BookDetailsUiDto transform(BookDetailsWrapper input) {
         BookDetailsEntity book = input.getBook();
-
         return new BookDetailsUiDto(
                 book.getId(),
                 book.getName(),
@@ -33,7 +31,7 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
                 book.getAnnotation(),
                 book.getIsAvailable(),
                 book.getLanguage(),
-                getCategoryNames(book.getCategories()),
+                getCategories(book.getCategories()),
                 book.getCreatedAt(),
                 book.getUpdatedAt(),
                 book.getDeletedAt(),
@@ -42,10 +40,10 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
         );
     }
 
-    private Set<String> getCategoryNames(List<CategoryEntity> categories) {
+    private List<BookCategoryUiDto> getCategories(List<CategoryEntity> categories) {
         return categories.stream()
-                .map(CategoryEntity::getName)
-                .collect(Collectors.toSet());
+                .map(entity -> new BookCategoryUiDto(entity.getId(), entity.getName()))
+                .toList();
     }
 
     private Collection<BookContentInfoUiDto> getContentInfo(Collection<BookContentInfoEntity> infoEntities) {

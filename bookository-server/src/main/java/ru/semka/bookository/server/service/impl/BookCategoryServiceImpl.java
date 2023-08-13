@@ -28,6 +28,11 @@ public class BookCategoryServiceImpl implements BookCategoryService {
     }
 
     @Override
+    public void delete(int categoryId) {
+        bookCategoryDao.delete(categoryId);
+    }
+
+    @Override
     public Collection<BookCategoryUiDto> getAll() {
         return bookCategoryDao.getAll().stream()
                 .map(bookCategoryTransformer::transform)

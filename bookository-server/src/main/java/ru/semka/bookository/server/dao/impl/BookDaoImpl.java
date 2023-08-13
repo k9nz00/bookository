@@ -10,7 +10,7 @@ import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.dto.SearchCriteriaDto;
 import ru.semka.bookository.server.dao.entity.*;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
-import ru.semka.bookository.server.rest.dto.book.CreateBookRequestDto;
+import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 import ru.semka.bookository.server.util.CommonUtil;
 import ru.semka.bookository.server.util.DaoUtil;
 
@@ -29,7 +29,7 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
-    public BookEntity save(CreateBookRequestDto dto) {
+    public BookEntity save(BookRequestDto dto) {
         Collection<CategoryEntity> categories = getCategories(dto.getCategories());
         BookEntity entity = new BookEntity();
         entity.getCategories().addAll(categories);

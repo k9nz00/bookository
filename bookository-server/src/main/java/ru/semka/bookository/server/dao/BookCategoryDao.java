@@ -12,5 +12,8 @@ public interface BookCategoryDao {
     @Transactional
     void update(int categoryId, String categoryName);
 
+    @Transactional
+    void delete(int categoryId);
+
     List<CategoryEntity> getAll();
 }

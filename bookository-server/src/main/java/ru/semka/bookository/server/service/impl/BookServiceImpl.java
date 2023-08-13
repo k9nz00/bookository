@@ -10,8 +10,8 @@ import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
+import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 import ru.semka.bookository.server.rest.dto.book.BookUiDto;
-import ru.semka.bookository.server.rest.dto.book.CreateBookRequestDto;
 import ru.semka.bookository.server.service.BookCoverService;
 import ru.semka.bookository.server.service.BookService;
 import ru.semka.bookository.server.transformers.Transformer;
@@ -31,12 +31,17 @@ public class BookServiceImpl implements BookService {
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
-    public void save(CreateBookRequestDto dto, MultipartFile book, MultipartFile bookCover) throws IOException {
+    public void save(BookRequestDto dto, MultipartFile book, MultipartFile bookCover) throws IOException {
         BookEntity bookEntity = bookDao.save(dto);
         bookCoverService.saveCover(bookEntity.getId(), bookCover);
-
         BookFormat type = getType(book);
         bookDao.saveBookContent(bookEntity.getId(), book, type);
+    }
+
+    @Override
+    public void attachBook(int bookId, MultipartFile book) throws IOException {
+        BookFormat type = getType(book);
+        bookDao.saveBookContent(bookId, book, type);
     }
 
     @Override
@@ -64,6 +69,5 @@ public class BookServiceImpl implements BookService {
         int formatIndex = filename.lastIndexOf(".");
         String formatValue = filename.substring(formatIndex + 1);
         return BookFormat.valueOf(formatValue.toUpperCase());
-
     }
 }
