@@ -22,15 +22,13 @@ public class BookTransformer implements Transformer<BookEntity, BookUiDto> {
                 input.getName(),
                 input.getAuthor(),
                 input.getGenre(),
-                input.getDescription(),
                 input.getAnnotation(),
                 input.getIsAvailable(),
                 input.getLanguage(),
                 getCategories(input.getCategories()),
                 input.getCreatedAt(),
                 input.getUpdatedAt(),
-                input.getDeletedAt(),
-                encoder.encodeToString(input.getSmallPreview().getPreview())
+                encoder.encodeToString(input.getSmallPreview() != null ? input.getSmallPreview().getPreview() : null)
         );
     }
 

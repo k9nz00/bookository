@@ -17,7 +17,13 @@ public interface BookDao {
     BookEntity save(BookRequestDto dto);
 
     @Transactional
+    BookEntity update(int bookId, BookRequestDto dto);
+
+    @Transactional
     void saveBookContent(int bookId, MultipartFile book, BookFormat bookFormat) throws IOException;
+
+    @Transactional
+    void deleteBookContent(int bookId, int bookContentId);
 
     Collection<BookEntity> getBooks(BookCriteriaDto criteriaDto);
 

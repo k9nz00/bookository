@@ -3,7 +3,6 @@ package ru.semka.bookository.server.rest.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,12 +40,14 @@ public class BookController {
         return bookService.getBookContent(bookId, bookContentId);
     }
 
-    //TODO изменить тип возвращаемых данных
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public void saveBook(@Valid BookRequestDto dto,
                          @RequestPart(name = "book", required = false) MultipartFile book,
-                         @RequestPart(name = "bookCover", required = false) MultipartFile bookCover) throws IOException {
-        bookService.save(dto, book, bookCover);
+                         @RequestPart(name = "cover", required = false) MultipartFile cover) throws IOException {
+        bookService.save(dto, book, cover);
     }
 
     @PutMapping("{bookId}/attach")
@@ -58,18 +59,29 @@ public class BookController {
     }
 
     @PutMapping("/{bookId}")
-    public void updateCardBook(@PathVariable int bookId,
-                               @Valid @RequestBody BookRequestDto dto) {
-        throw new NotImplementedException("не реализовано!");
-        //TODO need implemented
+    public BookUiDto updateCardBook(@PathVariable int bookId,
+                                    @Valid @RequestBody BookRequestDto dto) {
+        return bookService.update(bookId, dto);
+    }
+
+    @DeleteMapping("/{bookId}/book-content/{bookContentId}")
+    public void deleteBookContent(@PathVariable int bookId, @PathVariable int bookContentId) {
+        bookService.deleteBookContent(bookId, bookContentId);
+    }
+
+    @PutMapping("/{bookId}")
+    public void updateBookCover(@PathVariable int bookId,
+                                @RequestPart(name = "cover") MultipartFile cover) throws IOException {
+        bookService.updateBookCover(bookId, cover);
     }
 
     /*
      * Добавить новые эндпоинты
      * - добавление новой книги к карточке книги - ok
-     * - Удаление книги от карточки книги
-     * - Замена обложки у книги
-     * - Удаление обложки у карточки
+     * - обновление карточки - ok
+     * - Удаление книги от карточки книги - ok
+     * - Замена обложки у книги - ok
+     * - Удаление обложки у карточки - ok
      * - Удаление карточки книги (каскадное -  удаление карточки и всего контента относящегося к ней)
      * */
 }

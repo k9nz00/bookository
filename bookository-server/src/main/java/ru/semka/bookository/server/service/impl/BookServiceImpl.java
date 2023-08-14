@@ -20,6 +20,7 @@ import ru.semka.bookository.server.transformers.wrapper.BookDetailsWrapper;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +32,26 @@ public class BookServiceImpl implements BookService {
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
-    public void save(BookRequestDto dto, MultipartFile book, MultipartFile bookCover) throws IOException {
+    public void save(BookRequestDto dto, MultipartFile book, MultipartFile cover) throws IOException {
         BookEntity bookEntity = bookDao.save(dto);
-        bookCoverService.saveCover(bookEntity.getId(), bookCover);
-        BookFormat type = getType(book);
-        bookDao.saveBookContent(bookEntity.getId(), book, type);
+        if (Objects.nonNull(cover)) {
+            bookCoverService.saveCover(bookEntity.getId(), cover);
+        }
+        if (Objects.nonNull(book)) {
+            BookFormat type = getType(book);
+            bookDao.saveBookContent(bookEntity.getId(), book, type);
+        }
+    }
+
+    @Override
+    public BookUiDto update(int bookId, BookRequestDto dto) {
+        BookEntity entity = bookDao.update(bookId, dto);
+        return booksTransformer.transform(entity);
+    }
+
+    @Override
+    public void deleteBookContent(int bookId, int bookContentId) {
+        bookDao.deleteBookContent(bookId, bookContentId);
     }
 
     @Override
@@ -62,6 +78,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public String getBookContent(int bookId, int bookContentId) {
         return encoder.encodeToString(bookDao.getBookContent(bookId, bookContentId));
+    }
+
+    @Override
+    public void updateBookCover(int bookId, MultipartFile cover) throws IOException {
+        bookCoverService.saveCover(bookId, cover);
     }
 
     private BookFormat getType(final MultipartFile book) {

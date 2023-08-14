@@ -34,9 +34,8 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
                 getCategories(book.getCategories()),
                 book.getCreatedAt(),
                 book.getUpdatedAt(),
-                book.getDeletedAt(),
                 getContentInfo(input.getBookContentInfoEntities()),
-                encoder.encodeToString(book.getBigPreview().getPreview())
+                getPreview(book.getBigPreview() != null ? book.getBigPreview().getPreview() : null)
         );
     }
 
@@ -55,5 +54,9 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
                         entity.getBookFormat()
                 ))
                 .toList();
+    }
+
+    private String getPreview(byte[] bytes) {
+        return "data:image/gpeg;base64," + encoder.encodeToString(bytes);
     }
 }

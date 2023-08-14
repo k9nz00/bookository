@@ -23,7 +23,6 @@ public class BookDetailsUiDto {
     private final List<BookCategoryUiDto> categories;
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
-    private final Timestamp deletedAt;
     private final Collection<BookContentInfoUiDto> bookContentInfo;
     private final String bigPreview;
 }

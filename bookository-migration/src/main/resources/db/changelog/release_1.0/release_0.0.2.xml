@@ -34,22 +34,13 @@
             </column>
             <column name="author" type="varchar"/>
             <column name="genre" type="varchar"/>
-            <column name="description" type="varchar"/>
             <column name="annotation" type="varchar"/>
             <column name="is_available" type="boolean" defaultValue="true"/>
-
-
             <column name="language" type="bookository.language"/>
-            <!--            <column name="categories" type="int"/>-->
-
-
             <column name="created_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
             <column name="updated_at" type="timestamp">
-                <constraints nullable="true"/>
-            </column>
-            <column name="deleted_at" type="timestamp">
                 <constraints nullable="true"/>
             </column>
         </createTable>

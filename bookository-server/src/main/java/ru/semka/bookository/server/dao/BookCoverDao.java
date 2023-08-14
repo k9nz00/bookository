@@ -11,4 +11,10 @@ public interface BookCoverDao {
 
     @Transactional
     void saveSmallCover(int bookId, long size, byte[] data);
+
+    @Transactional
+    void deleteBigCover(int bookId);
+
+    @Transactional
+    void deleteSmallCover(int bookId);
 }

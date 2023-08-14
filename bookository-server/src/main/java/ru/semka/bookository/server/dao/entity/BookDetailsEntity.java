@@ -45,8 +45,6 @@ public class BookDetailsEntity {
     private Timestamp createdAt;
     @Column(name = "updated_at")
     private Timestamp updatedAt;
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "book_id")
     private BookBigPreviewEntity bigPreview;

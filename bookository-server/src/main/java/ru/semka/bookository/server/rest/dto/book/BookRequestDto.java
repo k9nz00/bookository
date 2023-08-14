@@ -12,6 +12,5 @@ public class BookRequestDto {
     private String genre;
     private Language language;
     private String annotation;
-    private String description;
     private int[] categories;
 }

@@ -19,12 +19,18 @@ public class BookCoverServiceImpl implements BookCoverService {
     private final ImageService imageService;
 
     @Override
-    public void saveCover(int bookId, MultipartFile bookCover) throws IOException {
-        BufferedImage smallImage = imageService.resizeImage(bookCover.getBytes());
+    public void saveCover(int bookId, MultipartFile cover) throws IOException {
+        BufferedImage smallImage = imageService.resizeImage(cover.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(smallImage, "jpeg", baos);
         byte[] bytes = baos.toByteArray();
-        bookCoverDao.saveBigCover(bookId, bookCover);
+        bookCoverDao.saveBigCover(bookId, cover);
         bookCoverDao.saveSmallCover(bookId, bytes.length, bytes);
+    }
+
+    @Override
+    public void deleteCover(int bookId) {
+        bookCoverDao.deleteBigCover(bookId);
+        bookCoverDao.deleteSmallCover(bookId);
     }
 }

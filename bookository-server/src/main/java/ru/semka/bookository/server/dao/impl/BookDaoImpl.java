@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,13 +38,38 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
         entity.setAuthor(dto.getAuthor());
         entity.setGenre(dto.getGenre());
         entity.setAnnotation(dto.getAnnotation());
-        entity.setDescription(dto.getDescription());
         entity.setName(dto.getName());
         entity.setCreatedAt(Timestamp.from(CommonUtil.SYSTEM_CLOCK.instant()));
         entity.setIsAvailable(true);
         entity.setLanguage(dto.getLanguage());
         entityManager.persist(entity);
         return entityManager.merge(entity);
+    }
+
+    @Override
+    public BookEntity update(int bookId, BookRequestDto dto) {
+        BookEntity bookEntity = entityManager.find(BookEntity.class, bookId);
+        if (Objects.nonNull(dto.getName())) {
+            bookEntity.setName(dto.getName());
+        }
+        if (Objects.nonNull(dto.getAuthor())) {
+            bookEntity.setAuthor(dto.getAuthor());
+        }
+        if (Objects.nonNull(dto.getGenre())) {
+            bookEntity.setGenre(dto.getGenre());
+        }
+        if (Objects.nonNull(dto.getLanguage())) {
+            bookEntity.setLanguage(dto.getLanguage());
+        }
+        if (Objects.nonNull(dto.getAnnotation())) {
+            bookEntity.setAnnotation(dto.getAnnotation());
+        }
+        if (Objects.nonNull(dto.getCategories())) {
+            bookEntity.setCategories(getCategories(dto.getCategories()));
+        }
+        bookEntity.setUpdatedAt(Timestamp.from(CommonUtil.SYSTEM_CLOCK.instant()));
+        entityManager.merge(bookEntity);
+        return bookEntity;
     }
 
     @Override
@@ -66,6 +92,15 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
         entity.setContent(book.getBytes());
         entityManager.persist(entity);
         entityManager.merge(entity);
+    }
+
+    @Override
+    public void deleteBookContent(int bookId, int bookContentId) {
+        Query deleteQuery = entityManager.createNativeQuery(
+                "DELETE FROM bookository.book_content WHERE id = :id AND book_id = :book_id");
+        deleteQuery.setParameter("id", bookContentId);
+        deleteQuery.setParameter("book_id", bookId);
+        deleteQuery.executeUpdate();
     }
 
     @Override

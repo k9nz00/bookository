@@ -25,8 +25,6 @@ public class BookEntity {
     private String author;
     @Column(name = "genre")
     private String genre;
-    @Column(name = "description")
-    private String description;
     @Column(name = "annotation")
     private String annotation;
     @Column(name = "is_available")
@@ -45,8 +43,6 @@ public class BookEntity {
     private Timestamp createdAt;
     @Column(name = "updated_at")
     private Timestamp updatedAt;
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "book_id")
     private BookSmallPreviewEntity smallPreview;

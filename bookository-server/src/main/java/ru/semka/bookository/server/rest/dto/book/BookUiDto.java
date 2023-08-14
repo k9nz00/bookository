@@ -15,13 +15,11 @@ public class BookUiDto {
     private final String name;
     private final String author;
     private final String genre;
-    private final String description;
     private final String annotation;
     private final Boolean isAvailable;
     private final Language language;
     private final Collection<BookCategoryUiDto> categories;
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
-    private final Timestamp deletedAt;
     private final String smallPreview;
 }
