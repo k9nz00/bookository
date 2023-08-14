@@ -5,25 +5,35 @@ import { BASE_URL } from '../constants.js'
  */
 
 /**
- * @typedef {Object} Book - TODO: уточнить типы данных во всех полях
- * @property {string} id
+ * @typedef {Object} Book
+ * @property {number} id
  * @property {string} name
  * @property {string} author
  * @property {string} genre
- * @property {string} language
  * @property {string} annotation
+ * @property {Boolean} isAvailable
+ * @property {string} language
  * @property {Category[]} categories
- * @property {string} cover - Base64
- * @property {String[]} formats - TODO: доступные форматы для скачивания
- * @property {string} status - TODO: читаю, хочу прочитать, прочитано
- * @property {string} type - TODO: type card для доски
+ * @property {string} bigPreview - Base64
+ * @property {Array} bookContentInfo
+
  */
 
-/**
- * @param {string} id
- * @returns {Promise<Book>}
- */
+
 export default {
+  /**
+   * @returns {Promise<Book[]>}
+   */
+  getBooks() {
+    return fetch(`${BASE_URL}/books` )
+      .then((response) => response.json())
+      .then((response) => response)
+  },
+
+  /**
+   * @param {number} id
+   * @returns {Promise<Book>}
+   */
   getBook(id) {
     return fetch(`${BASE_URL}/books/${id}` )
       .then((response) => response.json())

@@ -83,7 +83,7 @@ import {
 
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import clonedeep from 'lodash.clonedeep'
 
 const props = defineProps({
@@ -118,6 +118,10 @@ const props = defineProps({
 
 const optionsLocal = ref(clonedeep(props.options))
 const selectedLocal = ref(clonedeep(props.selected))
+
+watchEffect(() => {
+  optionsLocal.value = clonedeep(props.options)
+})
 </script>
 
 <style>

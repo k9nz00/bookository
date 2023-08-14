@@ -8,8 +8,21 @@
 
     <div v-else-if="!loading && !book">Нет такой книги</div>
 
-    <form v-else action="">
+    <form
+      v-else
+      method="POST"
+      enctype="multipart/form-data"
+      @submit.prevent="submit"
+    >
       <div class="app-fields-container">
+        <!-- ЗАГРУЗИТЬ ОБЛОЖКУ -->
+        <input
+          type="file"
+          id="cover"
+          name="cover"
+          @change="loadCover($event.target.files)"
+        >
+
         <!-- ОБЛОЖКА MOBILE -->
         <img
           class="book-cover-small"
@@ -63,11 +76,13 @@
             </div>
 
             <!-- КАТЕГОРИИ -->
+            <!-- TODO: multiselect or autocomplete -->
             <div class="app-field-wrapper">
               <label>Категории</label>
               <AppSelect
                 class="app-field"
                 placeholder="Выберите категории"
+                :selected="book.categories[0]"
                 :options="categories"
               />
             </div>
@@ -79,18 +94,25 @@
                 class="app-field"
                 placeholder="Выберите язык"
                 :options="languages"
+                :selected="languages.find(item => item.id === book.language)"
               />
             </div>
 
-            <!-- ФОРМАТЫ -->
+            <!-- TODO: СКАЧАТЬ В ФОРМАТЕ -->
             <div class="app-field-wrapper">
-              <label>Форматы</label>
-              <AppSelect
-                class="app-field"
-                placeholder="Выберите форматы для скачивания"
-                :options="formats"
-              />
+              <label>Скачать</label>
+              <div class="app-field border-none flex items-center gap-4 font-normal text-blue-500">
+                <div
+                  v-for="format in formats"
+                  :key="format.id"
+                >
+                {{ format.name }}
+                </div>
+              </div>
             </div>
+
+            <!-- TODO: Загрузить файл книги -->
+            <input type="file">
           </div>
         </div>
 
@@ -130,16 +152,19 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { BOOK_MODEL } from '../constants.js'
 
+import categoriesApi from '../api/categories.js'
+import bookApi from '../api/book.js'
+
 const route = useRoute()
 const router = useRouter()
-const bookId = route.params.bookId
+const bookId = ref(route.params.bookId || 2)
 
 const loading = ref(false)
 
 const book = ref(BOOK_MODEL)
 const getBook = () => {
-  if(bookId) {
-    return Promise.resolve()
+  if(bookId.value) {
+    return bookApi.getBook(bookId.value).then(data => (book.value = data))
   }
 
   return Promise.resolve()
@@ -149,13 +174,30 @@ const cover = computed(() => {
   return book.value.bigPreview ? `data:image/gpeg;base64,${book.value.bigPreview}` : ''
 })
 
-// TODO: getReferences
+const loadCover = (files) => {
+  let file = files[0]
+
+  let reader = new FileReader()
+
+  reader.readAsDataURL(file)
+
+  reader.onload = function() {
+    book.value.bigPreview  = reader.result
+  }
+}
+
 const categories = ref([
   { id: 1, name: 'русская литература' },
   { id: 2, name: 'зарубежная литература' },
   { id: 3, name: 'классика'},
   { id: 5, name: 'поэзия' }
 ])
+const getCategories = () => {
+  return categoriesApi.getCategories().then((data) => {
+    categories.value = data
+  })
+}
+
 const formats = ref([
   { id: 1, name: 'txt', disabled: false },
   { id: 2, name: 'fb2', disabled: false },
@@ -168,29 +210,21 @@ const languages = ref([
   { id: 'RU', name: 'русский' },
 ])
 
-const getFormats = () => {
-  return Promise.resolve()
-}
-const getLanguages = () => {
-  return Promise.resolve()
-}
-const getCategories = () => {
-  return Promise.resolve()
-}
-
 onMounted(() => {
+  loading.value = true
   Promise.all([
-    getBook(),
     getCategories(),
-    getLanguages(),
-    getFormats()]
-  )
+    getBook()
+  ])
     .catch((error) => {
       console.log(error)
     }).finally(() => {
       loading.value = false
     })
 })
+
+const submit = () => {
+}
 </script>
 
 <style>
