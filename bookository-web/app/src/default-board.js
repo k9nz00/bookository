@@ -1,23 +1,19 @@
 export default {
-  name: 'workshop',
   shelves: [
     {
       id: 'todo',
       name: 'Хочу прочитать',
-      type: 'shelf',
-      cards: []
+      type: 'shelf'
     },
     {
       id: 'in-progress',
       name: 'Читаю',
-      type: 'shelf',
-      cards: []
+      type: 'shelf'
     },
     {
       id: 'done',
       name: 'Прочитано',
-      type: 'shelf',
-      cards: []
+      type: 'shelf'
     }
   ]
 }
