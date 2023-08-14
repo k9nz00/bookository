@@ -16,10 +16,4 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     public ApiErrorResponseDto handleError(final IllegalStateException e) {
         return new ApiErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ExceptionUtils.getRootCause(e).getMessage());
     }
-
-    @ExceptionHandler(NullPointerException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiErrorResponseDto handleError(final NullPointerException e) {
-        return new ApiErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value(), ExceptionUtils.getRootCause(e).getMessage());
-    }
 }
