@@ -157,7 +157,7 @@ import bookApi from '../api/book.js'
 
 const route = useRoute()
 const router = useRouter()
-const bookId = ref(route.params.bookId || 2)
+const bookId = ref(route.params.bookId)
 
 const loading = ref(false)
 

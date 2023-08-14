@@ -10,7 +10,7 @@
         @create-card="createCard"
       >
         <BookCards
-          :cards="shelf.cards" @move-card="moveCard"
+          :shelfId="shelf.id" @move-card="moveCard"
         />
       </BookShelf>
 
