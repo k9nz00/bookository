@@ -13,10 +13,10 @@
         {{ book.name }}
       </span>
       <p
-        v-if="book.annotation"
-        class="w-full shrink-0 mt-1 text-sm"
+        v-if="book.author"
+        class="w-full shrink-0 mt-1 text-sm truncate"
       >
-        {{ book.description }}
+        {{ book.author }}
       </p>
     </AppDrag>
   </AppDrop>
