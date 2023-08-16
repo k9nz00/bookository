@@ -13,10 +13,7 @@ export const BOOK_MODEL = {
   author: '',
   annotation: '',
   genre: '',
-  cover: '',
+  bigPreview: '',
   language: '',
-  categories: '',
-  formats: '',
-  status: '',
-  type: 'card'
+  categories: ''
 }

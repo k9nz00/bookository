@@ -38,5 +38,20 @@ export default {
     return fetch(`${BASE_URL}/books/${id}` )
       .then((response) => response.json())
       .then((response) => response)
+  },
+
+  /**
+   * @param {FormData} book
+   * @returns {Promise<Book>}
+   */
+  createBook(book) {
+    const options = {
+      method: 'POST',
+      body: book
+    }
+
+    return fetch(`${BASE_URL}/books`, options )
+      .then((response) => response.json())
+      .then((response) => response)
   }
 }

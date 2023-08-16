@@ -20,7 +20,7 @@
           type="file"
           id="cover"
           name="cover"
-          @change="loadCover($event.target.files)"
+          @change.prevent="loadCover($event.target.files)"
         >
 
         <!-- ОБЛОЖКА MOBILE -->
@@ -39,15 +39,15 @@
           >
 
           <!-- НАЗВАНИЕ -->
-          <div class="w-full space-y-2">
+          <div class="w-full space-y-4">
             <div class="app-field-wrapper">
               <label for="name">Название</label>
               <input
+                v-model="book.name"
                 id="name"
                 type="text"
                 class="app-field"
                 placeholder="Укажите название"
-                :value="book.name"
               >
             </div>
 
@@ -55,11 +55,11 @@
             <div class="app-field-wrapper">
               <label for="author">Автор</label>
               <input
+                v-model="book.author"
                 id="author"
                 type="text"
                 class="app-field"
                 placeholder="Укажите автора"
-                :value="book.author"
               >
             </div>
 
@@ -67,11 +67,11 @@
             <div class="app-field-wrapper">
               <label for="genre">Жанр</label>
               <input
+                v-model="book.genre"
                 id="genre"
                 type="text"
                 class="app-field"
                 placeholder="Укажите жанр"
-                :value="book.genre"
               >
             </div>
 
@@ -79,11 +79,11 @@
             <!-- TODO: multiselect or autocomplete -->
             <div class="app-field-wrapper">
               <label>Категории</label>
-              <AppSelect
-                class="app-field"
-                placeholder="Выберите категории"
-                :selected="book.categories[0]"
+              <AppAutocomplete
+                class=""
+                placeholder="Добавьте категорию"
                 :options="categories"
+                @select="selectCategories"
               />
             </div>
 
@@ -91,37 +91,37 @@
             <div class="app-field-wrapper">
               <label>Язык оригинала</label>
               <AppSelect
-                class="app-field"
                 placeholder="Выберите язык"
                 :options="languages"
                 :selected="languages.find(item => item.id === book.language)"
+                @select="selectLanguage"
               />
             </div>
 
             <!-- TODO: СКАЧАТЬ В ФОРМАТЕ -->
-            <div class="app-field-wrapper">
-              <label>Скачать</label>
-              <div class="app-field border-none flex items-center gap-4 font-normal text-blue-500">
-                <div
-                  v-for="format in formats"
-                  :key="format.id"
-                >
-                {{ format.name }}
-                </div>
-              </div>
-            </div>
+<!--            <div class="app-field-wrapper">-->
+<!--              <label>Скачать</label>-->
+<!--              <div class="app-field border-none flex items-center gap-4 font-normal text-blue-500">-->
+<!--                <div-->
+<!--                  v-for="format in formats"-->
+<!--                  :key="format.id"-->
+<!--                >-->
+<!--                {{ format.name }}-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
 
             <!-- TODO: Загрузить файл книги -->
-            <input type="file">
+            <input type="file" @change="loadBookFile($event.target.files)">
           </div>
         </div>
 
         <!-- АННОТАЦИЯ -->
         <textarea
+          v-model="book.annotation"
           rows="5"
           class="border border-gray-300 rounded-md p-5"
           placeholder="Добавьте аннотацию"
-          :value="book.annotation"
         />
 
         <!-- СОХРАНИТЬ -->
@@ -143,10 +143,11 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
 import AppSelect from './AppSelect.vue'
+import AppAutocomplete from './AppAutocomplete.vue'
 
 import { useRoute, useRouter } from 'vue-router'
 
@@ -171,11 +172,14 @@ const getBook = () => {
 }
 
 const cover = computed(() => {
-  return book.value.bigPreview ? `data:image/gpeg;base64,${book.value.bigPreview}` : ''
+  // return book.value.bigPreview ? `data:image/gpeg;base64,${book.value.bigPreview}` : ''
+  return book.value.bigPreview || ''
 })
 
 const loadCover = (files) => {
   let file = files[0]
+
+  book.value.bookCover = file
 
   let reader = new FileReader()
 
@@ -184,6 +188,10 @@ const loadCover = (files) => {
   reader.onload = function() {
     book.value.bigPreview  = reader.result
   }
+}
+
+const loadBookFile = (files) => {
+  book.value.book = files[0]
 }
 
 const categories = ref([
@@ -210,6 +218,14 @@ const languages = ref([
   { id: 'RU', name: 'русский' },
 ])
 
+const selectLanguage = (selectedLanguage) => {
+  book.value.language = selectedLanguage.id
+}
+
+const selectCategories = (selectedCategories) => {
+  book.value.categories = selectedCategories
+}
+
 onMounted(() => {
   loading.value = true
   Promise.all([
@@ -223,7 +239,24 @@ onMounted(() => {
     })
 })
 
+
 const submit = () => {
+  const data = new FormData()
+
+  data.append('name', book.value.name)
+  data.append('author', book.value.author)
+  data.append('genre', book.value.genre)
+  data.append('annotation', book.value.annotation)
+  data.append('bookCover', book.value.bookCover)
+  data.append('book', book.value.book)
+  data.append('categories[]', JSON.stringify(book.value.categories))
+  data.append('language', book.value.language)
+
+  bookApi.createBook(data)
+    .then(response => console.log(response))
+    .catch((error) => {
+      console.log(error)
+    })
 }
 </script>
 
