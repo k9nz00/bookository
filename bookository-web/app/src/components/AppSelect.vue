@@ -2,7 +2,7 @@
   <div class="app-select w-full relative">
     <Listbox v-model="selectedLocal">
       <div class="flex item-center">
-        <ListboxButton class="listbox-button">
+        <ListboxButton class="listbox-button app-field">
           <span
             v-if="selectedLocal[nameField]"
             class="block truncate">
@@ -11,7 +11,7 @@
 
           <span v-else class="block truncate text-gray-400">{{ placeholder }}</span>
 
-          <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+          <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
             <ChevronUpDownIcon
               class="h-5 w-5 text-gray-400"
               aria-hidden="true"
@@ -83,7 +83,7 @@ import {
 
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
-import { ref, watchEffect } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import clonedeep from 'lodash.clonedeep'
 
 const props = defineProps({
@@ -116,24 +116,28 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['select'])
+
 const optionsLocal = ref(clonedeep(props.options))
 const selectedLocal = ref(clonedeep(props.selected))
 
 watchEffect(() => {
   optionsLocal.value = clonedeep(props.options)
 })
+
+watch(selectedLocal, () => {
+  emit('select', selectedLocal.value)
+})
 </script>
 
 <style>
 .listbox-button {
   @apply w-full text-left;
-  @apply focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white;
-  @apply focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300;
 }
 
 .listbox-options {
   @apply absolute max-h-60 w-full overflow-auto bg-white py-1;
-  @apply shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10;
+  @apply shadow-lg ring-1 ring-black ring-opacity-5 z-10;
   top: 38px;
   right: 0;
 }
