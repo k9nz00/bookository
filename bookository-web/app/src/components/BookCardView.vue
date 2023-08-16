@@ -1,161 +1,352 @@
 <template>
-  <div class="card-view">
-    <div class="body">
-      <div v-if="!book">Нет такой книги</div>
+<div>
+  <!-- TODO: navbar -->
+  <div class="bg-green-100 w-full h-20 px-40" />
 
-      <template v-else>
-        <div class="flex gap-2 w-full">
-          <div class="cover"/>
+  <div class="app-page">
+    <div v-if="loading">Загружается...</div>
 
-          <div class="grow space-y-2">
-            <div class="input-label">
+    <div v-else-if="!loading && !book">Нет такой книги</div>
+
+    <form
+      v-else
+      method="POST"
+      enctype="multipart/form-data"
+      @submit.prevent="submit"
+    >
+      <div class="app-fields-container">
+        <!-- ЗАГРУЗИТЬ ОБЛОЖКУ -->
+        <input
+          type="file"
+          id="cover"
+          name="cover"
+          @change.prevent="loadCover($event.target.files)"
+        >
+
+        <!-- ОБЛОЖКА MOBILE -->
+        <img
+          class="book-cover-small"
+          :src="cover"
+          alt=""
+        >
+
+        <div class="flex gap-5">
+         <!-- ОБЛОЖКА DESKTOP -->
+          <img
+            class="book-cover-large"
+            :src="cover"
+            alt=""
+          >
+
+          <!-- НАЗВАНИЕ -->
+          <div class="w-full space-y-4">
+            <div class="app-field-wrapper">
               <label for="name">Название</label>
               <input
+                v-model="book.name"
                 id="name"
                 type="text"
-                class="name"
-                :value="book.name"
+                class="app-field"
+                placeholder="Укажите название"
               >
             </div>
 
-            <div class="input-label">
+            <!-- АВТОР -->
+            <div class="app-field-wrapper">
               <label for="author">Автор</label>
               <input
+                v-model="book.author"
                 id="author"
                 type="text"
-                class="name"
-                :value="book.author"
+                class="app-field"
+                placeholder="Укажите автора"
               >
             </div>
 
-            <div class="input-label">
+            <!-- ЖАНР -->
+            <div class="app-field-wrapper">
               <label for="genre">Жанр</label>
               <input
+                v-model="book.genre"
                 id="genre"
                 type="text"
-                class="name"
-                :value="book.genre"
+                class="app-field"
+                placeholder="Укажите жанр"
               >
             </div>
 
-            <div class="input-label">
-              <label for="category">Категория</label>
-              <input
-                id="category"
-                type="text"
-                class="name"
-                :value="book.category"
-              >
+            <!-- КАТЕГОРИИ -->
+            <!-- TODO: multiselect or autocomplete -->
+            <div class="app-field-wrapper">
+              <label>Категории</label>
+              <AppAutocomplete
+                class=""
+                placeholder="Добавьте категорию"
+                :options="categories"
+                @select="selectCategories"
+              />
             </div>
 
-            <div class="input-label">
-              <label for="language">Язык оригинала</label>
-              <select
-                id="language"
-                name="language"
-                class="app-select"
-                :value="book.language"
-              >
-                <option
-                  v-for="language in languages"
-                  :key="language.code"
-                  :value="language.code"
-                  :selected="language.code === book.language"
-                >
-                  {{ language.name }}
-                </option>
-              </select>
+            <!-- ЯЗЫК ОРИГИНАЛА -->
+            <div class="app-field-wrapper">
+              <label>Язык оригинала</label>
+              <AppSelect
+                placeholder="Выберите язык"
+                :options="languages"
+                :selected="languages.find(item => item.id === book.language)"
+                @select="selectLanguage"
+              />
             </div>
+
+            <!-- TODO: СКАЧАТЬ В ФОРМАТЕ -->
+<!--            <div class="app-field-wrapper">-->
+<!--              <label>Скачать</label>-->
+<!--              <div class="app-field border-none flex items-center gap-4 font-normal text-blue-500">-->
+<!--                <div-->
+<!--                  v-for="format in formats"-->
+<!--                  :key="format.id"-->
+<!--                >-->
+<!--                {{ format.name }}-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+
+            <!-- TODO: Загрузить файл книги -->
+            <input type="file" @change="loadBookFile($event.target.files)">
           </div>
         </div>
 
+        <!-- АННОТАЦИЯ -->
         <textarea
-          class="description"
-          :value="book.annotation"
+          v-model="book.annotation"
+          rows="5"
+          class="border border-gray-300 rounded-md p-5"
+          placeholder="Добавьте аннотацию"
         />
-      </template>
-    </div>
+
+        <!-- СОХРАНИТЬ -->
+        <div class="app-buttons-container">
+          <button
+            type="button"
+            class="app-button border border-blue-100 flex items-center gap-2"
+            @click="router.push('/')"
+          >
+            <ArrowLeftIcon class="h-5 w-5" />
+            <span>Назад к списку книг</span>
+          </button>
+          <button type="submit" class="app-button bg-blue-100">Сохранить</button>
+        </div>
+      </div>
+    </form>
   </div>
+</div>
 </template>
 
 <script setup>
-import defaultBoard from '../default-board.js'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
 
-const languages = [{
-  name: 'Русский',
-  code: 'RU'
-},
-{
-  name: 'Английский',
-  code: 'ENG'
-}]
+import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
+import AppSelect from './AppSelect.vue'
+import AppAutocomplete from './AppAutocomplete.vue'
 
-const BOOK_MODEL = {
-  type: '',
-  annotation: '',
-  name: '',
-  author: '',
-  genre: '',
-  category: '',
-  language: '',
-  id:'',
-  shelfId: '',
-  color: ''
-}
+import { useRoute, useRouter } from 'vue-router'
+
+import { BOOK_MODEL } from '../constants.js'
+
+import categoriesApi from '../api/categories.js'
+import bookApi from '../api/book.js'
 
 const route = useRoute()
+const router = useRouter()
+const bookId = ref(route.params.bookId)
 
-const shelfId = route.params.shelfId
-const bookId = route.params.bookId
+const loading = ref(false)
 
-const book = computed(() => {
-  const shelf = defaultBoard.shelves.find(item => item.id === shelfId)
+const book = ref(BOOK_MODEL)
+const getBook = () => {
+  if(bookId.value) {
+    return bookApi.getBook(bookId.value).then(data => (book.value = data))
+  }
 
-  return shelf?.cards.find(book => book.id === bookId) || null
+  return Promise.resolve()
+}
+
+const cover = computed(() => {
+  // return book.value.bigPreview ? `data:image/gpeg;base64,${book.value.bigPreview}` : ''
+  return book.value.bigPreview || ''
 })
+
+const loadCover = (files) => {
+  let file = files[0]
+
+  book.value.bookCover = file
+
+  let reader = new FileReader()
+
+  reader.readAsDataURL(file)
+
+  reader.onload = function() {
+    book.value.bigPreview  = reader.result
+  }
+}
+
+const loadBookFile = (files) => {
+  book.value.book = files[0]
+}
+
+const categories = ref([
+  { id: 1, name: 'русская литература' },
+  { id: 2, name: 'зарубежная литература' },
+  { id: 3, name: 'классика'},
+  { id: 5, name: 'поэзия' }
+])
+const getCategories = () => {
+  return categoriesApi.getCategories().then((data) => {
+    categories.value = data
+  })
+}
+
+const formats = ref([
+  { id: 1, name: 'txt', disabled: false },
+  { id: 2, name: 'fb2', disabled: false },
+  { id: 3, name: 'pdf', disabled: true },
+  { id: 4, name: 'epub', disabled: true },
+  { id: 5, name: 'doc', disabled: true }
+])
+const languages = ref([
+  { id: 'EN', name: 'английский' },
+  { id: 'RU', name: 'русский' },
+])
+
+const selectLanguage = (selectedLanguage) => {
+  book.value.language = selectedLanguage.id
+}
+
+const selectCategories = (selectedCategories) => {
+  book.value.categories = selectedCategories
+}
+
+onMounted(() => {
+  loading.value = true
+  Promise.all([
+    getCategories(),
+    getBook()
+  ])
+    .catch((error) => {
+      console.log(error)
+    }).finally(() => {
+      loading.value = false
+    })
+})
+
+
+const submit = () => {
+  const data = new FormData()
+
+  data.append('name', book.value.name)
+  data.append('author', book.value.author)
+  data.append('genre', book.value.genre)
+  data.append('annotation', book.value.annotation)
+  data.append('bookCover', book.value.bookCover)
+  data.append('book', book.value.book)
+  data.append('categories[]', JSON.stringify(book.value.categories))
+  data.append('language', book.value.language)
+
+  bookApi.createBook(data)
+    .then(response => console.log(response))
+    .catch((error) => {
+      console.log(error)
+    })
+}
 </script>
 
 <style>
-.card-view {
-  @apply relative bg-white p-10;
+/* layout  */
+.app-page {
+  @apply p-10;
 }
 
-.card-view .body {
-  @apply flex flex-col flex-grow items-start justify-between;
+@media (min-width: 768px) {
+  .app-page {
+    @apply px-20;
+  }
 }
 
-.card-view .cover {
-  @apply border-2 border-blue-300 rounded-md;
-  min-width: 200px;
+@media (min-width: 1280px) {
+  .app-page {
+    @apply px-40;
+  }
+}
+
+/* tablet, mobile */
+.app-fields-container {
+  @apply flex flex-col gap-y-4;
+}
+
+.app-field-wrapper {
+  @apply flex flex-col;
+  @apply text-left font-bold;
+}
+
+.app-field {
+  @apply pb-2 font-normal;
+  @apply border-b border-gray-300;
+  height: 32px;
+}
+
+.book-cover-large {
+  display: none;
+}
+
+.book-cover-small {
+  @apply border border-blue-300 rounded-md;
   background: url('../assets/vue.svg') no-repeat center;
   background-size: 50%;
+  min-height: 300px;
+  display: block;
 }
 
-.card-view .name {
-  @apply p-2 w-full mr-2 block text-xl font-bold;
-  @apply border-2 border-blue-300 rounded-md;
+.app-buttons-container {
+  @apply flex flex-col gap-4 mt-5;
 }
 
-.card-view .description {
-  @apply relative w-full bg-transparent px-2 ;
-  @apply mt-2 h-64 leading-normal;
-  @apply border-2 border-blue-300 rounded-md;
+.app-button {
+  min-width: 200px;
+  @apply p-2;
 }
 
-.app-select {
-  @apply p-2 w-full;
-  @apply border-2 border-blue-300 rounded-md;
-}
+/* desktop */
+@media (min-width: 768px) {
+  .app-buttons-container {
+    @apply flex-row;
+  }
 
-.input-label {
-  @apply flex items-center;
-}
+  .app-fields-container {
+    @apply flex gap-y-4;
+  }
 
-.input-label label{
-  width: 150px;
-  margin-right: 20px;
-  text-align: end;
+  .app-field-wrapper {
+    @apply grid grid-flow-col items-center gap-4;
+    @apply font-bold;
+    grid-template-columns: 1fr 5fr;
+    text-align: left;
+  }
+
+  .app-field {
+    @apply p-2;
+  }
+
+  .book-cover-large {
+    @apply border border-blue-300 rounded-md;
+    background: url('../assets/vue.svg') no-repeat center;
+    background-size: 50%;
+    min-height: 250px;
+    min-width: 200px;
+    display: block;
+  }
+
+  .book-cover-small {
+    display: none;
+  }
 }
 </style>
