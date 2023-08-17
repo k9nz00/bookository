@@ -53,5 +53,47 @@ export default {
     return fetch(`${BASE_URL}/books`, options )
       .then((response) => response.json())
       .then((response) => response)
-  }
+  },
+
+  /**
+   * @param {FormData} book
+   * @returns {Promise<Book>}
+   */
+  updateBook(book) {
+    const options = {
+      method: 'PUT',
+      body: book
+    }
+
+    return fetch(`${BASE_URL}/books/${book.id}`, options )
+      .then((response) => response.json())
+      .then((response) => response)
+  },
+
+  /**
+   * @param {number} bookId
+   * @param {number} bookContentId
+   * @returns {Promise<String>}
+   */
+  getBookContent(bookId, bookContentId) {
+    return fetch(`${BASE_URL}/books/${bookId}/book-content/${bookContentId}` )
+      .then((response) => response.json())
+      .then((response) => response)
+  },
+
+  /**
+   * @param {number} bookId
+   * @param {String} bookContent
+   * @returns {Promise<void>}
+   */
+  createBookContent(bookId, bookContent) {
+    const options = {
+      method: 'PUT',
+      body: bookContent
+    }
+
+    return fetch(`${BASE_URL}/books/${bookId}/attach`, options )
+      .then((response) => response.json())
+      .then((response) => response)
+  },
 }
