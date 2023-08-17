@@ -19,7 +19,6 @@ import { BASE_URL } from '../constants.js'
 
  */
 
-
 export default {
   /**
    * @returns {Promise<Book[]>}
