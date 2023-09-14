@@ -1,41 +1,44 @@
 <template>
-<div>
-  <!-- TODO: navbar -->
-  <div class="bg-green-100 w-full h-20 px-40" />
-
   <div class="app-page">
     <div v-if="loading">Загружается...</div>
 
     <div v-else-if="!loading && !book">Нет такой книги</div>
 
-    <form
-      v-else
-      method="POST"
-      enctype="multipart/form-data"
-      @submit.prevent="submit"
-    >
+    <form v-else @submit.prevent="submit">
       <div class="app-fields-container">
-        <!-- ЗАГРУЗИТЬ ОБЛОЖКУ -->
-        <input
-          type="file"
-          id="cover"
-          name="cover"
-          @change.prevent="loadCover($event.target.files)"
-        >
-
-        <!-- ОБЛОЖКА MOBILE -->
+        <!-- ОБЛОЖКА -->
         <img
-          class="book-cover-small"
+          class="book-cover-mobile"
           :src="cover"
           alt=""
+          @click="upload"
+        >
+        <!-- ЗАГРУЗИТЬ ОБЛОЖКУ -->
+        <input
+          class="hidden"
+          type="file"
+          id="cover"
+          ref="coverInput"
+          name="cover"
+          @change="onUploadCover($event.target.files)"
         >
 
         <div class="flex gap-5">
-         <!-- ОБЛОЖКА DESKTOP -->
+          <!-- ОБЛОЖКА -->
           <img
-            class="book-cover-large"
+            class="book-cover-desktop"
             :src="cover"
             alt=""
+            @click="upload"
+          >
+          <!-- ЗАГРУЗИТЬ ОБЛОЖКУ -->
+          <input
+            class="hidden"
+            type="file"
+            id="cover"
+            ref="coverInput"
+            name="cover"
+            @change="onUploadCover($event.target.files)"
           >
 
           <!-- НАЗВАНИЕ -->
@@ -76,7 +79,6 @@
             </div>
 
             <!-- КАТЕГОРИИ -->
-            <!-- TODO: multiselect or autocomplete -->
             <div class="app-field-wrapper">
               <label>Категории</label>
               <AppAutocomplete
@@ -98,20 +100,7 @@
               />
             </div>
 
-            <!-- TODO: СКАЧАТЬ В ФОРМАТЕ -->
-<!--            <div class="app-field-wrapper">-->
-<!--              <label>Скачать</label>-->
-<!--              <div class="app-field border-none flex items-center gap-4 font-normal text-blue-500">-->
-<!--                <div-->
-<!--                  v-for="format in formats"-->
-<!--                  :key="format.id"-->
-<!--                >-->
-<!--                {{ format.name }}-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-
-            <!-- TODO: Загрузить файл книги -->
+            <!-- ЗАГРУЗИТЬ ФАЙЛ КНИГИ -->
             <input type="file" @change="loadBookFile($event.target.files)">
           </div>
         </div>
@@ -124,8 +113,8 @@
           placeholder="Добавьте аннотацию"
         />
 
-        <!-- СОХРАНИТЬ -->
         <div class="app-buttons-container">
+          <!-- НАЗАД К СПИСКУ КНИГ -->
           <button
             type="button"
             class="app-button border border-blue-100 flex items-center gap-2"
@@ -134,12 +123,13 @@
             <ArrowLeftIcon class="h-5 w-5" />
             <span>Назад к списку книг</span>
           </button>
+
+          <!-- СОХРАНИТЬ -->
           <button type="submit" class="app-button bg-blue-100">Сохранить</button>
         </div>
       </div>
     </form>
   </div>
-</div>
 </template>
 
 <script setup>
@@ -160,8 +150,6 @@ const route = useRoute()
 const router = useRouter()
 const bookId = ref(route.params.bookId)
 
-const loading = ref(false)
-
 const book = ref(BOOK_MODEL)
 const getBook = () => {
   if(bookId.value) {
@@ -176,9 +164,21 @@ const cover = computed(() => {
   return book.value.bigPreview || ''
 })
 
-const loadCover = (files) => {
-  let file = files[0]
+const coverInput = ref(null)
+const upload = () => {
+  if (!coverInput.value) {
+    console.error('Нет доступа к полю для выбора файлов')
+    return
+  }
 
+  coverInput.value.click()
+}
+
+const onUploadCover = (uploadedFiles) => {
+  displayCover(uploadedFiles[0])
+}
+
+const displayCover = (file) => {
   book.value.bookCover = file
 
   let reader = new FileReader()
@@ -206,13 +206,6 @@ const getCategories = () => {
   })
 }
 
-const formats = ref([
-  { id: 1, name: 'txt', disabled: false },
-  { id: 2, name: 'fb2', disabled: false },
-  { id: 3, name: 'pdf', disabled: true },
-  { id: 4, name: 'epub', disabled: true },
-  { id: 5, name: 'doc', disabled: true }
-])
 const languages = ref([
   { id: 'EN', name: 'английский' },
   { id: 'RU', name: 'русский' },
@@ -226,17 +219,19 @@ const selectCategories = (selectedCategories) => {
   book.value.categories = selectedCategories
 }
 
+const loading = ref(false)
 onMounted(() => {
-  loading.value = true
-  Promise.all([
-    getCategories(),
-    getBook()
-  ])
-    .catch((error) => {
+  if (bookId.value) {
+    loading.value = true
+    Promise.all([
+      getCategories(),
+      getBook()
+    ]).catch((error) => {
       console.log(error)
     }).finally(() => {
       loading.value = false
     })
+  }
 })
 
 
@@ -263,7 +258,7 @@ const submit = () => {
 <style>
 /* layout  */
 .app-page {
-  @apply p-10;
+  @apply py-20 px-10;
 }
 
 @media (min-width: 768px) {
@@ -294,11 +289,11 @@ const submit = () => {
   height: 32px;
 }
 
-.book-cover-large {
+.book-cover-desktop {
   display: none;
 }
 
-.book-cover-small {
+.book-cover-mobile {
   @apply border border-blue-300 rounded-md;
   background: url('../assets/vue.svg') no-repeat center;
   background-size: 50%;
@@ -336,7 +331,7 @@ const submit = () => {
     @apply p-2;
   }
 
-  .book-cover-large {
+  .book-cover-desktop {
     @apply border border-blue-300 rounded-md;
     background: url('../assets/vue.svg') no-repeat center;
     background-size: 50%;
@@ -345,7 +340,7 @@ const submit = () => {
     display: block;
   }
 
-  .book-cover-small {
+  .book-cover-mobile {
     display: none;
   }
 }
