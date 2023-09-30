@@ -6,40 +6,15 @@
 
     <form v-else @submit.prevent="submit">
       <div class="app-fields-container">
-        <!-- ОБЛОЖКА -->
-        <img
-          class="book-cover-mobile"
-          :src="cover"
-          alt=""
-          @click="upload"
-        >
-        <!-- ЗАГРУЗИТЬ ОБЛОЖКУ -->
-        <input
-          class="hidden"
-          type="file"
-          id="cover"
-          ref="coverInput"
-          name="cover"
-          @change="onUploadCover($event.target.files)"
-        >
+        <!-- ОБЛОЖКА MOBILE -->
+        <div class="block md:hidden" >
+          <BookCover is-mobile />
+        </div>
+
 
         <div class="flex gap-5">
-          <!-- ОБЛОЖКА -->
-          <img
-            class="book-cover-desktop"
-            :src="cover"
-            alt=""
-            @click="upload"
-          >
-          <!-- ЗАГРУЗИТЬ ОБЛОЖКУ -->
-          <input
-            class="hidden"
-            type="file"
-            id="cover"
-            ref="coverInput"
-            name="cover"
-            @change="onUploadCover($event.target.files)"
-          >
+          <!-- ОБЛОЖКА DESKTOP -->
+          <BookCover :is-mobile="false" />
 
           <!-- НАЗВАНИЕ -->
           <div class="w-full space-y-4">
@@ -133,11 +108,12 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
 import AppSelect from './AppSelect.vue'
 import AppAutocomplete from './AppAutocomplete.vue'
+import BookCover from './BookCover.vue'
 
 import { useRoute, useRouter } from 'vue-router'
 
@@ -159,36 +135,6 @@ const getBook = () => {
   return Promise.resolve()
 }
 
-const cover = computed(() => {
-  // return book.value.bigPreview ? `data:image/gpeg;base64,${book.value.bigPreview}` : ''
-  return book.value.bigPreview || ''
-})
-
-const coverInput = ref(null)
-const upload = () => {
-  if (!coverInput.value) {
-    console.error('Нет доступа к полю для выбора файлов')
-    return
-  }
-
-  coverInput.value.click()
-}
-
-const onUploadCover = (uploadedFiles) => {
-  displayCover(uploadedFiles[0])
-}
-
-const displayCover = (file) => {
-  book.value.bookCover = file
-
-  let reader = new FileReader()
-
-  reader.readAsDataURL(file)
-
-  reader.onload = function() {
-    book.value.bigPreview  = reader.result
-  }
-}
 
 const loadBookFile = (files) => {
   book.value.book = files[0]
@@ -289,18 +235,6 @@ const submit = () => {
   height: 32px;
 }
 
-.book-cover-desktop {
-  display: none;
-}
-
-.book-cover-mobile {
-  @apply border border-blue-300 rounded-md;
-  background: url('../assets/vue.svg') no-repeat center;
-  background-size: 50%;
-  min-height: 300px;
-  display: block;
-}
-
 .app-buttons-container {
   @apply flex flex-col gap-4 mt-5;
 }
@@ -329,19 +263,6 @@ const submit = () => {
 
   .app-field {
     @apply p-2;
-  }
-
-  .book-cover-desktop {
-    @apply border border-blue-300 rounded-md;
-    background: url('../assets/vue.svg') no-repeat center;
-    background-size: 50%;
-    min-height: 250px;
-    min-width: 200px;
-    display: block;
-  }
-
-  .book-cover-mobile {
-    display: none;
   }
 }
 </style>
