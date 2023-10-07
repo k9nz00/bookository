@@ -25,8 +25,6 @@ public class BookDetailsEntity {
     private String author;
     @Column(name = "genre")
     private String genre;
-    @Column(name = "description")
-    private String description;
     @Column(name = "annotation")
     private String annotation;
     @Column(name = "is_available")

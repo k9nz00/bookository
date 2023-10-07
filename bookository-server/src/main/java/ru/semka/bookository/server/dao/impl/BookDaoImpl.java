@@ -95,6 +95,14 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
+    public void deleteBook(int bookId) {
+        Query deleteQuery = entityManager.createNativeQuery(
+                "DELETE FROM bookository.book WHERE id = :id");
+        deleteQuery.setParameter("id", bookId);
+        deleteQuery.executeUpdate();
+    }
+
+    @Override
     public void deleteBookContent(int bookId, int bookContentId) {
         Query deleteQuery = entityManager.createNativeQuery(
                 "DELETE FROM bookository.book_content WHERE id = :id AND book_id = :book_id");

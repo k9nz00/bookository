@@ -6,16 +6,6 @@ services:
     ports:
       - "8010:8080"
 
-  #  postgres:
-  #    image: postgres:15.3
-  #    restart: on-failure
-  #    ports:
-  #      - "5432:5432"
-  #    environment:
-  #      POSTGRES_USER: postgres
-  #      POSTGRES_PASSWORD: postgres
-  #      POSTGRES_DB: bookository
-
   postgres:
     image: bookository/migration-postgres:br_it
     restart: always

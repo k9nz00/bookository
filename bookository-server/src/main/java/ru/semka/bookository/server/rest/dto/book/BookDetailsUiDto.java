@@ -16,7 +16,6 @@ public class BookDetailsUiDto {
     private final String name;
     private final String author;
     private final String genre;
-    private final String description;
     private final String annotation;
     private final Boolean isAvailable;
     private final Language language;

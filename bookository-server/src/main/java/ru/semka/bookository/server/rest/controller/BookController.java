@@ -1,6 +1,7 @@
 package ru.semka.bookository.server.rest.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.semka.bookository.server.common.enums.Language;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -44,9 +46,25 @@ public class BookController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public void saveBook(@Valid BookRequestDto dto,
-                         @RequestPart(name = "book", required = false) MultipartFile book,
-                         @RequestPart(name = "cover", required = false) MultipartFile cover) throws IOException {
+    public void saveBook(
+            @RequestPart(value = "name") @Parameter(name = "name", description = "desc_test", example = "idiot") String name,
+            @RequestPart(value = "author", required = false) String author,
+            @RequestPart(value = "genre", required = false) String genre,
+            @RequestPart(value = "language", required = false) String language,
+            @RequestPart(value = "annotation", required = false) String annotation,
+            @RequestPart(value = "categories", required = false) int[] categories,
+            @RequestPart(name = "book", required = false) MultipartFile book,
+            @RequestPart(name = "cover", required = false) MultipartFile cover) throws IOException {
+
+        BookRequestDto dto = new BookRequestDto(
+                name,
+                author,
+                genre,
+                Language.valueOf(language.toUpperCase()),
+                annotation,
+                categories
+        );
+
         bookService.save(dto, book, cover);
     }
 
@@ -64,24 +82,24 @@ public class BookController {
         return bookService.update(bookId, dto);
     }
 
+    @DeleteMapping("/{bookId}")
+    public void deleteBook(@PathVariable int bookId) {
+        bookService.deleteBook(bookId);
+    }
+
     @DeleteMapping("/{bookId}/book-content/{bookContentId}")
     public void deleteBookContent(@PathVariable int bookId, @PathVariable int bookContentId) {
         bookService.deleteBookContent(bookId, bookContentId);
     }
 
-    @PutMapping("/{bookId}")
+    @PutMapping("/{bookId}/update-cover")
     public void updateBookCover(@PathVariable int bookId,
                                 @RequestPart(name = "cover") MultipartFile cover) throws IOException {
         bookService.updateBookCover(bookId, cover);
     }
 
-    /*
-     * Добавить новые эндпоинты
-     * - добавление новой книги к карточке книги - ok
-     * - обновление карточки - ok
-     * - Удаление книги от карточки книги - ok
-     * - Замена обложки у книги - ok
-     * - Удаление обложки у карточки - ok
-     * - Удаление карточки книги (каскадное -  удаление карточки и всего контента относящегося к ней)
-     * */
+    @DeleteMapping("/{bookId}/delete-cover")
+    public void deleteBookCover(@PathVariable int bookId) {
+        bookService.deleteBookCover(bookId);
+    }
 }

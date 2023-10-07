@@ -50,6 +50,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public void deleteBook(int bookId) {
+        bookDao.deleteBook(bookId);
+    }
+
+    @Override
     public void deleteBookContent(int bookId, int bookContentId) {
         bookDao.deleteBookContent(bookId, bookContentId);
     }
@@ -83,6 +88,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public void updateBookCover(int bookId, MultipartFile cover) throws IOException {
         bookCoverService.saveCover(bookId, cover);
+    }
+
+    @Override
+    public void deleteBookCover(int bookId) {
+        bookCoverService.deleteCover(bookId);
     }
 
     private BookFormat getType(final MultipartFile book) {

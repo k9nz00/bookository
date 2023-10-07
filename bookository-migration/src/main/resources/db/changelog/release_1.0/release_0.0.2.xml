@@ -176,4 +176,82 @@
                        columnNames="book_id, category_id"
                        constraintName="book_category_id_pkey"/>
     </changeSet>
+    <changeSet id="20230815_2154" author="ASemka">
+        <preConditions>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM information_schema.constraint_column_usage
+                WHERE constraint_name = 'book_category_book_id_fkey'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            ALTER TABLE bookository.book_category
+                ADD CONSTRAINT book_category_book_id_fkey
+                    FOREIGN KEY (book_id)
+                        REFERENCES bookository.book (id) ON UPDATE CASCADE ON DELETE CASCADE
+        </sql>
+        <rollback>
+            ALTER TABLE bookository.book_category DROP CONSTRAINT book_category_book_id_fkey
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="20230815_2155" author="ASemka">
+        <preConditions>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM information_schema.constraint_column_usage
+                WHERE constraint_name = 'book_big_preview_book_id_fkey'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            ALTER TABLE bookository.book_big_preview
+                ADD CONSTRAINT book_big_preview_book_id_fkey
+                    FOREIGN KEY (book_id)
+                        REFERENCES bookository.book (id) ON UPDATE CASCADE ON DELETE CASCADE
+        </sql>
+        <rollback>
+            ALTER TABLE bookository.book_big_preview DROP CONSTRAINT book_big_preview_book_id_fkey
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="20230815_2156" author="ASemka">
+        <preConditions>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM information_schema.constraint_column_usage
+                WHERE constraint_name = 'book_small_preview_book_id_fkey'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            ALTER TABLE bookository.book_small_preview
+                ADD CONSTRAINT book_small_preview_book_id_fkey
+                    FOREIGN KEY (book_id)
+                        REFERENCES bookository.book (id) ON UPDATE CASCADE ON DELETE CASCADE
+        </sql>
+        <rollback>
+            ALTER TABLE bookository.book_small_preview DROP CONSTRAINT book_small_preview_book_id_fkey
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="20230815_2157" author="ASemka">
+        <preConditions>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM information_schema.constraint_column_usage
+                WHERE constraint_name = 'book_content_book_id_fkey'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            ALTER TABLE bookository.book_content
+                ADD CONSTRAINT book_content_book_id_fkey
+                    FOREIGN KEY (book_id)
+                        REFERENCES bookository.book (id) ON UPDATE CASCADE ON DELETE CASCADE
+        </sql>
+        <rollback>
+            ALTER TABLE bookository.book_content DROP CONSTRAINT book_content_book_id_fkey
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

@@ -27,7 +27,6 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
                 book.getName(),
                 book.getAuthor(),
                 book.getGenre(),
-                book.getDescription(),
                 book.getAnnotation(),
                 book.getIsAvailable(),
                 book.getLanguage(),

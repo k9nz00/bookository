@@ -16,6 +16,8 @@ public interface BookService {
 
     void deleteBookContent(int bookId, int bookContentId);
 
+    void deleteBook(int bookId);
+
     void attachBook(int bookId, MultipartFile book) throws IOException;
 
     Collection<BookUiDto> getBooks(BookCriteriaDto criteriaDto);
@@ -25,4 +27,6 @@ public interface BookService {
     String getBookContent(int bookId, int bookContentId);
 
     void updateBookCover(int bookId, MultipartFile cover) throws IOException;
+
+    void deleteBookCover(int bookId);
 }
