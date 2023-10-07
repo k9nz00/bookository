@@ -2,75 +2,61 @@
   <div class="app-page">
     <div v-if="loading">Загружается...</div>
 
-    <div v-else-if="!loading && !book">Нет такой книги</div>
+    <div v-else-if="cardLoadingError">Нет такой книги</div>
 
-    <form
-      v-else
-      @submit.prevent="submit"
-    >
+    <form v-else @submit.prevent>
       <div class="app-fields-container">
         <!-- ОБЛОЖКА MOBILE -->
-        <BookCover v-model="book.cover" is-mobile />
+        <BookCover
+          v-model="book.cover"
+          is-mobile
+        />
 
         <div class="flex gap-5">
           <!-- ОБЛОЖКА DESKTOP -->
-          <BookCover v-model="book.cover" />
+          <BookCover v-model="book.cover"/>
 
           <!-- НАЗВАНИЕ -->
           <div class="w-full space-y-4">
-            <div class="app-field-wrapper">
-              <label for="name">Название</label>
-              <input
-                v-model="book.name"
-                id="name"
-                class="app-field"
-                placeholder="Укажите название"
-              >
-            </div>
+            <AppInput
+              v-model="book.name"
+              id="name"
+              placeholder="Укажите название"
+              label="Название"
+            />
 
             <!-- АВТОР -->
-            <div class="app-field-wrapper">
-              <label for="author">Автор</label>
-              <input
-                v-model="book.author"
-                id="author"
-                class="app-field"
-                placeholder="Укажите автора"
-              >
-            </div>
+            <AppInput
+              v-model="book.author"
+              id="author"
+              placeholder="Укажите автора"
+              label="Автор"
+            />
 
             <!-- ЖАНР -->
-            <div class="app-field-wrapper">
-              <label for="genre">Жанр</label>
-              <input
-                v-model="book.genre"
-                id="genre"
-                class="app-field"
-                placeholder="Укажите жанр"
-              >
-            </div>
+            <AppInput
+              v-model="book.genre"
+              id="genre"
+              placeholder="Укажите жанр"
+              label="Жанр"
+            />
 
             <!-- КАТЕГОРИИ -->
-            <div class="app-field-wrapper">
-              <label>Категории</label>
-              <AppAutocomplete
-                class=""
-                placeholder="Добавьте категорию"
-                :options="categories"
-                @select="selectCategories"
-              />
-            </div>
+            <AppAutocomplete
+              placeholder="Добавьте категорию"
+              label="Категории"
+              :options="categories"
+              @select="selectCategories"
+            />
 
             <!-- ЯЗЫК ОРИГИНАЛА -->
-            <div class="app-field-wrapper">
-              <label>Язык оригинала</label>
-              <AppSelect
-                placeholder="Выберите язык"
-                :options="LANGUAGES"
-                :selected="LANGUAGES.find(item => item.id === book.language)"
-                @select="selectLanguage"
-              />
-            </div>
+            <AppSelect
+              placeholder="Выберите язык"
+              label="Язык оригинала"
+              :options="LANGUAGES"
+              :selected="LANGUAGES.find(item => item.id === book.language)"
+              @select="selectLanguage"
+            />
 
             <!-- ЗАГРУЗИТЬ ФАЙЛ КНИГИ -->
             <input
@@ -81,31 +67,24 @@
         </div>
 
         <!-- АННОТАЦИЯ -->
-        <textarea
+        <AppTextarea
           v-model="book.annotation"
-          rows="5"
-          class="border border-gray-300 rounded-md p-5"
           placeholder="Добавьте аннотацию"
         />
 
         <div class="app-buttons-container">
           <!-- НАЗАД К СПИСКУ КНИГ -->
-          <button
-            type="button"
-            class="app-button bordered"
-            @click="router.push('/')"
+          <AppIconButton
+            icon="ArrowLeftIcon"
+            @click="backToBooks"
           >
-            <ArrowLeftIcon class="h-5 w-5"/>
-            <span>Назад к списку книг</span>
-          </button>
+            Назад к списку книг
+          </AppIconButton>
 
           <!-- СОХРАНИТЬ -->
-          <button
-            type="submit"
-            class="app-button"
-          >
+          <AppSubmitButton @click="submit">
             Сохранить
-          </button>
+          </AppSubmitButton>
         </div>
       </div>
     </form>
@@ -113,11 +92,14 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 
-import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
 import AppSelect from './AppSelect.vue'
 import AppAutocomplete from './AppAutocomplete.vue'
+import AppInput from './AppInput.vue'
+import AppTextarea from './AppTextarea.vue'
+import AppSubmitButton from './AppSubmitButton.vue'
+import AppIconButton from './AppIconButton.vue'
 import BookCover from './BookCover.vue'
 
 import { BOOK_MODEL, LANGUAGES } from '../constants.js'
@@ -128,6 +110,9 @@ import { useFormData } from '../hooks/useFormData.js'
 
 const route = useRoute()
 const router = useRouter()
+const backToBooks = () => {
+  router.push('/')
+}
 
 const bookId = ref(route.params.bookId)
 const book = ref(BOOK_MODEL)
@@ -137,6 +122,9 @@ const getBookCard = () => {
   }
   return Promise.resolve()
 }
+const cardLoadingError = computed(() => {
+  return !loading.value && bookId.value && !book.value.name
+})
 
 const categories = ref([])
 const getCategoriesOptions = () => {
@@ -152,6 +140,7 @@ const selectLanguage = (selectedLanguage) => {
   book.value.language = selectedLanguage.id
 }
 
+// TODO: Проверка на тип файла
 const loadBookFile = (files) => {
   book.value.book = files[0]
 }
@@ -174,7 +163,6 @@ const submit = () => {
   const formData = appendFormData(book.value)
 
   createBook(formData)
-    .then(response => console.log(response))
     .catch((error) => {
       console.log(error)
     })

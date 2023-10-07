@@ -1,7 +1,6 @@
 <template>
-  <div
-    class="w-full relative"
-  >
+  <div class="app-field-wrapper w-full relative">
+    <label>{{ label }}</label>
     <Combobox v-model="selectedOptionsLocal" multiple>
         <div
           class="relative cursor-pointer d-flex w-full cursor-default overflow-hidden bg-white text-left"
@@ -107,6 +106,10 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: 'Выберите что-нибудь'
+  },
+  label: {
+    type: String,
+    default: ''
   }
 })
 
@@ -129,6 +132,4 @@ const filteredOptions = computed(() =>
 watch(selectedOptionsLocal, () => {
   emit('select', selectedOptionsLocal.value.map(item => item.id))
 })
-
-// const inputOptions
 </script>

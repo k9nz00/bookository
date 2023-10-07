@@ -26,7 +26,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['select'])
+const emit = defineEmits(['update:modelValue'])
 
 const id = computed(() => {
   return props.isMobile ? 'input-mobile' : 'input-desktop'
