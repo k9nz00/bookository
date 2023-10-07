@@ -29,7 +29,7 @@ export const getBooks = () => {
 }
 
 /**
- * @param {number} id
+ * @param {string} id
  * @returns {Promise<Book>}
  */
 export const getBook = (id) => {
@@ -69,8 +69,8 @@ export const updateBook = (book) => {
 }
 
 /**
- * @param {number} bookId
- * @param {number} bookContentId
+ * @param {string} bookId
+ * @param {string} bookContentId
  * @returns {Promise<String>}
  */
 export const getBookContent = (bookId, bookContentId) => {
@@ -80,8 +80,8 @@ export const getBookContent = (bookId, bookContentId) => {
 }
 
 /**
- * @param {number} bookId
- * @param {String} bookContent
+ * @param {string} bookId
+ * @param {string} bookContent
  * @returns {Promise<void>}
  */
 export const createBookContent = (bookId, bookContent) => {
