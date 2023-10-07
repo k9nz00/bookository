@@ -28,7 +28,7 @@ import AppDrag from './AppDrag.vue'
 import AppDrop from './AppDrop.vue'
 import clonedeep from 'lodash.clonedeep'
 import { useRouter } from 'vue-router'
-import bookApi from '../api/book.js'
+import { getBooks } from '../api/index.js'
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -36,14 +36,14 @@ const props = defineProps({
 })
 
 const books = ref([])
-const getBooks = () => {
-  bookApi.getBooks()
+const loadBooks = () => {
+  getBooks()
     .then(data => (books.value = data))
     .catch(error => console.log(error))
 }
 
 onMounted(() => {
-  getBooks()
+  loadBooks()
 })
 
 const router = useRouter()

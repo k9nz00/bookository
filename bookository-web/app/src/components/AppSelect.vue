@@ -1,5 +1,6 @@
 <template>
-  <div class="app-select w-full relative">
+  <div class="app-field-wrapper app-select w-full relative">
+    <label>{{ label }}</label>
     <Listbox v-model="selectedLocal">
       <div class="flex item-center">
         <ListboxButton class="listbox-button app-field">
@@ -113,6 +114,10 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: 'Выберите что-нибудь'
+  },
+  label: {
+    type: String,
+    default: ''
   }
 })
 
