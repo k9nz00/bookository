@@ -4,17 +4,17 @@
 
     <div v-else-if="!loading && !book">Нет такой книги</div>
 
-    <form v-else @submit.prevent="submit">
+    <form
+      v-else
+      @submit.prevent="submit"
+    >
       <div class="app-fields-container">
         <!-- ОБЛОЖКА MOBILE -->
-        <div class="block md:hidden" >
-          <BookCover @save="saveCover" is-mobile />
-        </div>
-
+        <BookCover v-model="book.cover" is-mobile />
 
         <div class="flex gap-5">
           <!-- ОБЛОЖКА DESKTOP -->
-          <BookCover @save="saveCover" :is-mobile="false" />
+          <BookCover v-model="book.cover" />
 
           <!-- НАЗВАНИЕ -->
           <div class="w-full space-y-4">
@@ -23,7 +23,6 @@
               <input
                 v-model="book.name"
                 id="name"
-                type="text"
                 class="app-field"
                 placeholder="Укажите название"
               >
@@ -35,7 +34,6 @@
               <input
                 v-model="book.author"
                 id="author"
-                type="text"
                 class="app-field"
                 placeholder="Укажите автора"
               >
@@ -47,7 +45,6 @@
               <input
                 v-model="book.genre"
                 id="genre"
-                type="text"
                 class="app-field"
                 placeholder="Укажите жанр"
               >
@@ -69,14 +66,17 @@
               <label>Язык оригинала</label>
               <AppSelect
                 placeholder="Выберите язык"
-                :options="languages"
-                :selected="languages.find(item => item.id === book.language)"
+                :options="LANGUAGES"
+                :selected="LANGUAGES.find(item => item.id === book.language)"
                 @select="selectLanguage"
               />
             </div>
 
             <!-- ЗАГРУЗИТЬ ФАЙЛ КНИГИ -->
-            <input type="file" @change="loadBookFile($event.target.files)">
+            <input
+              type="file"
+              @change="loadBookFile($event.target.files)"
+            >
           </div>
         </div>
 
@@ -92,15 +92,20 @@
           <!-- НАЗАД К СПИСКУ КНИГ -->
           <button
             type="button"
-            class="app-button border border-blue-100 flex items-center gap-2"
+            class="app-button bordered"
             @click="router.push('/')"
           >
-            <ArrowLeftIcon class="h-5 w-5" />
+            <ArrowLeftIcon class="h-5 w-5"/>
             <span>Назад к списку книг</span>
           </button>
 
           <!-- СОХРАНИТЬ -->
-          <button type="submit" class="app-button bg-blue-100">Сохранить</button>
+          <button
+            type="submit"
+            class="app-button"
+          >
+            Сохранить
+          </button>
         </div>
       </div>
     </form>
@@ -115,157 +120,63 @@ import AppSelect from './AppSelect.vue'
 import AppAutocomplete from './AppAutocomplete.vue'
 import BookCover from './BookCover.vue'
 
+import { BOOK_MODEL, LANGUAGES } from '../constants.js'
+import { getCategories, getBook, createBook } from '../api/index.js'
+
 import { useRoute, useRouter } from 'vue-router'
-
-import { BOOK_MODEL } from '../constants.js'
-
-import categoriesApi from '../api/categories.js'
-import bookApi from '../api/book.js'
+import { useFormData } from '../hooks/useFormData.js'
 
 const route = useRoute()
 const router = useRouter()
+
 const bookId = ref(route.params.bookId)
-
 const book = ref(BOOK_MODEL)
-const getBook = () => {
-  if(bookId.value) {
-    return bookApi.getBook(bookId.value).then(data => (book.value = data))
+const getBookCard = () => {
+  if (bookId.value) {
+    return getBook(bookId.value).then(data => (book.value = data))
   }
-
   return Promise.resolve()
 }
 
-
-const loadBookFile = (files) => {
-  book.value.book = files[0]
-}
-
-const categories = ref([
-  { id: 1, name: 'русская литература' },
-  { id: 2, name: 'зарубежная литература' },
-  { id: 3, name: 'классика'},
-  { id: 5, name: 'поэзия' }
-])
-const getCategories = () => {
-  return categoriesApi.getCategories().then((data) => {
+const categories = ref([])
+const getCategoriesOptions = () => {
+  return getCategories().then((data) => {
     categories.value = data
   })
 }
-
-const languages = ref([
-  { id: 'EN', name: 'английский' },
-  { id: 'RU', name: 'русский' },
-])
+const selectCategories = (selectedCategories) => {
+  book.value.categories = selectedCategories.join(',')
+}
 
 const selectLanguage = (selectedLanguage) => {
   book.value.language = selectedLanguage.id
 }
 
-const selectCategories = (selectedCategories) => {
-  book.value.categories = selectedCategories
+const loadBookFile = (files) => {
+  book.value.book = files[0]
 }
 
 const loading = ref(false)
 onMounted(() => {
-  if (bookId.value) {
-    loading.value = true
-    Promise.all([
-      getCategories(),
-      getBook()
-    ]).catch((error) => {
-      console.log(error)
-    }).finally(() => {
-      loading.value = false
-    })
-  }
+  loading.value = true
+  Promise.all([
+    getCategoriesOptions(),
+    getBookCard()
+  ]).catch((error) => {
+    console.log(error)
+  }).finally(() => {
+    loading.value = false
+  })
 })
 
-const saveCover = (cover) => {
-  book.value.cover = cover
-}
-
+const { appendFormData } = useFormData()
 const submit = () => {
-  const data = new FormData()
+  const formData = appendFormData(book.value)
 
-  data.append('name', book.value.name)
-  data.append('author', book.value.author)
-  data.append('genre', book.value.genre)
-  data.append('annotation', book.value.annotation)
-  data.append('cover', book.value.cover)
-  data.append('book', book.value.book)
-  data.append('categories', book.value.categories.join(','))
-  data.append('language', book.value.language)
-
-  bookApi.createBook(data)
+  createBook(formData)
     .then(response => console.log(response))
     .catch((error) => {
       console.log(error)
     })
 }
 </script>
-
-<style>
-/* layout  */
-.app-page {
-  @apply py-20 px-10;
-}
-
-@media (min-width: 768px) {
-  .app-page {
-    @apply px-20;
-  }
-}
-
-@media (min-width: 1280px) {
-  .app-page {
-    @apply px-40;
-  }
-}
-
-/* tablet, mobile */
-.app-fields-container {
-  @apply flex flex-col gap-y-4;
-}
-
-.app-field-wrapper {
-  @apply flex flex-col;
-  @apply text-left font-bold;
-}
-
-.app-field {
-  @apply pb-2 font-normal;
-  @apply border-b border-gray-300;
-  height: 32px;
-}
-
-.app-buttons-container {
-  @apply flex flex-col gap-4 mt-5;
-}
-
-.app-button {
-  min-width: 200px;
-  @apply p-2;
-}
-
-/* desktop */
-@media (min-width: 768px) {
-  .app-buttons-container {
-    @apply flex-row;
-  }
-
-  .app-fields-container {
-    @apply flex gap-y-4;
-  }
-
-  .app-field-wrapper {
-    @apply grid grid-flow-col items-center gap-4;
-    @apply font-bold;
-    grid-template-columns: 1fr 5fr;
-    text-align: left;
-  }
-
-  .app-field {
-    @apply p-2;
-  }
-}
-</style>

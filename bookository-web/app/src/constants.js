@@ -13,7 +13,13 @@ export const BOOK_MODEL = {
   author: '',
   annotation: '',
   genre: '',
-  bigPreview: '',
+  cover: '',
   language: '',
-  categories: ''
+  categories: '',
+  book: ''
 }
+
+export const LANGUAGES = [
+  { id: 'EN', name: 'английский' },
+  { id: 'RU', name: 'русский' }
+]

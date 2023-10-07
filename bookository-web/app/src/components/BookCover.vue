@@ -22,7 +22,7 @@ import { ref, computed  } from 'vue'
 const props = defineProps({
   isMobile: {
     type: Boolean,
-    required: true
+    default: false
   }
 })
 
@@ -32,6 +32,7 @@ const id = computed(() => {
   return props.isMobile ? 'input-mobile' : 'input-desktop'
 })
 
+// TODO: допустимое расширение файла
 const src = ref('')
 const onUploadCover = (uploadedFiles) => {
   const file = uploadedFiles[0]
@@ -40,7 +41,7 @@ const onUploadCover = (uploadedFiles) => {
   reader.onload = function() {
     src.value  = reader.result
 
-    emit('save', file)
+    emit('update:modelValue', file)
   }
 }
 </script>
