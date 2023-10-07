@@ -18,6 +18,7 @@ import ru.semka.bookository.server.rest.dto.book.BookUiDto;
 import ru.semka.bookository.server.service.BookService;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 
 @RestController
@@ -52,19 +53,21 @@ public class BookController {
             @RequestPart(value = "genre", required = false) String genre,
             @RequestPart(value = "language", required = false) String language,
             @RequestPart(value = "annotation", required = false) String annotation,
-            @RequestPart(value = "categories", required = false) int[] categories,
+            @RequestPart(value = "categories", required = false) String categories,
             @RequestPart(name = "book", required = false) MultipartFile book,
             @RequestPart(name = "cover", required = false) MultipartFile cover) throws IOException {
 
+        int[] categoriesToArray = Arrays.stream(categories.split(","))
+                .mapToInt(Integer::parseInt)
+                .toArray();
         BookRequestDto dto = new BookRequestDto(
                 name,
                 author,
                 genre,
                 Language.valueOf(language.toUpperCase()),
                 annotation,
-                categories
+                categoriesToArray
         );
-
         bookService.save(dto, book, cover);
     }
 
