@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class BookDaoImpl extends AbstractDao implements BookDao {
@@ -137,6 +136,6 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
                 .stream()
                 .flatMapToInt(Arrays::stream)
                 .mapToObj(id -> entityManager.find(CategoryEntity.class, id))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

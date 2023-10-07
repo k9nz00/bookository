@@ -20,6 +20,7 @@ import ru.semka.bookository.server.service.BookService;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/books")
@@ -57,18 +58,9 @@ public class BookController {
             @RequestPart(name = "book", required = false) MultipartFile book,
             @RequestPart(name = "cover", required = false) MultipartFile cover) throws IOException {
 
-        int[] categoriesToArray = Arrays.stream(categories.split(","))
-                .mapToInt(Integer::parseInt)
-                .toArray();
-        BookRequestDto dto = new BookRequestDto(
-                name,
-                author,
-                genre,
-                Language.valueOf(language.toUpperCase()),
-                annotation,
-                categoriesToArray
-        );
-        bookService.save(dto, book, cover);
+        BookRequestDto bookDto = getBookDto(name, author, genre, language, annotation, categories);
+        bookService.save(bookDto, book, cover);
+
     }
 
     @PutMapping("{bookId}/attach")
@@ -105,4 +97,29 @@ public class BookController {
     public void deleteBookCover(@PathVariable int bookId) {
         bookService.deleteBookCover(bookId);
     }
+
+    private BookRequestDto getBookDto(String name,
+                                      String author,
+                                      String genre,
+                                      String language,
+                                      String annotation,
+                                      String categories) {
+
+        int[] categoriesToArray = Optional.ofNullable(categories)
+                .map(el -> el.split(",")).stream()
+                .flatMapToInt(el1 -> Arrays.stream(Arrays.stream(el1)
+                        .mapToInt(Integer::parseInt)
+                        .toArray()))
+                .toArray();
+        return new BookRequestDto(
+                name,
+                author,
+                genre,
+                language != null ? Language.valueOf(language.toUpperCase()) : null,
+                annotation,
+                categoriesToArray
+        );
+    }
+
+
 }
