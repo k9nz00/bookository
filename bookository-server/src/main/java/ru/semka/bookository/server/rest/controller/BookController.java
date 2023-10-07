@@ -115,7 +115,7 @@ public class BookController {
                 name,
                 author,
                 genre,
-                language != null ? Language.valueOf(language.toUpperCase()) : null,
+                language != null ? Language.fromValue(language.toUpperCase()) : null,
                 annotation,
                 categoriesToArray
         );

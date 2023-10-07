@@ -99,6 +99,6 @@ public class BookServiceImpl implements BookService {
         String filename = book.getResource().getFilename();
         int formatIndex = filename.lastIndexOf(".");
         String formatValue = filename.substring(formatIndex + 1);
-        return BookFormat.valueOf(formatValue.toUpperCase());
+        return BookFormat.fromValue(formatValue.toUpperCase());
     }
 }
