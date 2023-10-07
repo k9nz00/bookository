@@ -2,6 +2,7 @@ package ru.semka.bookository.server.transformers.impl;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
+import ru.semka.bookository.server.dao.entity.BookBigPreviewEntity;
 import ru.semka.bookository.server.dao.entity.BookContentInfoEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
@@ -14,6 +15,7 @@ import ru.semka.bookository.server.transformers.wrapper.BookDetailsWrapper;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, BookDetailsUiDto> {
@@ -34,7 +36,7 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
                 book.getCreatedAt(),
                 book.getUpdatedAt(),
                 getContentInfo(input.getBookContentInfoEntities()),
-                getPreview(book.getBigPreview() != null ? book.getBigPreview().getPreview() : null)
+                getPreview(book.getBigPreview())
         );
     }
 
@@ -55,7 +57,9 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
                 .toList();
     }
 
-    private String getPreview(byte[] bytes) {
-        return "data:image/gpeg;base64," + encoder.encodeToString(bytes);
+    private String getPreview(BookBigPreviewEntity bigPreview) {
+        return Optional.ofNullable(bigPreview)
+                .map(el -> "data:image/gpeg;base64," + encoder.encodeToString(el.getPreview()))
+                .orElse(null);
     }
 }
