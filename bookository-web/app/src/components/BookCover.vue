@@ -26,6 +26,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['select'])
+
 const id = computed(() => {
   return props.isMobile ? 'input-mobile' : 'input-desktop'
 })
@@ -37,6 +39,8 @@ const onUploadCover = (uploadedFiles) => {
   reader.readAsDataURL(file)
   reader.onload = function() {
     src.value  = reader.result
+
+    emit('save', file)
   }
 }
 </script>

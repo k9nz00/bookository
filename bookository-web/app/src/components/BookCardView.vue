@@ -8,13 +8,13 @@
       <div class="app-fields-container">
         <!-- ОБЛОЖКА MOBILE -->
         <div class="block md:hidden" >
-          <BookCover is-mobile />
+          <BookCover @save="saveCover" is-mobile />
         </div>
 
 
         <div class="flex gap-5">
           <!-- ОБЛОЖКА DESKTOP -->
-          <BookCover :is-mobile="false" />
+          <BookCover @save="saveCover" :is-mobile="false" />
 
           <!-- НАЗВАНИЕ -->
           <div class="w-full space-y-4">
@@ -180,6 +180,9 @@ onMounted(() => {
   }
 })
 
+const saveCover = (cover) => {
+  book.value.cover = cover
+}
 
 const submit = () => {
   const data = new FormData()
@@ -188,9 +191,9 @@ const submit = () => {
   data.append('author', book.value.author)
   data.append('genre', book.value.genre)
   data.append('annotation', book.value.annotation)
-  data.append('bookCover', book.value.bookCover)
+  data.append('cover', book.value.cover)
   data.append('book', book.value.book)
-  data.append('categories[]', JSON.stringify(book.value.categories))
+  data.append('categories', book.value.categories.join(','))
   data.append('language', book.value.language)
 
   bookApi.createBook(data)
