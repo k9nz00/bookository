@@ -1,89 +1,71 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+/* layout  */
+.app-page {
+    @apply py-20 px-10;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+@media (min-width: 768px) {
+    .app-page {
+        @apply px-20;
+    }
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+@media (min-width: 1280px) {
+    .app-page {
+        @apply px-40;
+    }
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+/* tablet, mobile */
+.app-fields-container {
+    @apply flex flex-col gap-y-4;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.app-field-wrapper {
+    @apply flex flex-col;
+    @apply text-left font-bold;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.app-field {
+    @apply pb-2 font-normal;
+    @apply border-b border-gray-300;
+    height: 32px;
 }
 
-.card {
-  padding: 2em;
+.app-buttons-container {
+    @apply flex flex-col gap-4 mt-5;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.app-button {
+    min-width: 200px;
+    @apply p-2 bg-blue-100;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.app-button.bordered {
+    @apply bg-transparent border border-blue-200 flex items-center gap-2;
+}
+
+/* desktop */
+@media (min-width: 768px) {
+    .app-buttons-container {
+        @apply flex-row;
+    }
+
+    .app-fields-container {
+        @apply flex gap-y-4;
+    }
+
+    .app-field-wrapper {
+        @apply grid grid-flow-col items-center gap-4;
+        @apply font-bold;
+        grid-template-columns: 1fr 5fr;
+        text-align: left;
+    }
+
+    .app-field {
+        @apply p-2;
+    }
 }
