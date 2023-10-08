@@ -7,7 +7,7 @@
         >
           <ComboboxInput
             class="app-field w-full text-sm leading-5 text-gray-900"
-            :displayValue="() => selectedOptionsLocal.map(item => item.name).join(', ')"
+            :displayValue="displayValue"
             :placeholder="placeholder"
             @change="query = $event.target.value"
           />
@@ -117,6 +117,10 @@ const emit = defineEmits(['select'])
 
 const query = ref('')
 const selectedOptionsLocal = ref(props.selectedOptions)
+
+const displayValue = (() => {
+  return selectedOptionsLocal.value.map(item => item.name).join(', ')
+})
 
 const filteredOptions = computed(() =>
   query.value === ''
