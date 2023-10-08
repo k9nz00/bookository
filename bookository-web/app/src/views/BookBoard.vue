@@ -5,14 +5,12 @@
         v-for="shelf of shelves"
         :key="shelf.name"
         :shelf="shelf"
+        :books="books"
         @move-shelf="moveShelf"
         @move-card-to-shelf="moveCardToShelf"
         @create-card="createCard"
-      >
-        <BookCards
-          :shelfId="shelf.id" @move-card="moveCard"
-        />
-      </BookShelf>
+        @move-card="moveCard"
+      />
 
       <div class="shelf flex">
         <input
@@ -28,12 +26,23 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import BookShelf from '../components/BookShelf.vue'
-import BookCards from '../components/BookCards.vue'
 import defaultBoard from '../default-board.js'
 import clonedeep from 'lodash.clonedeep'
 import { router } from '../router.js'
+import { getBooks } from '../api/index.js'
+
+const books = ref([])
+const loadBooks = () => {
+  getBooks()
+    .then(data => (books.value = data))
+    .catch(error => console.log(error))
+}
+
+onMounted(() => {
+  loadBooks()
+})
 
 const board = ref(defaultBoard)
 const shelves = computed(() => {
@@ -69,9 +78,6 @@ const moveShelf = ({ shelf, toShelf }) => {
 
 const moveCard = ({ card, toCard }) => {
   const shelves = clonedeep(board.value.shelves)
-
-  // const cardShelf = shelves.find(shelf => shelf.id === card.shelfId).cards || []
-  // const cardIndex = cardShelf.findIndex(item => item.id === card.id)
 
   const toCardShelf = shelves.find(shelf => shelf.id === toCard.shelfId).cards || []
   const toCardIndex = toCardShelf.findIndex(item => item.id === toCard.id)

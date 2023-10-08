@@ -46,6 +46,7 @@
               placeholder="Добавьте категорию"
               label="Категории"
               :options="categories"
+              :selected-options="book.categories"
               @select="selectCategories"
             />
 
