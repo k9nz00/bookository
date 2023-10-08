@@ -12,7 +12,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @Log
 public class BookositoryMigration {
     public static void main(String[] args) {
-        log.info("Starting migration service");
         SpringApplication.run(BookositoryMigration.class, args);
     }
 }
