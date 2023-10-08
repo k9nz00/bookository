@@ -23,27 +23,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 import AppDrag from './AppDrag.vue'
 import AppDrop from './AppDrop.vue'
 import clonedeep from 'lodash.clonedeep'
 import { useRouter } from 'vue-router'
-import { getBooks } from '../api/index.js'
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
-  shelfId: String
-})
-
-const books = ref([])
-const loadBooks = () => {
-  getBooks()
-    .then(data => (books.value = data))
-    .catch(error => console.log(error))
-}
-
-onMounted(() => {
-  loadBooks()
+  shelfId: {
+    type: String,
+    required: true
+  },
+  books: {
+    type: Array,
+    default: () => []
+  }
 })
 
 const router = useRouter()

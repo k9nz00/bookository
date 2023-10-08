@@ -8,7 +8,11 @@
         {{ shelf.name }}
       </div>
       <div class="list-reset">
-        <slot/>
+        <BookCards
+          :books="books"
+          :shelfId="shelf.id"
+          @move-card="$emit('move-card')"
+        />
 
         <button
           type="button"
@@ -26,13 +30,21 @@
 <script setup>
 import AppDrag from './AppDrag.vue'
 import AppDrop from './AppDrop.vue'
+import BookCards from '../components/BookCards.vue'
 import clonedeep from 'lodash.clonedeep'
 
 const props = defineProps({
-  shelf: Object
+  shelf: {
+    type: Object,
+    required: true
+  },
+  books: {
+    type: Array,
+    default: () => []
+  }
 })
 
-const emit = defineEmits([ 'move-shelf', 'create-card', 'move-card-to-shelf' ])
+const emit = defineEmits([ 'move-shelf', 'create-card', 'move-card-to-shelf', 'move-card' ])
 
 const move = (fromData, toData) => {
   if (fromData.type === 'card') {
