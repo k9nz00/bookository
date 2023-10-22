@@ -42,6 +42,7 @@ const loadBooks = () => {
 
 onMounted(() => {
   loadBooks()
+  console.log(process.env.API_HOST)
 })
 
 const board = ref(defaultBoard)
