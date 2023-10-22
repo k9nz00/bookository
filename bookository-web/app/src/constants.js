@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://192.168.1.110:8020/api'
+export const BASE_URL = window._getEnv_('API_HOST')
 
 /**
  * @typedef {import('./api.books.js').Book}
