@@ -75,7 +75,7 @@ export const updateBook = (book) => {
  */
 export const getBookContent = (bookId, bookContentId) => {
   return fetch(`${ BASE_URL }/books/${ bookId }/book-content/${ bookContentId }`)
-    .then((response) => response.json())
+    .then((response) => response.text())
     .then((response) => response)
 }
 
