@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
         {
-            name: 'Web-Server 0.0.1',
+            name: 'web-Server 0.0.1',
             script: 'web-server.js',
             exec_mode: 'cluster',
             instances: process.env.APP_INSTANCE_COUNT || 1,

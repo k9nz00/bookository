@@ -9,7 +9,7 @@
 
     <artifactId>bookository-web</artifactId>
     <packaging>pom</packaging>
-    <name>bookository-web Maven Webapp</name>
+    <name>bookository-web</name>
     <dependencies>
 
     </dependencies>
@@ -22,8 +22,8 @@
                 <version>${exec-maven-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>Build ${project.artifactId} image</id>
-                        <phase>pre-integration-test</phase>
+                        <id>${project.artifactId}</id>
+                        <phase>install</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
