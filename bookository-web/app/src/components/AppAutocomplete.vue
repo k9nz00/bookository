@@ -119,7 +119,7 @@ const query = ref('')
 const selectedOptionsLocal = ref(props.selectedOptions)
 
 const displayValue = (() => {
-  return selectedOptionsLocal.value.map(item => item.name).join(', ')
+  return (selectedOptionsLocal.value || []).map(item => item.name).join(', ')
 })
 
 const filteredOptions = computed(() =>

@@ -40,8 +40,12 @@
 }
 
 .app-button {
-    min-width: 200px;
     @apply p-2 bg-blue-100;
+    min-width: 200px;
+}
+
+.app-button-link {
+    min-width: fit-content;
 }
 
 .app-button.bordered {

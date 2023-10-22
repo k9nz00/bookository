@@ -15,7 +15,7 @@ export const BOOK_MODEL = {
   genre: '',
   cover: '',
   language: '',
-  categories: '',
+  categories: [],
   book: ''
 }
 
