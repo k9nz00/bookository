@@ -18,7 +18,7 @@ const publicRuntimeEnv = JSON.stringify({
 const scriptBody = `window._getEnv_=(${getEnvBuilder.toString()})(${publicRuntimeEnv});`;
 
 // There is /app/build path was created on build time
-fs.writeFile(path.join(__dirname, 'build', 'get-env.js'), scriptBody, function (error) {
+fs.writeFile(path.join(__dirname, 'dist', 'get-env.js'), scriptBody, function (error) {
   if (error) {
     console.log(error);
     return;

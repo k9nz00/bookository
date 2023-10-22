@@ -1,7 +1,7 @@
 FROM node:16.17-alpine
 WORKDIR /app
 
-RUN npm install pm2
+RUN npm install pm2 -g
 
 RUN mkdir /configs
 COPY ./docker/prod/pm2.config.js /configs
