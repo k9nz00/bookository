@@ -28,3 +28,11 @@ services:
       DB_PWD: "postgres"
     depends_on:
       - postgres
+  bookository-web:
+    image: bookository/bookository-web:br_it
+    restart: on-failure
+    network_mode: bridge
+    ports:
+      - "81:8000"
+    environment:
+      API_HOST: "http://localhost:8020/api"

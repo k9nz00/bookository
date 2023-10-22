@@ -15,5 +15,29 @@
     </dependencies>
     <build>
         <finalName>bookository-web</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <version>${exec-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>Build ${project.artifactId} image</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip-build-web-ui-image}</skip>
+                            <executable>/bin/bash</executable>
+                            <arguments>
+                                <argument>${project.basedir}/build-image.sh</argument>
+                                <argument>bookository/${project.artifactId}:${docker.image.version}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

@@ -5,7 +5,7 @@ then
   IMAGE_VERSION=br_it
 fi
 
-mvn clean install -DskipTests -PwithDocker -Ddocker.image.version="$IMAGE_VERSION"
+mvn clean install -DskipTests -PwithDocker,web-ui -Ddocker.image.version="$IMAGE_VERSION"
 echo "IMAGE_VERSION=${IMAGE_VERSION}" > env/.env
 
 #Creating image DB with migration scripts
