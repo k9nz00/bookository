@@ -1,10 +1,9 @@
 <template>
   <div class="app-field-wrapper w-full relative">
     <label>{{ label }}</label>
-    <Combobox v-model="selectedOptionsLocal" multiple>
-        <div
-          class="relative cursor-pointer d-flex w-full cursor-default overflow-hidden bg-white text-left"
-        >
+    <div class="relative">
+      <Combobox v-model="selectedOptionsLocal" multiple>
+        <div class="cursor-pointer d-flex overflow-hidden bg-white text-left">
           <ComboboxInput
             class="app-field w-full text-sm leading-5 text-gray-900"
             :displayValue="displayValue"
@@ -21,7 +20,6 @@
             />
           </ComboboxButton>
         </div>
-
 
         <TransitionRoot
           leave="transition ease-in duration-100"
@@ -66,7 +64,8 @@
             </ComboboxOption>
           </ComboboxOptions>
         </TransitionRoot>
-    </Combobox>
+      </Combobox>
+    </div>
   </div>
 </template>
 
