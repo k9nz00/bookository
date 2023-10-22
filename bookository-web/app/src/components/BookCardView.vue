@@ -64,6 +64,11 @@
               type="file"
               @change="loadBookFile($event.target.files)"
             >
+
+            <!-- СКАЧАТЬ В ФОРМАТЕ -->
+            <template v-for="content in book.bookContentInfo" :key="content.id">
+              <BookDownloader :book-content="content" :book-name="book.name" />
+            </template>
           </div>
         </div>
 
@@ -101,6 +106,7 @@ import AppInput from './AppInput.vue'
 import AppTextarea from './AppTextarea.vue'
 import AppSubmitButton from './AppSubmitButton.vue'
 import AppIconButton from './AppIconButton.vue'
+import BookDownloader from './BookDownloader.vue'
 import BookCover from './BookCover.vue'
 
 import { BOOK_MODEL, LANGUAGES } from '../constants.js'
