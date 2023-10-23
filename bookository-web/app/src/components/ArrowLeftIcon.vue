@@ -1,5 +1,5 @@
 <template>
-  <ArrowLeftIcon/>
+  <ArrowLeftIcon />
 </template>
 
 <script setup>
