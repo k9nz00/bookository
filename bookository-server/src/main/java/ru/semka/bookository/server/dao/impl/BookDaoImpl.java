@@ -2,13 +2,20 @@ package ru.semka.bookository.server.dao.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import org.hibernate.query.TypedParameterValue;
+import org.hibernate.type.CustomType;
+import org.hibernate.type.spi.TypeConfiguration;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.dao.AbstractDao;
 import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.dto.SearchCriteriaDto;
-import ru.semka.bookository.server.dao.entity.*;
+import ru.semka.bookository.server.dao.entity.BookContentEntity;
+import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
+import ru.semka.bookository.server.dao.entity.BookEntity;
+import ru.semka.bookository.server.dao.entity.CategoryEntity;
+import ru.semka.bookository.server.dao.type.BookFormatType;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 import ru.semka.bookository.server.util.CommonUtil;
@@ -20,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class BookDaoImpl extends AbstractDao implements BookDao {
@@ -32,7 +40,7 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     public BookEntity save(BookRequestDto dto) {
         Collection<CategoryEntity> categories = getCategories(dto.getCategories());
         BookEntity entity = new BookEntity();
-        entity.getCategories().addAll(categories);
+        entity.setCategories(categories);
         entity.setName(dto.getName());
         entity.setAuthor(dto.getAuthor());
         entity.setGenre(dto.getGenre());
@@ -78,19 +86,30 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
-    public BookDetailsEntity find(int bookId) {
-        return entityManager.find(BookDetailsEntity.class, bookId);
+    public Optional<BookDetailsEntity> getDetails(int bookId) {
+        return Optional.ofNullable(entityManager.find(BookDetailsEntity.class, bookId));
     }
 
     @Override
     public void saveBookContent(int bookId, MultipartFile book, BookFormat bookFormat) throws IOException {
-        BookContentEntity entity = new BookContentEntity();
-        entity.setBookId(bookId);
-        entity.setSize(book.getSize());
-        entity.setBookFormat(bookFormat);
-        entity.setContent(book.getBytes());
-        entityManager.persist(entity);
-        entityManager.merge(entity);
+        CustomType<BookFormat> customType = new CustomType<>(new BookFormatType(), new TypeConfiguration());
+        TypedParameterValue<BookFormat> typedParameterValue = new TypedParameterValue<>(customType, bookFormat);
+
+        Query nativeQuery = entityManager.createNativeQuery(
+                "INSERT INTO bookository.book_content (book_id, size, format, content) " +
+                        "VALUES (:bookId, :size, CAST(:format AS bookository.book_format), :content) RETURNING id", Integer.class);
+
+        nativeQuery.setParameter("bookId", bookId);
+        nativeQuery.setParameter("size", book.getSize());
+        nativeQuery.setParameter("format", typedParameterValue);
+        nativeQuery.setParameter("content", book.getBytes());
+        Integer result = (Integer) nativeQuery.getSingleResult();
+
+        if (result == 0) {
+            throw new IllegalStateException(
+                    String.format("Error when saving book content for book with id = %d", bookId)
+            );
+        }
     }
 
     @Override
@@ -111,10 +130,10 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
-    public Collection<BookContentInfoEntity> getContentInfo(int bookId) {
+    public Collection<BookContentEntity> getBookContents(int bookId) {
         Query query = entityManager.createNativeQuery(
                 "SELECT id, book_id, size, format FROM bookository.book_content WHERE book_id = :book_id",
-                BookContentInfoEntity.class
+                BookContentEntity.class
         );
         query.setParameter("book_id", bookId);
         return query.getResultList();
@@ -136,6 +155,6 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
                 .stream()
                 .flatMapToInt(Arrays::stream)
                 .mapToObj(id -> entityManager.find(CategoryEntity.class, id))
-                .toList();
+                .collect(Collectors.toList());
     }
 }

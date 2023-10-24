@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
+import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
 import ru.semka.bookository.server.dao.BookDao;
-import ru.semka.bookository.server.dao.entity.BookContentInfoEntity;
+import ru.semka.bookository.server.dao.entity.BookContentEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
@@ -34,12 +35,12 @@ public class BookServiceImpl implements BookService {
     @Override
     public void save(BookRequestDto dto, MultipartFile book, MultipartFile cover) throws IOException {
         BookEntity bookEntity = bookDao.save(dto);
-        if (Objects.nonNull(cover)) {
-            bookCoverService.saveCover(bookEntity.getId(), cover);
-        }
         if (Objects.nonNull(book)) {
             BookFormat type = getType(book);
             bookDao.saveBookContent(bookEntity.getId(), book, type);
+        }
+        if (Objects.nonNull(cover)) {
+            bookCoverService.saveCover(bookEntity.getId(), cover);
         }
     }
 
@@ -75,8 +76,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDetailsUiDto getDetails(int bookId) {
-        BookDetailsEntity entity = bookDao.find(bookId);
-        Collection<BookContentInfoEntity> contentInfo = bookDao.getContentInfo(bookId);
+        BookDetailsEntity entity = bookDao.getDetails(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Book with id = %d not found", bookId)
+                ));
+        Collection<BookContentEntity> contentInfo = bookDao.getBookContents(bookId);
         return bookDetailsTransformer.transform(new BookDetailsWrapper(entity, contentInfo));
     }
 
