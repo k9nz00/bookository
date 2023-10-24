@@ -3,7 +3,6 @@ package ru.semka.bookository.server.dao;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
-import ru.semka.bookository.server.dao.entity.BookContentEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
@@ -35,6 +34,4 @@ public interface BookDao {
     Optional<BookDetailsEntity> getDetails(int bookId);
 
     byte[] getBookContent(int bookId, int bookContentId);
-
-    Collection<BookContentEntity> getBookContents(int bookId);
 }

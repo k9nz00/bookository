@@ -11,7 +11,10 @@ import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.dao.AbstractDao;
 import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.dto.SearchCriteriaDto;
-import ru.semka.bookository.server.dao.entity.*;
+import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
+import ru.semka.bookository.server.dao.entity.BookEntity;
+import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
+import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.dao.type.BookFormatType;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -124,16 +127,6 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
         deleteQuery.setParameter("id", bookContentId);
         deleteQuery.setParameter("book_id", bookId);
         deleteQuery.executeUpdate();
-    }
-
-    @Override
-    public Collection<BookContentEntity> getBookContents(int bookId) {
-        Query query = entityManager.createNativeQuery(
-                "SELECT id, book_id, size, format FROM bookository.book_content WHERE book_id = :book_id",
-                BookContentEntity.class
-        );
-        query.setParameter("book_id", bookId);
-        return query.getResultList();
     }
 
     @Override

@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
 import ru.semka.bookository.server.dao.BookDao;
-import ru.semka.bookository.server.dao.entity.BookContentEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
@@ -17,7 +16,6 @@ import ru.semka.bookository.server.rest.dto.book.BookUiDto;
 import ru.semka.bookository.server.service.BookCoverService;
 import ru.semka.bookository.server.service.BookService;
 import ru.semka.bookository.server.transformers.Transformer;
-import ru.semka.bookository.server.transformers.wrapper.BookDetailsWrapper;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -29,7 +27,7 @@ import java.util.Objects;
 public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final BookCoverService bookCoverService;
-    private final Transformer<BookDetailsWrapper, BookDetailsUiDto> bookDetailsTransformer;
+    private final Transformer<BookDetailsEntity, BookDetailsUiDto> bookDetailsTransformer;
     private final Transformer<BookWithSmallPreviewEntity, BookUiDto> bookTransformer;
     private final Base64.Encoder encoder = Base64.getEncoder();
 
@@ -83,8 +81,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Book with id = %d not found", bookId)
                 ));
-        Collection<BookContentEntity> contentInfo = bookDao.getBookContents(bookId);
-        return bookDetailsTransformer.transform(new BookDetailsWrapper(entity, contentInfo));
+        return bookDetailsTransformer.transform(entity);
     }
 
     @Override

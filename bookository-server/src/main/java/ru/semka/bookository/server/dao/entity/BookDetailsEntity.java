@@ -1,10 +1,9 @@
 package ru.semka.bookository.server.dao.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.Collection;
 
 @Entity
 @Table(schema = "bookository", name = "book")
@@ -13,4 +12,8 @@ public class BookDetailsEntity extends AbstractBookEntity {
     @OneToOne
     @JoinColumn(name = "id")
     private BigBookPreviewEntity bigPreview;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Collection<BookContentInfoEntity> bookContentsInfo;
 }
