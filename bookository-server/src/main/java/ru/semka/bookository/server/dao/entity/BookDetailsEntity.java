@@ -13,7 +13,7 @@ public class BookDetailsEntity extends AbstractBookEntity {
     @JoinColumn(name = "id")
     private BigBookPreviewEntity bigPreview;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id")
     private Collection<BookContentInfoEntity> bookContentsInfo;
 }
