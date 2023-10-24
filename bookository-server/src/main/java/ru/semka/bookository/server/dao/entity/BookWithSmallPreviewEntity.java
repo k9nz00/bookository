@@ -9,8 +9,8 @@ import lombok.Data;
 @Entity
 @Table(schema = "bookository", name = "book")
 @Data
-public class BookDetailsEntity extends AbstractBookEntity {
+public class BookWithSmallPreviewEntity extends AbstractBookEntity {
     @OneToOne
     @JoinColumn(name = "id")
-    private BigBookPreviewEntity bigPreview;
+    private SmallBookPreviewEntity smallPreview;
 }

@@ -14,7 +14,6 @@ import ru.semka.bookository.server.transformers.wrapper.BookDetailsWrapper;
 
 import java.util.Base64;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -40,7 +39,7 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
         );
     }
 
-    private List<BookCategoryUiDto> getCategories(List<CategoryEntity> categories) {
+    private Collection<BookCategoryUiDto> getCategories(Collection<CategoryEntity> categories) {
         return categories.stream()
                 .map(entity -> new BookCategoryUiDto(entity.getId(), entity.getName()))
                 .toList();

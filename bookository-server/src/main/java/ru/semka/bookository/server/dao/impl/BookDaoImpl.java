@@ -11,10 +11,7 @@ import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.dao.AbstractDao;
 import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.dto.SearchCriteriaDto;
-import ru.semka.bookository.server.dao.entity.BookContentEntity;
-import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
-import ru.semka.bookository.server.dao.entity.BookEntity;
-import ru.semka.bookository.server.dao.entity.CategoryEntity;
+import ru.semka.bookository.server.dao.entity.*;
 import ru.semka.bookository.server.dao.type.BookFormatType;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -80,8 +77,8 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
-    public Collection<BookEntity> getBooks(BookCriteriaDto criteriaDto) {
-        SearchCriteriaDto<BookEntity> searchCriteria = DaoUtil.createCriteria(criteriaDto, BookEntity.class);
+    public Collection<BookWithSmallPreviewEntity> getBooks(BookCriteriaDto criteriaDto) {
+        SearchCriteriaDto<BookWithSmallPreviewEntity> searchCriteria = DaoUtil.createCriteria(criteriaDto, BookWithSmallPreviewEntity.class);
         return execute(searchCriteria);
     }
 

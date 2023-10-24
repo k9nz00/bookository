@@ -6,6 +6,7 @@ import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.dao.entity.BookContentEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
+import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 
@@ -29,7 +30,7 @@ public interface BookDao {
     @Transactional
     void deleteBookContent(int bookId, int bookContentId);
 
-    Collection<BookEntity> getBooks(BookCriteriaDto criteriaDto);
+    Collection<BookWithSmallPreviewEntity> getBooks(BookCriteriaDto criteriaDto);
 
     Optional<BookDetailsEntity> getDetails(int bookId);
 
