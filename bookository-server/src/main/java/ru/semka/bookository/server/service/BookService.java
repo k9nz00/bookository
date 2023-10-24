@@ -1,5 +1,6 @@
 package ru.semka.bookository.server.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 public interface BookService {
+    @Transactional
     void save(BookRequestDto dto, MultipartFile book, MultipartFile cover) throws IOException;
 
     BookUiDto update(int bookId, BookRequestDto dto);

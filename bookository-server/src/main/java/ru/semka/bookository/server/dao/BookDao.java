@@ -3,14 +3,15 @@ package ru.semka.bookository.server.dao;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
-import ru.semka.bookository.server.dao.entity.BookContentInfoEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
+import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Optional;
 
 public interface BookDao {
     @Transactional
@@ -28,11 +29,9 @@ public interface BookDao {
     @Transactional
     void deleteBookContent(int bookId, int bookContentId);
 
-    Collection<BookEntity> getBooks(BookCriteriaDto criteriaDto);
+    Collection<BookWithSmallPreviewEntity> getBooks(BookCriteriaDto criteriaDto);
 
-    BookDetailsEntity find(int bookId);
+    Optional<BookDetailsEntity> getDetails(int bookId);
 
     byte[] getBookContent(int bookId, int bookContentId);
-
-    Collection<BookContentInfoEntity> getContentInfo(int bookId);
 }
