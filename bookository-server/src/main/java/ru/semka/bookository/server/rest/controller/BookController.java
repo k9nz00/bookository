@@ -11,10 +11,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.Language;
-import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 import ru.semka.bookository.server.rest.dto.book.BookUiDto;
+import ru.semka.bookository.server.rest.dto.book.BooksCriteriaDto;
 import ru.semka.bookository.server.service.BookService;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public Collection<BookUiDto> getBooks(@Valid @ParameterObject final BookCriteriaDto criteriaDto) {
+    public Collection<BookUiDto> getBooks(@Valid @ParameterObject final BooksCriteriaDto criteriaDto) {
         return bookService.getBooks(criteriaDto);
     }
 
