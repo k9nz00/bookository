@@ -22,27 +22,27 @@ public class BookCategoryController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<BookCategoryUiDto> getBooks() {
+    public Collection<BookCategoryUiDto> getCategories() {
         return bookCategoryService.getAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookCategoryUiDto save(@Valid @RequestBody CreateBookCategoriesRequestDto dto) {
+    public BookCategoryUiDto saveCategory(@Valid @RequestBody CreateBookCategoriesRequestDto dto) {
         return bookCategoryService.save(dto.getName());
     }
 
     @PutMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable int categoryId,
-                       @Valid @RequestBody UpdateBookCategoriesRequestDto dto) {
+    public void updateCategory(@PathVariable int categoryId,
+                               @Valid @RequestBody UpdateBookCategoriesRequestDto dto) {
         bookCategoryService.update(categoryId, dto.getName());
     }
 
     @DeleteMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(description = "Remove category")
-    public void delete(@PathVariable int categoryId) {
+    public void deleteCategory(@PathVariable int categoryId) {
         bookCategoryService.delete(categoryId);
     }
 }
