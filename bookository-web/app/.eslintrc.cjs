@@ -34,5 +34,12 @@ module.exports = {
     'quotes': [ 'error', 'single' ],
     'semi': [ 'error', 'never'
     ]
+  },
+  globals: {
+    // переменные vitest[global:true]
+    describe: false,
+    test: false,
+    expect: false,
+    afterEach: false
   }
 }

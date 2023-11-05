@@ -15,7 +15,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
+import ArrowLeftIcon from './ArrowLeftIcon.vue'
 
 const props = defineProps({
   type: {
