@@ -1,7 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import AppButton from './AppButton.vue'
 
-
 const wrapperFactory = (mountingOptions = {}) => {
   return shallowMount(AppButton, mountingOptions)
 }

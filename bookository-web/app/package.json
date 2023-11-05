@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint --ext .js,.vue --fix src",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "test": "vitest"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.15",

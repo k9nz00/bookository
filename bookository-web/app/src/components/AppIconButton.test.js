@@ -21,19 +21,31 @@ describe('AppIconButton.vue', () => {
     expect(wrapper.emitted().click).toHaveLength(1)
   })
 
-  test('Не должен отрисовывать иконку, если входной параметр не определен', () => {
-    wrapper = wrapperFactory()
+  describe('должен корректно показывать иконку', () => {
+    test('когда входной параметр не передан', () => {
+      wrapper = wrapperFactory()
 
-    expect(wrapper.find('arrow-left-icon-stub').exists()).toBe(false)
-  })
-
-  test('Должен отрисовывать иконку в соответствии с входным параметром', () => {
-    wrapper = wrapperFactory({
-      props: {
-        icon: 'ArrowLeftIcon'
-      }
+      expect(wrapper.find('arrow-left-icon-stub').exists()).toBe(false)
     })
 
-    expect(wrapper.find('arrow-left-icon-stub').exists()).toBe(true)
+    test('когда входной параметр передан правильно', () => {
+      wrapper = wrapperFactory({
+        props: {
+          icon: 'ArrowLeftIcon'
+        }
+      })
+
+      expect(wrapper.find('arrow-left-icon-stub').exists()).toBe(true)
+    })
+
+    test('когда входной параметр передан неправильно', () => {
+      wrapper = wrapperFactory({
+        props: {
+          icon: 'RandomIcon'
+        }
+      })
+
+      expect(wrapper.find('random-icon-stub').exists()).toBe(false)
+    })
   })
 })
