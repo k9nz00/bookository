@@ -6,7 +6,7 @@ module.exports = {
       script: 'web-server.js',
       exec_mode: 'cluster',
       // eslint-disable-next-line no-undef
-      instances: process.env.APP_INSTANCE_COUNT || 1,
+      instances: 1,
       merge_logs: true,
       restart_delay: 500,
       max_restarts: 0
