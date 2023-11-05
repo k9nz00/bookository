@@ -1,4 +1,4 @@
-import { BASE_URL } from '../constants.js'
+import { API_HOST } from '../constants.js'
 
 /**
  * @typedef {import('./categories.js').Category}
@@ -23,7 +23,7 @@ import { BASE_URL } from '../constants.js'
  * @returns {Promise<Book[]>}
  */
 export const getBooks = () => {
-  return fetch(`${ BASE_URL }/books`)
+  return fetch(`${ API_HOST }/books`)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -33,7 +33,7 @@ export const getBooks = () => {
  * @returns {Promise<Book>}
  */
 export const getBook = (id) => {
-  return fetch(`${ BASE_URL }/books/${ id }`)
+  return fetch(`${ API_HOST }/books/${ id }`)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -48,7 +48,7 @@ export const createBook = (book) => {
     body: book
   }
 
-  return fetch(`${ BASE_URL }/books`, options)
+  return fetch(`${ API_HOST }/books`, options)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -63,7 +63,7 @@ export const updateBook = (book) => {
     body: book
   }
 
-  return fetch(`${ BASE_URL }/books/${ book.id }`, options)
+  return fetch(`${ API_HOST }/books/${ book.id }`, options)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -74,7 +74,7 @@ export const updateBook = (book) => {
  * @returns {Promise<String>}
  */
 export const getBookContent = (bookId, bookContentId) => {
-  return fetch(`${ BASE_URL }/books/${ bookId }/book-content/${ bookContentId }`)
+  return fetch(`${ API_HOST }/books/${ bookId }/book-content/${ bookContentId }`)
     .then((response) => response.text())
     .then((response) => response)
 }
@@ -90,7 +90,7 @@ export const createBookContent = (bookId, bookContent) => {
     body: bookContent
   }
 
-  return fetch(`${ BASE_URL }/books/${ bookId }/attach`, options)
+  return fetch(`${ API_HOST }/books/${ bookId }/attach`, options)
     .then((response) => response.json())
     .then((response) => response)
 }

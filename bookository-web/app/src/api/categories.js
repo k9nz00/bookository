@@ -1,4 +1,4 @@
-import { BASE_URL } from '../constants.js'
+import { API_HOST } from '../constants.js'
 
 /**
  * @typedef {Object} Category
@@ -10,7 +10,7 @@ import { BASE_URL } from '../constants.js'
  * @returns {Promise<Category[]>}
  */
 export const getCategories = () => {
-  return fetch(`${ BASE_URL }/book-categories`)
+  return fetch(`${ API_HOST }/book-categories`)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -25,7 +25,7 @@ export const createCategory = (category) => {
     body: category
   }
 
-  return fetch(`${ BASE_URL }/book-categories`, options)
+  return fetch(`${ API_HOST }/book-categories`, options)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -40,7 +40,7 @@ export const updateCategory = (category) => {
     body: category
   }
 
-  return fetch(`${ BASE_URL }/book-categories/${ category.id }`, options)
+  return fetch(`${ API_HOST }/book-categories/${ category.id }`, options)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -54,7 +54,7 @@ export const deleteCategory = (id) => {
     method: 'DELETE'
   }
 
-  return fetch(`${ BASE_URL }/book-categories/${ id }`, options)
+  return fetch(`${ API_HOST }/book-categories/${ id }`, options)
     .then((response) => response.json())
     .then((response) => response)
 }
