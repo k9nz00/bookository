@@ -2,7 +2,7 @@ package ru.semka.bookository.server.transformers.impl;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
-import ru.semka.bookository.server.dao.entity.BookBigPreviewEntity;
+import ru.semka.bookository.server.dao.entity.BigBookPreviewEntity;
 import ru.semka.bookository.server.dao.entity.BookContentInfoEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
@@ -10,20 +10,18 @@ import ru.semka.bookository.server.rest.dto.book.BookContentInfoUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
 import ru.semka.bookository.server.transformers.Transformer;
-import ru.semka.bookository.server.transformers.wrapper.BookDetailsWrapper;
 
 import java.util.Base64;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Component
-public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, BookDetailsUiDto> {
+public class BookDetailsTransformer implements Transformer<BookDetailsEntity, BookDetailsUiDto> {
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
-    public BookDetailsUiDto transform(BookDetailsWrapper input) {
-        BookDetailsEntity book = input.getBook();
+    public BookDetailsUiDto transform(BookDetailsEntity book) {
+
         return new BookDetailsUiDto(
                 book.getId(),
                 book.getName(),
@@ -35,12 +33,12 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
                 getCategories(book.getCategories()),
                 book.getCreatedAt(),
                 book.getUpdatedAt(),
-                getContentInfo(input.getBookContentInfoEntities()),
+                getContentInfo(book.getBookContentsInfo()),
                 getPreview(book.getBigPreview())
         );
     }
 
-    private List<BookCategoryUiDto> getCategories(List<CategoryEntity> categories) {
+    private Collection<BookCategoryUiDto> getCategories(Collection<CategoryEntity> categories) {
         return categories.stream()
                 .map(entity -> new BookCategoryUiDto(entity.getId(), entity.getName()))
                 .toList();
@@ -57,7 +55,7 @@ public class BookDetailsTransformer implements Transformer<BookDetailsWrapper, B
                 .toList();
     }
 
-    private String getPreview(BookBigPreviewEntity bigPreview) {
+    private String getPreview(BigBookPreviewEntity bigPreview) {
         return Optional.ofNullable(bigPreview)
                 .map(el -> "data:image/gpeg;base64," + encoder.encodeToString(el.getPreview()))
                 .orElse(null);
