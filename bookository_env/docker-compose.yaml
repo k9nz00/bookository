@@ -2,13 +2,13 @@ version: "3"
 services:
   adminer:
     image: adminer:4.8.1
-    restart: always
+    restart: on-failure
     ports:
       - "8010:8080"
 
   postgres:
-    image: bookository/migration-postgres:br_it
-    restart: always
+    image: bookository/postgres:br_it
+    restart: on-failure
     ports:
       - "5432:5432"
     environment:
@@ -18,7 +18,7 @@ services:
 
   bookository-server:
     image: bookository/bookository-server:br_it
-    restart: always
+    restart: on-failure
     ports:
       - "8020:8020"
       - "38005:38005"

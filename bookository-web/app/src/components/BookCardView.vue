@@ -9,12 +9,13 @@
         <!-- ОБЛОЖКА MOBILE -->
         <BookCover
           v-model="book.cover"
+          :preview="book.bigPreview"
           is-mobile
         />
 
         <div class="flex gap-5">
           <!-- ОБЛОЖКА DESKTOP -->
-          <BookCover v-model="book.cover"/>
+          <BookCover v-model="book.cover" :preview="book.bigPreview" />
 
           <!-- НАЗВАНИЕ -->
           <div class="w-full space-y-4">

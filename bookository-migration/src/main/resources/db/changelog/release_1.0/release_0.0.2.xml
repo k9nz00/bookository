@@ -55,71 +55,37 @@
             <column name="author"/>
         </createIndex>
     </changeSet>
-    <changeSet id="20230717_2316" author="ASemka">
-        <preConditions>
-            <sqlCheck expectedResult="0">
-                SELECT COUNT(*)
-                FROM information_schema.sequences
-                WHERE sequence_schema = 'bookository'
-                  AND sequence_name = 'seq_book_big_preview_id'</sqlCheck>
-        </preConditions>
-        <createSequence
-                schemaName="bookository"
-                startValue="1"
-                incrementBy="1"
-                sequenceName="seq_book_big_preview_id"/>
-    </changeSet>
     <changeSet id="20230717_2317" author="ASemka">
         <preConditions>
             <not>
-                <tableExists schemaName="bookository" tableName="book_big_preview"/>
+                <tableExists schemaName="bookository" tableName="big_book_preview"/>
             </not>
         </preConditions>
-        <createTable schemaName="bookository" tableName="book_big_preview">
-            <column name="id" type="int" defaultValue="nextval('seq_book_big_preview_id')">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="book_id" type="int"/>
+        <createTable schemaName="bookository" tableName="big_book_preview">
+            <column name="id" type="int"/>
             <column name="size" type="bigint"/>
             <column name="preview" type="bytea"/>
         </createTable>
         <addPrimaryKey schemaName="bookository"
-                       tableName="book_big_preview"
+                       tableName="big_book_preview"
                        columnNames="id"
-                       constraintName="book_big_preview_id_pkey"/>
-    </changeSet>
-    <changeSet id="20230717_2318" author="ASemka">
-        <preConditions>
-            <sqlCheck expectedResult="0">
-                SELECT COUNT(*)
-                FROM information_schema.sequences
-                WHERE sequence_schema = 'bookository'
-                  AND sequence_name = 'seq_book_small_preview_id'</sqlCheck>
-        </preConditions>
-        <createSequence
-                schemaName="bookository"
-                startValue="1"
-                incrementBy="1"
-                sequenceName="seq_book_small_preview_id"/>
+                       constraintName="big_book_preview_id_pkey"/>
     </changeSet>
     <changeSet id="20230717_2319" author="ASemka">
         <preConditions>
             <not>
-                <tableExists schemaName="bookository" tableName="book_small_preview"/>
+                <tableExists schemaName="bookository" tableName="small_book_preview"/>
             </not>
         </preConditions>
-        <createTable schemaName="bookository" tableName="book_small_preview">
-            <column name="id" type="int" defaultValue="nextval('seq_book_small_preview_id')">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="book_id" type="int"/>
+        <createTable schemaName="bookository" tableName="small_book_preview">
+            <column name="id" type="int"/>
             <column name="size" type="bigint"/>
             <column name="preview" type="bytea"/>
         </createTable>
         <addPrimaryKey schemaName="bookository"
-                       tableName="book_small_preview"
+                       tableName="small_book_preview"
                        columnNames="id"
-                       constraintName="book_small_preview_id_pkey"/>
+                       constraintName="small_book_preview_id_pkey"/>
     </changeSet>
     <changeSet id="20230717_2320" author="ASemka">
         <preConditions>
@@ -164,18 +130,16 @@
             </not>
         </preConditions>
         <createTable schemaName="bookository" tableName="book_category">
-            <column name="book_id" type="int">
-                <constraints nullable="false"/>
-            </column>
-            <column name="category_id" type="int">
-                <constraints nullable="false"/>
-            </column>
+            <column name="book_id" type="int"/>
+            <column name="category_id" type="int"/>
         </createTable>
         <addPrimaryKey schemaName="bookository"
                        tableName="book_category"
                        columnNames="book_id, category_id"
-                       constraintName="book_category_id_pkey"/>
+                       constraintName="book_category_book_id_category_id_pkey"/>
     </changeSet>
+
+    <!-- foreign keys   -->
     <changeSet id="20230815_2154" author="ASemka">
         <preConditions>
             <sqlCheck expectedResult="0">
@@ -201,41 +165,38 @@
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*)
                 FROM information_schema.constraint_column_usage
-                WHERE constraint_name = 'book_big_preview_book_id_fkey'
+                WHERE constraint_name = 'big_book_preview_id_fkey'
             </sqlCheck>
         </preConditions>
         <sql>
-            ALTER TABLE bookository.book_big_preview
-                ADD CONSTRAINT book_big_preview_book_id_fkey
-                    FOREIGN KEY (book_id)
+            ALTER TABLE bookository.big_book_preview
+                ADD CONSTRAINT big_book_preview_id_fkey
+                    FOREIGN KEY (id)
                         REFERENCES bookository.book (id) ON UPDATE CASCADE ON DELETE CASCADE
         </sql>
         <rollback>
-            ALTER TABLE bookository.book_big_preview DROP CONSTRAINT book_big_preview_book_id_fkey
+            ALTER TABLE bookository.book_big_preview DROP CONSTRAINT big_book_preview_id_fkey
         </rollback>
     </changeSet>
-
 
     <changeSet id="20230815_2156" author="ASemka">
         <preConditions>
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*)
                 FROM information_schema.constraint_column_usage
-                WHERE constraint_name = 'book_small_preview_book_id_fkey'
+                WHERE constraint_name = 'small_book_preview_id_fkey'
             </sqlCheck>
         </preConditions>
         <sql>
-            ALTER TABLE bookository.book_small_preview
+            ALTER TABLE bookository.small_book_preview
                 ADD CONSTRAINT book_small_preview_book_id_fkey
-                    FOREIGN KEY (book_id)
+                    FOREIGN KEY (id)
                         REFERENCES bookository.book (id) ON UPDATE CASCADE ON DELETE CASCADE
         </sql>
         <rollback>
-            ALTER TABLE bookository.book_small_preview DROP CONSTRAINT book_small_preview_book_id_fkey
+            ALTER TABLE bookository.book_small_preview DROP CONSTRAINT small_book_preview_id_fkey
         </rollback>
     </changeSet>
-
-
     <changeSet id="20230815_2157" author="ASemka">
         <preConditions>
             <sqlCheck expectedResult="0">

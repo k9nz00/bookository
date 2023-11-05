@@ -7,7 +7,6 @@ import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
 
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +18,7 @@ public class BookDetailsUiDto {
     private final String annotation;
     private final Boolean isAvailable;
     private final Language language;
-    private final List<BookCategoryUiDto> categories;
+    private final Collection<BookCategoryUiDto> categories;
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
     private final Collection<BookContentInfoUiDto> bookContentInfo;

@@ -1,10 +1,7 @@
 <template>
-  <div
-    class="book-cover"
-    :class="isMobile ? 'block md:hidden' : 'hidden md:block'"
-  >
+  <div :class="isMobile ? 'block md:hidden' : 'hidden md:block'">
     <label :for="id">
-      <img alt="" :src="src" >
+      <img class="book-cover" alt="" :src="src" >
     </label>
 
     <input
@@ -17,9 +14,13 @@
 </template>
 
 <script setup>
-import { ref, computed  } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 const props = defineProps({
+  preview: {
+    type: String,
+    default: ''
+  },
   isMobile: {
     type: Boolean,
     default: false
@@ -44,6 +45,10 @@ const onUploadCover = (uploadedFiles) => {
     emit('update:modelValue', file)
   }
 }
+
+onMounted(() => {
+  src.value = props.preview
+})
 </script>
 
 <style>
