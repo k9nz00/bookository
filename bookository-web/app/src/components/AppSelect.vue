@@ -5,9 +5,10 @@
       <div class="flex item-center">
         <ListboxButton class="listbox-button app-field">
           <span
-            v-if="selectedLocal[nameField]"
-            class="block truncate">
-            {{ selectedLocal[nameField] }}
+            v-if="selectedLocalName"
+            class="block truncate"
+          >
+            {{ selectedLocalName }}
           </span>
 
           <span v-else class="block truncate text-gray-400">{{ placeholder }}</span>
@@ -26,7 +27,7 @@
           leave-to-class="opacity-0"
         >
           <ListboxOptions class="listbox-options">
-            <ListboxOption v-if="!optionsLocal.length" as="div">
+            <ListboxOption v-if="!options.length" as="div">
               <li class="relative cursor-default select-none p-2">
                 <span class="block truncate">
                   Нет данных для отображения
@@ -36,9 +37,9 @@
 
             <ListboxOption
               v-else
-              v-for="option in optionsLocal"
+              v-for="option in options"
+              :value="option[valueField]"
               :key="option[valueField]"
-              :value="option"
               :disabled="option[disabledField]"
               v-slot="{ active, selected, disabled }"
               as="template"
@@ -79,26 +80,22 @@ import {
   Listbox,
   ListboxButton,
   ListboxOptions,
-  ListboxOption,
+  ListboxOption
 } from '@headlessui/vue'
 
 import CheckIcon from './CheckIcon.vue'
 import ChevronUpDownIcon from './ChevronUpDownIcon.vue'
 
-import { ref, watch, watchEffect } from 'vue'
-import clonedeep from 'lodash.clonedeep'
+import { ref, computed, watch } from 'vue'
 
 const props = defineProps({
   options: {
     type: Array,
-    default: () => []
+    required: true
   },
   selected: {
-    type: Object,
-    default: () => ({
-      name: '',
-      id: ''
-    })
+    type: String,
+    default: ''
   },
   nameField: {
     type: String,
@@ -114,7 +111,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: 'Выберите что-нибудь'
+    default: ''
   },
   label: {
     type: String,
@@ -122,17 +119,16 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['select'])
+const emit = defineEmits(['update:selected'])
 
-const optionsLocal = ref(clonedeep(props.options))
-const selectedLocal = ref(clonedeep(props.selected))
-
-watchEffect(() => {
-  optionsLocal.value = clonedeep(props.options)
+const selectedLocal = ref(props.selected)
+const selectedLocalName = computed(() => {
+  return selectedLocal.value
+    ? props.options.find(item => item[props.valueField] === selectedLocal.value)[props.nameField] || ''
+    : ''
 })
-
 watch(selectedLocal, () => {
-  emit('select', selectedLocal.value)
+  emit('update:selected',selectedLocal.value)
 })
 </script>
 

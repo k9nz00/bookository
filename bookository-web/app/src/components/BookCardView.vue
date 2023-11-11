@@ -53,11 +53,10 @@
 
             <!-- ЯЗЫК ОРИГИНАЛА -->
             <AppSelect
+              v-model:selected="book.language"
               placeholder="Выберите язык"
               label="Язык оригинала"
               :options="LANGUAGES"
-              :selected="LANGUAGES.find(item => item.id === book.language)"
-              @select="selectLanguage"
             />
 
             <!-- ЗАГРУЗИТЬ ФАЙЛ КНИГИ -->
@@ -142,10 +141,6 @@ const getCategoriesOptions = () => {
 }
 const selectCategories = (selectedCategories) => {
   book.value.categories = selectedCategories.join(',')
-}
-
-const selectLanguage = (selectedLanguage) => {
-  book.value.language = selectedLanguage.id
 }
 
 // TODO: Проверка на тип файла
