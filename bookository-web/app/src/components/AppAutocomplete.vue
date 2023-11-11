@@ -1,5 +1,5 @@
 <template>
-  <div class="app-field-wrapper w-full relative">
+  <div class="app-field-wrapper w-full">
     <label>{{ label }}</label>
     <div class="relative">
       <Combobox v-model="selectedOptionsLocal" multiple>

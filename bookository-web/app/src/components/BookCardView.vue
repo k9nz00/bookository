@@ -164,6 +164,7 @@ onMounted(() => {
 const { appendFormData } = useFormData()
 const submit = () => {
   const formData = appendFormData(book.value)
+  // TODO: Проверка на пустые поля
 
   createBook(formData)
     .catch((error) => {
