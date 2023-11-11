@@ -79,11 +79,16 @@ const props = defineProps({
 const emit = defineEmits([ 'update:selected' ])
 
 const selectedLocal = ref(props.selected)
+
 const selectedLocalName = computed(() => {
-  return selectedLocal.value
-    ? props.options.find(item => item[props.valueField] === selectedLocal.value)[props.nameField] || ''
-    : ''
+  if(!selectedLocal.value || !props.options.length) {
+    return ''
+  }
+
+  const option = props.options.find(item => item[props.valueField] === selectedLocal.value)
+  return option && option[props.nameField] || ''
 })
+
 watch(selectedLocal, () => {
   emit('update:selected', selectedLocal.value)
 })
