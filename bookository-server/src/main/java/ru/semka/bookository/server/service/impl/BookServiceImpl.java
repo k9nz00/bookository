@@ -9,10 +9,10 @@ import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
-import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 import ru.semka.bookository.server.rest.dto.book.BookUiDto;
+import ru.semka.bookository.server.rest.dto.book.BooksCriteriaDto;
 import ru.semka.bookository.server.service.BookCoverService;
 import ru.semka.bookository.server.service.BookService;
 import ru.semka.bookository.server.transformers.Transformer;
@@ -68,7 +68,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Collection<BookUiDto> getBooks(BookCriteriaDto criteriaDto) {
+    public Collection<BookUiDto> getBooks(BooksCriteriaDto criteriaDto) {
         Collection<BookWithSmallPreviewEntity> books = bookDao.getBooks(criteriaDto);
         return books.stream()
                 .map(bookTransformer::transform)
