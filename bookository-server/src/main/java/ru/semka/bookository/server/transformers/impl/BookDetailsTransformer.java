@@ -21,7 +21,6 @@ public class BookDetailsTransformer implements Transformer<BookDetailsEntity, Bo
 
     @Override
     public BookDetailsUiDto transform(BookDetailsEntity book) {
-
         return new BookDetailsUiDto(
                 book.getId(),
                 book.getName(),

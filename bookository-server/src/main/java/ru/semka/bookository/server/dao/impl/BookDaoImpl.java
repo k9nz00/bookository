@@ -10,20 +10,20 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.dao.AbstractDao;
 import ru.semka.bookository.server.dao.BookDao;
+import ru.semka.bookository.server.dao.PredicateProvider;
 import ru.semka.bookository.server.dao.dto.SearchCriteriaDto;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.dao.type.BookFormatType;
+import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
-import ru.semka.bookository.server.rest.dto.book.BooksCriteriaDto;
 import ru.semka.bookository.server.util.CommonUtil;
 import ru.semka.bookository.server.util.DaoUtil;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -80,8 +80,10 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
-    public Collection<BookWithSmallPreviewEntity> getBooks(BooksCriteriaDto criteriaDto) {
-        SearchCriteriaDto<BookWithSmallPreviewEntity> searchCriteria = DaoUtil.createCriteria(criteriaDto, BookWithSmallPreviewEntity.class);
+    public Collection<BookWithSmallPreviewEntity> getBooks(BookCriteriaDto criteriaDto,
+                                                           PredicateProvider<BookWithSmallPreviewEntity> predicateProvider) {
+        SearchCriteriaDto<BookWithSmallPreviewEntity> searchCriteria =
+                DaoUtil.createCriteria(criteriaDto, predicateProvider, BookWithSmallPreviewEntity.class);
         return execute(searchCriteria);
     }
 
@@ -140,11 +142,10 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
         return (byte[]) query.getSingleResult();
     }
 
-    private Collection<CategoryEntity> getCategories(int[] categoryIds) {
-        return Optional.ofNullable(categoryIds)
-                .stream()
-                .flatMapToInt(Arrays::stream)
-                .mapToObj(id -> entityManager.find(CategoryEntity.class, id))
+    private Collection<CategoryEntity> getCategories(Collection<Integer> categoryIds) {
+        return Optional.ofNullable(categoryIds).stream()
+                .flatMap(Collection::stream)
+                .map(id -> entityManager.find(CategoryEntity.class, id))
                 .collect(Collectors.toList());
     }
 }

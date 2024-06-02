@@ -20,6 +20,10 @@ public abstract class AbstractDao {
         CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(searchCriteriaDto.getClazz());
         Root<T> root = criteriaQuery.from(searchCriteriaDto.getClazz());
 
+        Optional.ofNullable(searchCriteriaDto.getProvider())
+                .map(provider -> provider.getPredicates(criteriaBuilder, root).toArray(new Predicate[0]))
+                .ifPresent(criteriaQuery::where);
+
         Optional.ofNullable(searchCriteriaDto.getSortColumn())
                 .ifPresent(sort -> {
                     String[] paths = sort.split("\\.");
@@ -37,8 +41,8 @@ public abstract class AbstractDao {
                 });
 
         TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
-        query.setMaxResults(searchCriteriaDto.getLimit() != null ? searchCriteriaDto.getLimit() : 10);
-        query.setFirstResult(searchCriteriaDto.getOffset() != null ? searchCriteriaDto.getOffset() : 0);
+        query.setMaxResults(searchCriteriaDto.getLimit() != null ? searchCriteriaDto.getLimit() : 10); //todo create default value
+        query.setFirstResult(searchCriteriaDto.getOffset() != null ? searchCriteriaDto.getOffset() : 0); //todo create default value
         return query.getResultList();
     }
 }

@@ -9,7 +9,10 @@ import ru.semka.bookository.server.rest.dto.TableCriteria;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class BooksCriteriaDto extends TableCriteria {
+public class BookCriteriaDto extends TableCriteria {
+
+    private String name;
+
     @Parameter(
             in = ParameterIn.QUERY,
             schema = @Schema(allowableValues = {"id", "name", "genre", "author", "language", "createdAt"}))

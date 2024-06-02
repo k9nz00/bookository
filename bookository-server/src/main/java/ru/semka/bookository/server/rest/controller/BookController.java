@@ -11,16 +11,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.Language;
+import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 import ru.semka.bookository.server.rest.dto.book.BookUiDto;
-import ru.semka.bookository.server.rest.dto.book.BooksCriteriaDto;
 import ru.semka.bookository.server.service.BookService;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/books")
@@ -30,7 +31,7 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public Collection<BookUiDto> getBooks(@Valid @ParameterObject final BooksCriteriaDto criteriaDto) {
+    public Collection<BookUiDto> getBooks(@Valid @ParameterObject final BookCriteriaDto criteriaDto) {
         return bookService.getBooks(criteriaDto);
     }
 
@@ -57,10 +58,8 @@ public class BookController {
             @RequestPart(value = "categories", required = false) String categories,
             @RequestPart(name = "book", required = false) MultipartFile book,
             @RequestPart(name = "cover", required = false) MultipartFile cover) throws IOException {
-
         BookRequestDto bookDto = getBookDto(name, author, genre, language, annotation, categories);
         bookService.save(bookDto, book, cover);
-
     }
 
     @PutMapping("{bookId}/attach")
@@ -104,22 +103,23 @@ public class BookController {
                                       String language,
                                       String annotation,
                                       String categories) {
-
-        int[] categoriesToArray = Optional.ofNullable(categories)
-                .map(el -> el.split(",")).stream()
-                .flatMapToInt(el1 -> Arrays.stream(Arrays.stream(el1)
-                        .mapToInt(Integer::parseInt)
-                        .toArray()))
-                .toArray();
         return new BookRequestDto(
                 name,
                 author,
                 genre,
                 language != null ? Language.fromValue(language.toUpperCase()) : null,
                 annotation,
-                categoriesToArray
+                getCategoryIds(categories)
         );
     }
 
-
+    private Collection<Integer> getCategoryIds(String ids) {
+        return Optional.ofNullable(ids)
+                .map(el -> el.split(","))
+                .stream()
+                .map(Arrays::asList)
+                .flatMap(Collection::stream)
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+    }
 }

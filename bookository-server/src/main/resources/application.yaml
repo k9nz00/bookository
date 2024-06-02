@@ -23,6 +23,8 @@ spring:
 #    hibernate:
 #      ddl-auto: validate
 
+# Добавить метку о способе сортировки nullable значений. См книгу jpa & hibernate!!
+
 server:
   port: 8020
 
