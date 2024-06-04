@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
 import ru.semka.bookository.server.rest.dto.bookcategory.CreateBookCategoriesRequestDto;
 import ru.semka.bookository.server.rest.dto.bookcategory.UpdateBookCategoriesRequestDto;
@@ -34,9 +35,9 @@ public class BookCategoryController {
 
     @PutMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateCategory(@PathVariable int categoryId,
-                               @Valid @RequestBody UpdateBookCategoriesRequestDto dto) {
-        bookCategoryService.update(categoryId, dto.getName());
+    public CategoryEntity updateCategory(@PathVariable int categoryId,
+                                         @Valid @RequestBody UpdateBookCategoriesRequestDto dto) {
+        return bookCategoryService.update(categoryId, dto.getName());
     }
 
     @DeleteMapping("/{categoryId}")
