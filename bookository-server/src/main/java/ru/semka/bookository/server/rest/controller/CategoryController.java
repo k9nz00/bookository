@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
-import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
 import ru.semka.bookository.server.rest.dto.bookcategory.CreateBookCategoriesRequestDto;
 import ru.semka.bookository.server.rest.dto.bookcategory.UpdateBookCategoriesRequestDto;
-import ru.semka.bookository.server.service.BookCategoryService;
+import ru.semka.bookository.server.service.CategoryService;
 
 import java.util.Collection;
 
@@ -18,32 +18,32 @@ import java.util.Collection;
 @RequestMapping(value = "/api/book-categories")
 @Validated
 @RequiredArgsConstructor
-public class BookCategoryController {
-    private final BookCategoryService bookCategoryService;
+public class CategoryController {
+    private final CategoryService categoryService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<BookCategoryUiDto> getCategories() {
-        return bookCategoryService.getAll();
+    public Collection<CategoryUiDto> getCategories() {
+        return categoryService.getAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookCategoryUiDto saveCategory(@Valid @RequestBody CreateBookCategoriesRequestDto dto) {
-        return bookCategoryService.save(dto.getName());
+    public CategoryUiDto saveCategory(@Valid @RequestBody CreateBookCategoriesRequestDto dto) {
+        return categoryService.save(dto.getName());
     }
 
     @PutMapping("/{categoryId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public CategoryEntity updateCategory(@PathVariable int categoryId,
                                          @Valid @RequestBody UpdateBookCategoriesRequestDto dto) {
-        return bookCategoryService.update(categoryId, dto.getName());
+        return categoryService.update(categoryId, dto.getName());
     }
 
     @DeleteMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(description = "Remove category")
     public void deleteCategory(@PathVariable int categoryId) {
-        bookCategoryService.delete(categoryId);
+        categoryService.delete(categoryId);
     }
 }

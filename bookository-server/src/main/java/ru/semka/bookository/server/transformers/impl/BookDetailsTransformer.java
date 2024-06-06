@@ -8,7 +8,7 @@ import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.rest.dto.book.BookContentInfoUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
-import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
 import ru.semka.bookository.server.transformers.Transformer;
 
 import java.util.Base64;
@@ -37,9 +37,9 @@ public class BookDetailsTransformer implements Transformer<BookDetailsEntity, Bo
         );
     }
 
-    private Collection<BookCategoryUiDto> getCategories(Collection<CategoryEntity> categories) {
+    private Collection<CategoryUiDto> getCategories(Collection<CategoryEntity> categories) {
         return categories.stream()
-                .map(entity -> new BookCategoryUiDto(entity.getId(), entity.getName()))
+                .map(entity -> new CategoryUiDto(entity.getId(), entity.getName()))
                 .toList();
     }
 

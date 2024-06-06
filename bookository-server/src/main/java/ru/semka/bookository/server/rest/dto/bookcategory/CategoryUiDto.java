@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class BookCategoryUiDto {
+public class CategoryUiDto {
     private final Integer id;
     private final String name;
 }

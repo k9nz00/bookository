@@ -4,34 +4,35 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
-import ru.semka.bookository.server.dao.BookCategoryDao;
+import ru.semka.bookository.server.dao.CategoryDao;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
-import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
-import ru.semka.bookository.server.service.BookCategoryService;
+import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
+import ru.semka.bookository.server.service.CategoryService;
 import ru.semka.bookository.server.transformers.Transformer;
 
 import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
-public class BookCategoryServiceImpl implements BookCategoryService {
-    private final BookCategoryDao bookCategoryDao;
-    private final Transformer<CategoryEntity, BookCategoryUiDto> bookCategoryTransformer;
+public class CategoryServiceImpl implements CategoryService {
+    private final CategoryDao categoryDao;
+    private final Transformer<CategoryEntity, CategoryUiDto> CategoryTransformer;
+    private final static String DEFAULT_SORTING_FIELD = "name";
 
     @Override
-    public BookCategoryUiDto save(String categoryName) {
+    public CategoryUiDto save(String categoryName) {
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setName(categoryName);
-        bookCategoryDao.save(categoryEntity);
-        return bookCategoryTransformer.transform(categoryEntity);
+        categoryDao.save(categoryEntity);
+        return CategoryTransformer.transform(categoryEntity);
     }
 
     @Override
     public CategoryEntity update(int categoryId, String categoryName) {
-        return bookCategoryDao.findById(categoryId)
+        return categoryDao.findById(categoryId)
                 .map(entity -> {
                     entity.setName(categoryName);
-                    return bookCategoryDao.save(entity);
+                    return categoryDao.save(entity);
                 }).orElseThrow(() -> new ResourceNotFoundException(
                         "Category with id = %d not found".formatted(categoryId))
                 );
@@ -39,19 +40,19 @@ public class BookCategoryServiceImpl implements BookCategoryService {
 
     @Override
     public void delete(int categoryId) {
-        bookCategoryDao.findById(categoryId)
+        categoryDao.findById(categoryId)
                 .ifPresentOrElse(
-                        entity -> bookCategoryDao.deleteById(categoryId),
+                        entity -> categoryDao.deleteById(categoryId),
                         () -> {
                             throw new ResourceNotFoundException("Category with id = %d not found".formatted(categoryId));
                         });
     }
 
     @Override
-    public Collection<BookCategoryUiDto> getAll() {
-        Sort sort = Sort.by(Sort.Direction.ASC, "name");
-        return bookCategoryDao.findAll(sort).stream()
-                .map(bookCategoryTransformer::transform)
+    public Collection<CategoryUiDto> getAll() {
+        Sort sort = Sort.by(Sort.Direction.ASC, DEFAULT_SORTING_FIELD);
+        return categoryDao.findAll(sort).stream()
+                .map(CategoryTransformer::transform)
                 .toList();
     }
 }

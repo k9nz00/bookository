@@ -2,14 +2,14 @@ package ru.semka.bookository.server.transformers.impl;
 
 import org.springframework.stereotype.Component;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
-import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
 import ru.semka.bookository.server.transformers.Transformer;
 
 @Component
-public class BookCategoryTransformer implements Transformer<CategoryEntity, BookCategoryUiDto> {
+public class CategoryTransformer implements Transformer<CategoryEntity, CategoryUiDto> {
     @Override
-    public BookCategoryUiDto transform(CategoryEntity input) {
-        return new BookCategoryUiDto(
+    public CategoryUiDto transform(CategoryEntity input) {
+        return new CategoryUiDto(
                 input.getId(),
                 input.getName()
         );
