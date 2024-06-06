@@ -7,7 +7,7 @@ services:
       - "8010:8080"
 
   postgres:
-    image: bookository/postgres:br_it
+    image: "bookository/postgres:${IMAGE_VERSION}"
     restart: on-failure
     ports:
       - "5432:5432"
@@ -17,7 +17,7 @@ services:
       POSTGRES_DB: bookository
 
   bookository-server:
-    image: bookository/bookository-server:br_it
+    image: "bookository/bookository-server:${IMAGE_VERSION}"
     restart: on-failure
     ports:
       - "8020:8020"
