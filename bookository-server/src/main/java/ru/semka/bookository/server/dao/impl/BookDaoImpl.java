@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.query.TypedParameterValue;
 import org.hibernate.type.CustomType;
 import org.hibernate.type.spi.TypeConfiguration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
@@ -37,8 +38,10 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
 
     private final ComponentCommonUtil commonUtil;
 
-    public BookDaoImpl(EntityManager entityManager, ComponentCommonUtil commonUtil) {
-        super(entityManager);
+    public BookDaoImpl(EntityManager entityManager,
+                       ComponentCommonUtil commonUtil,
+                       final @Value("${app-config.pagination.default-limit}") int defaultLimit) {
+        super(entityManager, defaultLimit);
         this.commonUtil = commonUtil;
     }
 

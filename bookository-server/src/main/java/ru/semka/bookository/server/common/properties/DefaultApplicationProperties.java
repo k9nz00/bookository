@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@ConfigurationProperties("app")
+@ConfigurationProperties("app-config")
 @Component
 @Data
 public class DefaultApplicationProperties {

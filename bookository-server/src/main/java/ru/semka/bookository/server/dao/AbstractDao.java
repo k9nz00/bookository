@@ -14,6 +14,7 @@ import java.util.Optional;
 @Getter
 public abstract class AbstractDao {
     protected final EntityManager entityManager;
+    private final int DEFAULT_LIMIT;
 
     protected <T> Collection<T> execute(SearchCriteriaDto<T> searchCriteriaDto) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -41,8 +42,8 @@ public abstract class AbstractDao {
                 });
 
         TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
-        query.setMaxResults(searchCriteriaDto.getLimit() != null ? searchCriteriaDto.getLimit() : 10); //todo create default value
-        query.setFirstResult(searchCriteriaDto.getOffset() != null ? searchCriteriaDto.getOffset() : 0); //todo create default value
+        query.setMaxResults(searchCriteriaDto.getLimit() != null ? searchCriteriaDto.getLimit() : DEFAULT_LIMIT);
+        query.setFirstResult(searchCriteriaDto.getOffset() != null ? searchCriteriaDto.getOffset() : 0);
         return query.getResultList();
     }
 }
