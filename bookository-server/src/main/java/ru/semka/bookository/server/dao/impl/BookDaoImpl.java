@@ -21,7 +21,7 @@ import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.dao.type.BookFormatType;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
-import ru.semka.bookository.server.util.CommonUtil;
+import ru.semka.bookository.server.util.ComponentCommonUtil;
 import ru.semka.bookository.server.util.DaoUtil;
 
 import java.io.IOException;
@@ -35,8 +35,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BookDaoImpl extends AbstractDao implements BookDao {
 
-    public BookDaoImpl(EntityManager entityManager) {
+    private final ComponentCommonUtil commonUtil;
+
+    public BookDaoImpl(EntityManager entityManager, ComponentCommonUtil commonUtil) {
         super(entityManager);
+        this.commonUtil = commonUtil;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
         entity.setGenre(dto.getGenre());
         entity.setAnnotation(dto.getAnnotation());
         entity.setName(dto.getName());
-        entity.setCreatedAt(Timestamp.from(CommonUtil.SYSTEM_CLOCK.instant()));
+        entity.setCreatedAt(Timestamp.from(commonUtil.getSystemClock().instant()));
         entity.setIsAvailable(true);
         entity.setLanguage(dto.getLanguage());
         entityManager.persist(entity);
@@ -77,7 +80,7 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
         if (Objects.nonNull(dto.getCategories())) {
             bookEntity.setCategories(getCategories(dto.getCategories()));
         }
-        bookEntity.setUpdatedAt(Timestamp.from(CommonUtil.SYSTEM_CLOCK.instant()));
+        bookEntity.setUpdatedAt(Timestamp.from(commonUtil.getSystemClock().instant()));
         entityManager.merge(bookEntity);
         return bookEntity;
     }
