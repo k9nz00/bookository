@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -58,10 +59,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookUiDto update(int bookId, BookRequestDto dto) {
-        // TODO need implemented
-        //BookEntity entity = bookDao.update(bookId, dto);
-        //return bookTransformer.transform(entity);
-        return null;
+        BookWithSmallPreviewEntity entity = bookDao.update(bookId, dto);
+        return bookTransformer.transform(entity);
     }
 
     @Override
@@ -92,11 +91,17 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public String getBookContent(int bookId, int bookContentId) {
-        return encoder.encodeToString(bookDao.getBookContent(bookId, bookContentId));
+        Optional<byte[]> bookContent = bookDao.getBookContent(bookId, bookContentId);
+        return bookContent.map(encoder::encodeToString)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Not found book content for book with id = %d and content id = %d".formatted(bookId, bookContentId)
+                ));
     }
 
     @Override
     public void updateBookCover(int bookId, MultipartFile cover) throws IOException {
+
+        bookCoverService.deleteCover(bookId);
         bookCoverService.saveCover(bookId, cover);
     }
 
@@ -106,6 +111,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private BookFormat getType(final MultipartFile book) {
+        //todo переработать чтобы не могло появиться NPE
         String filename = book.getResource().getFilename();
         int formatIndex = filename.lastIndexOf(".");
         String formatValue = filename.substring(formatIndex + 1);

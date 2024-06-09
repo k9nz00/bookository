@@ -20,6 +20,7 @@ public class BookCoverServiceImpl implements BookCoverService {
 
     @Override
     public void saveCover(int bookId, MultipartFile cover) throws IOException {
+        //todo брать расширение файла из его инфы
         BufferedImage smallImage = imageService.resizeImage(cover.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(smallImage, "jpeg", baos);

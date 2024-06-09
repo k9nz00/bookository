@@ -15,7 +15,7 @@ import ru.semka.bookository.server.service.CategoryService;
 import java.util.Collection;
 
 @RestController
-@RequestMapping(value = "/api/book-categories")
+@RequestMapping(value = "/api/categories")
 @Validated
 @RequiredArgsConstructor
 public class CategoryController {

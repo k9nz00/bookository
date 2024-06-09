@@ -1,7 +1,9 @@
 package ru.semka.bookository.server.dao.impl;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.query.TypedParameterValue;
 import org.hibernate.type.CustomType;
 import org.hibernate.type.spi.TypeConfiguration;
@@ -30,6 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
+@Slf4j
 public class BookDaoImpl extends AbstractDao implements BookDao {
 
     public BookDaoImpl(EntityManager entityManager) {
@@ -54,8 +57,8 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
-    public BookEntity update(int bookId, BookRequestDto dto) {
-        BookEntity bookEntity = entityManager.find(BookEntity.class, bookId);
+    public BookWithSmallPreviewEntity update(int bookId, BookRequestDto dto) {
+        BookWithSmallPreviewEntity bookEntity = entityManager.find(BookWithSmallPreviewEntity.class, bookId);
         if (Objects.nonNull(dto.getName())) {
             bookEntity.setName(dto.getName());
         }
@@ -132,14 +135,19 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
-    public byte[] getBookContent(int bookId, int bookContentId) {
+    public Optional<byte[]> getBookContent(int bookId, int bookContentId) {
         Query query = entityManager.createNativeQuery(
                 "SELECT content FROM bookository.book_content WHERE id = :id AND book_id = :book_id",
                 byte[].class
         );
         query.setParameter("book_id", bookId);
         query.setParameter("id", bookContentId);
-        return (byte[]) query.getSingleResult();
+        try {
+            return Optional.of((byte[]) query.getSingleResult());
+        } catch (NoResultException e) {
+            log.info("Not found book content for book with id = {} and content id = {}", bookId, bookContentId);
+            return Optional.empty();
+        }
     }
 
     private Collection<CategoryEntity> getCategories(Collection<Integer> categoryIds) {
