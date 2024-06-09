@@ -111,10 +111,13 @@ public class BookServiceImpl implements BookService {
     }
 
     private BookFormat getType(final MultipartFile book) {
-        //todo переработать чтобы не могло появиться NPE
         String filename = book.getResource().getFilename();
-        int formatIndex = filename.lastIndexOf(".");
-        String formatValue = filename.substring(formatIndex + 1);
-        return BookFormat.fromValue(formatValue.toUpperCase());
+        if (Objects.nonNull(filename) && ".".contains(filename)) {
+            int indexFormat = filename.lastIndexOf(".");
+            String formatValue = filename.substring(indexFormat + 1);
+            return BookFormat.fromValue(formatValue.toUpperCase());
+        } else {
+            throw new IllegalArgumentException("Not possible to determine the type of file extension");
+        }
     }
 }
