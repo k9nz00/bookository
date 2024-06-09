@@ -18,6 +18,7 @@ import ru.semka.bookository.server.rest.dto.book.BookUiDto;
 import ru.semka.bookository.server.service.BookCoverService;
 import ru.semka.bookository.server.service.BookService;
 import ru.semka.bookository.server.transformers.Transformer;
+import ru.semka.bookository.server.util.FileUtil;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -111,13 +112,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private BookFormat getType(final MultipartFile book) {
-        String filename = book.getResource().getFilename();
-        if (Objects.nonNull(filename) && ".".contains(filename)) {
-            int indexFormat = filename.lastIndexOf(".");
-            String formatValue = filename.substring(indexFormat + 1);
-            return BookFormat.fromValue(formatValue.toUpperCase());
-        } else {
-            throw new IllegalArgumentException("Not possible to determine the type of file extension");
-        }
+        String fileFormat = FileUtil.getFileFormat(book);
+        return BookFormat.fromValue(fileFormat.toUpperCase());
     }
 }
