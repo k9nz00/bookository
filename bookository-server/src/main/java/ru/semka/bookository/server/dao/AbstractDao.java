@@ -14,11 +14,16 @@ import java.util.Optional;
 @Getter
 public abstract class AbstractDao {
     protected final EntityManager entityManager;
+    private final int DEFAULT_LIMIT;
 
     protected <T> Collection<T> execute(SearchCriteriaDto<T> searchCriteriaDto) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(searchCriteriaDto.getClazz());
         Root<T> root = criteriaQuery.from(searchCriteriaDto.getClazz());
+
+        Optional.ofNullable(searchCriteriaDto.getProvider())
+                .map(provider -> provider.getPredicates(criteriaBuilder, root).toArray(new Predicate[0]))
+                .ifPresent(criteriaQuery::where);
 
         Optional.ofNullable(searchCriteriaDto.getSortColumn())
                 .ifPresent(sort -> {
@@ -37,7 +42,7 @@ public abstract class AbstractDao {
                 });
 
         TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
-        query.setMaxResults(searchCriteriaDto.getLimit() != null ? searchCriteriaDto.getLimit() : 10);
+        query.setMaxResults(searchCriteriaDto.getLimit() != null ? searchCriteriaDto.getLimit() : DEFAULT_LIMIT);
         query.setFirstResult(searchCriteriaDto.getOffset() != null ? searchCriteriaDto.getOffset() : 0);
         return query.getResultList();
     }

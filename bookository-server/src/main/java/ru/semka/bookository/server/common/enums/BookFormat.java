@@ -9,7 +9,6 @@ public enum BookFormat {
     PDF;
 
     public static BookFormat fromValue(String input) {
-
         for (BookFormat value : BookFormat.values()) {
             if (value.name().equals(input)) {
                 return value;

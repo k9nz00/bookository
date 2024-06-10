@@ -5,7 +5,7 @@ import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.dao.entity.SmallBookPreviewEntity;
 import ru.semka.bookository.server.rest.dto.book.BookUiDto;
-import ru.semka.bookository.server.rest.dto.bookcategory.BookCategoryUiDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
 import ru.semka.bookository.server.transformers.Transformer;
 
 import java.util.Base64;
@@ -40,9 +40,9 @@ public class BookTransformer implements Transformer<BookWithSmallPreviewEntity, 
                 .orElse(null);
     }
 
-    private Collection<BookCategoryUiDto> getCategories(Collection<CategoryEntity> categories) {
+    private Collection<CategoryUiDto> getCategories(Collection<CategoryEntity> categories) {
         return categories.stream()
-                .map(entity -> new BookCategoryUiDto(entity.getId(), entity.getName()))
+                .map(entity -> new CategoryUiDto(entity.getId(), entity.getName()))
                 .toList();
     }
 }

@@ -18,7 +18,7 @@ public interface BookDao {
     BookEntity save(BookRequestDto dto);
 
     @Transactional
-    BookEntity update(int bookId, BookRequestDto dto);
+    BookWithSmallPreviewEntity update(int bookId, BookRequestDto dto);
 
     @Transactional
     void saveBookContent(int bookId, MultipartFile book, BookFormat bookFormat) throws IOException;
@@ -29,9 +29,10 @@ public interface BookDao {
     @Transactional
     void deleteBookContent(int bookId, int bookContentId);
 
-    Collection<BookWithSmallPreviewEntity> getBooks(BookCriteriaDto criteriaDto);
+    Collection<BookWithSmallPreviewEntity> getBooks(BookCriteriaDto criteriaDto,
+                                                    PredicateProvider<BookWithSmallPreviewEntity> predicateProvider);
 
     Optional<BookDetailsEntity> getDetails(int bookId);
 
-    byte[] getBookContent(int bookId, int bookContentId);
+    Optional<byte[]> getBookContent(int bookId, int bookContentId);
 }
