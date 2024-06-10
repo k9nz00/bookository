@@ -24,6 +24,7 @@
         <!-- main components versions -->
         <junit.version>3.8.1</junit.version>
         <hikari.version>5.0.1</hikari.version>
+        <lombok.version>1.18.30</lombok.version>
 
         <!-- plugin versions-->
         <docker-maven-plugin.version>0.43.0</docker-maven-plugin.version>

@@ -40,14 +40,14 @@ public class BookCoverDaoImpl implements BookCoverDao {
 
     @Override
     public void deleteBigCover(int bookId) {
-        Query nativeQuery = entityManager.createNativeQuery("DELETE FROM bookository.book_big_preview WHERE book_id = :book_id");
+        Query nativeQuery = entityManager.createNativeQuery("DELETE FROM bookository.big_book_preview WHERE id = :book_id");
         nativeQuery.setParameter("book_id", bookId);
         nativeQuery.executeUpdate();
     }
 
     @Override
     public void deleteSmallCover(int bookId) {
-        Query nativeQuery = entityManager.createNativeQuery("DELETE FROM bookository.book_small_preview WHERE book_id = :book_id");
+        Query nativeQuery = entityManager.createNativeQuery("DELETE FROM bookository.small_book_preview WHERE id = :book_id");
         nativeQuery.setParameter("book_id", bookId);
         nativeQuery.executeUpdate();
     }

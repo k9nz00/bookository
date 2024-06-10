@@ -19,12 +19,20 @@ spring:
       max-request-size: 50MB
       location:
   jpa:
-    show-sql: true
-#    hibernate:
-#      ddl-auto: validate
+    hibernate:
+      show-sql: true
+      format_sql: true
+      use_sql_comments: true
+      #ddl-auto: validate
+# Добавить метку о способе сортировки nullable значений. См книгу jpa & hibernate!!
 
 server:
   port: 8020
+
+app-config:
+  system-offset-id: ${SYSTEM-OFFSET-ID:+03}
+  pagination:
+    default-limit: 15
 
 springdoc:
   swagger-ui:

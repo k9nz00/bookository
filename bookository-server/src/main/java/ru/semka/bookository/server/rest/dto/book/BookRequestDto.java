@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import ru.semka.bookository.server.common.enums.Language;
 
+import java.util.Collection;
+
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Data
@@ -26,5 +28,5 @@ public class BookRequestDto {
     @Parameter
     private String annotation;
     @Parameter
-    private int[] categories;
+    private Collection<Integer> categories;
 }
