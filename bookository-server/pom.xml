@@ -9,7 +9,6 @@
 
     <artifactId>bookository-server</artifactId>
     <packaging>jar</packaging>
-
     <name>bookository-server</name>
 
     <dependencies>
