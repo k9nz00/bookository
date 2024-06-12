@@ -12,7 +12,7 @@ import java.util.Collection;
 
 public interface BookService {
     @Transactional
-    void save(BookRequestDto dto, MultipartFile book, MultipartFile cover) throws IOException;
+    void save(BookRequestDto dto) throws IOException;
 
     BookUiDto update(int bookId, BookRequestDto dto);
 

@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,21 +26,9 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
-    @PostMapping(
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE}
-    )
-    public void saveBook(
-            @RequestPart(value = "name") String name,
-            @RequestPart(value = "author", required = false) String author,
-            @RequestPart(value = "genre", required = false) String genre,
-            @RequestPart(value = "language", required = false) String language,
-            @RequestPart(value = "annotation", required = false) String annotation,
-            @RequestPart(value = "categories", required = false) Integer[] categories,
-            @RequestPart(name = "book", required = false) MultipartFile book,
-            @RequestPart(name = "cover", required = false) MultipartFile cover) throws IOException {
-        BookRequestDto bookDto = getBookDto(name, author, genre, language, annotation, categories);
-        bookService.save(bookDto, book, cover);
+    @PostMapping
+    public void saveBook(@Valid @RequestBody BookRequestDto requestDto) throws IOException {
+        bookService.save(requestDto);
     }
 
     @GetMapping
