@@ -10,7 +10,7 @@ import { API_HOST } from '../constants.js'
  * @returns {Promise<Category[]>}
  */
 export const getCategories = () => {
-  return fetch(`${ API_HOST }/book-categories`)
+  return fetch(`${ API_HOST }/categories`)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -25,7 +25,7 @@ export const createCategory = (category) => {
     body: category
   }
 
-  return fetch(`${ API_HOST }/book-categories`, options)
+  return fetch(`${ API_HOST }/categories`, options)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -40,7 +40,7 @@ export const updateCategory = (category) => {
     body: category
   }
 
-  return fetch(`${ API_HOST }/book-categories/${ category.id }`, options)
+  return fetch(`${ API_HOST }/categories/${ category.id }`, options)
     .then((response) => response.json())
     .then((response) => response)
 }
@@ -54,7 +54,7 @@ export const deleteCategory = (id) => {
     method: 'DELETE'
   }
 
-  return fetch(`${ API_HOST }/book-categories/${ id }`, options)
+  return fetch(`${ API_HOST }/categories/${ id }`, options)
     .then((response) => response.json())
     .then((response) => response)
 }
