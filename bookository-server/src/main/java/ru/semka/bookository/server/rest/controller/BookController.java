@@ -106,7 +106,7 @@ public class BookController {
                 genre,
                 language != null ? Language.fromValue(language.toUpperCase()) : null,
                 annotation,
-                List.of(categories)
+                categories != null ? List.of(categories) : null
         );
     }
 }
