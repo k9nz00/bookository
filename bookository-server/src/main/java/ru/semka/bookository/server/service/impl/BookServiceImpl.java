@@ -23,7 +23,6 @@ import ru.semka.bookository.server.util.FileUtil;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -38,15 +37,8 @@ public class BookServiceImpl implements BookService {
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
-    public void save(BookRequestDto dto, MultipartFile book, MultipartFile cover) throws IOException {
+    public void save(BookRequestDto dto) throws IOException {
         BookEntity bookEntity = bookDao.save(dto);
-        if (Objects.nonNull(book)) {
-            BookFormat type = getType(book);
-            bookDao.saveBookContent(bookEntity.getId(), book, type);
-        }
-        if (Objects.nonNull(cover)) {
-            bookCoverService.saveCover(bookEntity.getId(), cover);
-        }
     }
 
     @Override
