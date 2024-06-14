@@ -1,10 +1,12 @@
 package ru.semka.bookository.server.factory.impl;
 
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
 import ru.semka.bookository.server.dao.PredicateProvider;
 import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity_;
+import ru.semka.bookository.server.dao.entity.CategoryEntity;
+import ru.semka.bookository.server.dao.entity.CategoryEntity_;
 import ru.semka.bookository.server.factory.CriteriaPredicateFactory;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 
@@ -31,6 +33,18 @@ public class BookCriteriaPredicate implements CriteriaPredicateFactory<BookCrite
 
             Optional.ofNullable(input.getLanguage())
                     .ifPresent(value -> predicates.add(builder.equal(root.get(BookWithSmallPreviewEntity_.language), value)));
+
+            Optional.ofNullable(input.getCategories())
+                    .ifPresent(value -> {
+                        CriteriaQuery<BookWithSmallPreviewEntity> bookCriteriaQuery = builder.createQuery(BookWithSmallPreviewEntity.class);
+                        Subquery<Integer> subquery = bookCriteriaQuery.subquery(Integer.class);
+                        Root<BookWithSmallPreviewEntity> subqueryCategory = subquery.from(BookWithSmallPreviewEntity.class);
+                        Join<CategoryEntity, BookWithSmallPreviewEntity> subqueryCategories = subqueryCategory.join(BookWithSmallPreviewEntity_.CATEGORIES);
+                        subquery.select(subqueryCategory.get(BookWithSmallPreviewEntity_.ID)).where(
+                                subqueryCategories.get(CategoryEntity_.ID).in(value)
+                        );
+                        predicates.add(builder.in(root.get(CategoryEntity_.ID)).value(subquery));
+                    });
 
             return predicates;
         });
