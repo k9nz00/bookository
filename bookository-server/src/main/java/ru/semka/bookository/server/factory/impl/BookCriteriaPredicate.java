@@ -4,6 +4,7 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.stereotype.Component;
 import ru.semka.bookository.server.dao.PredicateProvider;
 import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
+import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity_;
 import ru.semka.bookository.server.factory.CriteriaPredicateFactory;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 
@@ -20,16 +21,16 @@ public class BookCriteriaPredicate implements CriteriaPredicateFactory<BookCrite
             Collection<Predicate> predicates = new ArrayList<>();
 
             Optional.ofNullable(input.getName())
-                    .ifPresent(value -> predicates.add(builder.equal(root.get("name"), value)));
+                    .ifPresent(value -> predicates.add(builder.equal(root.get(BookWithSmallPreviewEntity_.name), value)));
 
             Optional.ofNullable(input.getAuthor())
-                    .ifPresent(value -> predicates.add(builder.like(root.get("author"), "%" + value + "%")));
+                    .ifPresent(value -> predicates.add(builder.like(root.get(BookWithSmallPreviewEntity_.author), "%" + value + "%")));
 
             Optional.ofNullable(input.getGenre())
-                    .ifPresent(value -> predicates.add(builder.like(root.get("genre"), "%" + value + "%")));
+                    .ifPresent(value -> predicates.add(builder.like(root.get(BookWithSmallPreviewEntity_.genre), "%" + value + "%")));
 
             Optional.ofNullable(input.getLanguage())
-                    .ifPresent(value -> predicates.add(builder.equal(root.get("language"), value)));
+                    .ifPresent(value -> predicates.add(builder.equal(root.get(BookWithSmallPreviewEntity_.language), value)));
 
             return predicates;
         });
