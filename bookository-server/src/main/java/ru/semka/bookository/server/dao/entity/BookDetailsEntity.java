@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Collection;
 
 @Entity
-@Table(schema = "bookository", name = "book")
+@Table(name = "book")
 @Data
 public class BookDetailsEntity extends AbstractBookEntity {
     @OneToOne

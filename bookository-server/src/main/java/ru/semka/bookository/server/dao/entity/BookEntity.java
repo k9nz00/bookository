@@ -5,7 +5,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(schema = "bookository", name = "book")
+@Table(name = "book")
 @Data
 public class BookEntity extends AbstractBookEntity {
 }

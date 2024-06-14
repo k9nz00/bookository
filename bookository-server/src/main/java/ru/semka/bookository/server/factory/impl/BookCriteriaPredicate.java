@@ -22,6 +22,15 @@ public class BookCriteriaPredicate implements CriteriaPredicateFactory<BookCrite
             Optional.ofNullable(input.getName())
                     .ifPresent(value -> predicates.add(builder.equal(root.get("name"), value)));
 
+            Optional.ofNullable(input.getAuthor())
+                    .ifPresent(value -> predicates.add(builder.like(root.get("author"), "%" + value + "%")));
+
+            Optional.ofNullable(input.getGenre())
+                    .ifPresent(value -> predicates.add(builder.like(root.get("genre"), "%" + value + "%")));
+
+            Optional.ofNullable(input.getLanguage())
+                    .ifPresent(value -> predicates.add(builder.equal(root.get("language"), value)));
+
             return predicates;
         });
     }
