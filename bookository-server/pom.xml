@@ -76,6 +76,11 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>
+
         <!--tests dependencies-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

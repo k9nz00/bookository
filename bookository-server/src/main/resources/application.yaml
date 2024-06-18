@@ -2,7 +2,7 @@ spring:
   application:
     name: Bookository - учебный проект. Сайт электронной библиотеки
   datasource:
-    url: ${DB_JDBC_URL:jdbc:postgresql://192.168.1.110:5432/bookository}?currentSchema=bookository
+    url: ${DB_JDBC_URL:jdbc:postgresql://localhost:5432/bookository}?currentSchema=bookository
     hikari:
       driver-class-name: org.postgresql.Driver
       pool-name: HikariCpPoolName
@@ -19,17 +19,12 @@ spring:
       max-request-size: 50MB
       location:
   jpa:
-    #    hibernate:
-    #      show-sql: true
-    #      format_sql: true
-    #      use_sql_comments: true
-    #ddl-auto: validate
     properties:
       hibernate:
         show_sql: true
         use_sql_comments: false
         format_sql: true
-#        default_schema: default_schema: hibernate
+        default_schema: bookository
 
 # Добавить метку о способе сортировки nullable значений. См книгу jpa & hibernate!!
 

@@ -16,23 +16,23 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: bookository
 
-  bookository-server:
-    image: "bookository/bookository-server:${IMAGE_VERSION}"
-    restart: on-failure
-    ports:
-      - "8020:8020"
-      - "38005:38005"
-    environment:
-      DB_JDBC_URL: jdbc:postgresql://postgres:5432/bookository?currentSchema=bookository
-      DB_USER: "postgres"
-      DB_PWD: "postgres"
-    depends_on:
-      - postgres
-  bookository-web:
-    image: bookository/bookository-web:br_it
-    restart: on-failure
-    network_mode: bridge
-    ports:
-      - "81:3000"
-    environment:
-      API_HOST: "http://localhost:8020/api"
+#  bookository-server:
+#    image: "bookository/bookository-server:${IMAGE_VERSION}"
+#    restart: on-failure
+#    ports:
+#      - "8020:8020"
+#      - "38005:38005"
+#    environment:
+#      DB_JDBC_URL: jdbc:postgresql://postgres:5432/bookository?currentSchema=bookository
+#      DB_USER: "postgres"
+#      DB_PWD: "postgres"
+#    depends_on:
+#      - postgres
+#  bookository-web:
+#    image: bookository/bookository-web:br_it
+#    restart: on-failure
+#    network_mode: bridge
+#    ports:
+#      - "81:3000"
+#    environment:
+#      API_HOST: "http://localhost:8020/api"
