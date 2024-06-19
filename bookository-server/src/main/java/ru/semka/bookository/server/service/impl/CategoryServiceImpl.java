@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
 import ru.semka.bookository.server.dao.CategoryDao;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
+import ru.semka.bookository.server.mapper.CategoryMapper;
 import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
 import ru.semka.bookository.server.service.CategoryService;
-import ru.semka.bookository.server.transformers.Transformer;
 
 import java.util.Collection;
 
@@ -16,7 +16,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryDao categoryDao;
-    private final Transformer<CategoryEntity, CategoryUiDto> CategoryTransformer;
+    private final CategoryMapper categoryMapper;
     private final static String DEFAULT_SORTING_FIELD = "name";
 
     @Override
@@ -24,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setName(categoryName);
         categoryDao.save(categoryEntity);
-        return CategoryTransformer.transform(categoryEntity);
+        return categoryMapper.categoryEntityToDto(categoryEntity);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Collection<CategoryUiDto> getAll() {
         Sort sort = Sort.by(Sort.Direction.ASC, DEFAULT_SORTING_FIELD);
         return categoryDao.findAll(sort).stream()
-                .map(CategoryTransformer::transform)
+                .map(categoryMapper::categoryEntityToDto)
                 .toList();
     }
 }

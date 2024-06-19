@@ -8,16 +8,15 @@ import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
 import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.PredicateProvider;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
-import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.factory.CriteriaPredicateFactory;
+import ru.semka.bookository.server.mapper.BookMapper;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 import ru.semka.bookository.server.rest.dto.book.BookUiDto;
 import ru.semka.bookository.server.service.BookCoverService;
 import ru.semka.bookository.server.service.BookService;
-import ru.semka.bookository.server.transformers.Transformer;
 import ru.semka.bookository.server.util.FileUtil;
 
 import java.io.IOException;
@@ -31,14 +30,12 @@ public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final BookCoverService bookCoverService;
     private final CriteriaPredicateFactory<BookCriteriaDto, BookWithSmallPreviewEntity> bookCriteriaPredicateFactory;
-
-    private final Transformer<BookDetailsEntity, BookDetailsUiDto> bookDetailsTransformer;
-    private final Transformer<BookWithSmallPreviewEntity, BookUiDto> bookTransformer;
+    private final BookMapper bookMapper;
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
-    public void save(BookRequestDto dto) throws IOException {
-        BookEntity bookEntity = bookDao.save(dto);
+    public void save(BookRequestDto dto) {
+        bookDao.save(dto);
     }
 
     @Override
@@ -46,14 +43,14 @@ public class BookServiceImpl implements BookService {
         PredicateProvider<BookWithSmallPreviewEntity> predicateProvider = bookCriteriaPredicateFactory.create(criteriaDto);
         Collection<BookWithSmallPreviewEntity> books = bookDao.getBooks(criteriaDto, predicateProvider);
         return books.stream()
-                .map(bookTransformer::transform)
+                .map(bookMapper::bookWithSmallPreviewToBookUiDto)
                 .toList();
     }
 
     @Override
     public BookUiDto update(int bookId, BookRequestDto dto) {
         BookWithSmallPreviewEntity entity = bookDao.update(bookId, dto);
-        return bookTransformer.transform(entity);
+        return bookMapper.bookWithSmallPreviewToBookUiDto(entity);
     }
 
     @Override
@@ -72,14 +69,13 @@ public class BookServiceImpl implements BookService {
         bookDao.saveBookContent(bookId, book, type);
     }
 
-
     @Override
     public BookDetailsUiDto getDetails(int bookId) {
         BookDetailsEntity entity = bookDao.getDetails(bookId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Book with id = %d not found", bookId)
                 ));
-        return bookDetailsTransformer.transform(entity);
+        return bookMapper.bookDetailsEntityToBookDetailsDto(entity);
     }
 
     @Override
@@ -93,7 +89,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void updateBookCover(int bookId, MultipartFile cover) throws IOException {
-
         bookCoverService.deleteCover(bookId);
         bookCoverService.saveCover(bookId, cover);
     }
