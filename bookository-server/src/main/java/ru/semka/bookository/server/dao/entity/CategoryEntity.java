@@ -2,10 +2,12 @@ package ru.semka.bookository.server.dao.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "category")
 @Data
+@NoArgsConstructor
 public class CategoryEntity {
 
     @Id
