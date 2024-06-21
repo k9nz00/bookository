@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.semka.bookository.server.common.enums.Language;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -17,7 +16,6 @@ import ru.semka.bookository.server.service.BookService;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/books")
@@ -79,21 +77,5 @@ public class BookController {
     @DeleteMapping("/{bookId}/cover")
     public void deleteBookCover(@PathVariable int bookId) {
         bookService.deleteBookCover(bookId);
-    }
-
-    private BookRequestDto getBookDto(String name,
-                                      String author,
-                                      String genre,
-                                      String language,
-                                      String annotation,
-                                      Integer[] categories) {
-        return new BookRequestDto(
-                name,
-                author,
-                genre,
-                language != null ? Language.fromValue(language.toUpperCase()) : null,
-                annotation,
-                categories != null ? List.of(categories) : null
-        );
     }
 }
