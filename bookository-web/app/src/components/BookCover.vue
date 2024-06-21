@@ -54,9 +54,6 @@ onMounted(() => {
 <style>
 .book-cover {
   @apply border border-blue-300 rounded-md;
-}
-
-.book-cover img {
   min-height: 300px;
   min-width: 250px;
   background: url('../assets/vue.svg') no-repeat center;

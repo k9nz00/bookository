@@ -39,13 +39,16 @@ export const getBook = (id) => {
 }
 
 /**
- * @param {FormData} book
+ * @param {Object} book
  * @returns {Promise<Book>}
  */
 export const createBook = (book) => {
   const options = {
     method: 'POST',
-    body: book
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(book)
   }
 
   return fetch(`${ API_HOST }/books`, options)
