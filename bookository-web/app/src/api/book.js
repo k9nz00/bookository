@@ -16,15 +16,21 @@ import { API_HOST } from '../constants.js'
  * @property {Category[]} categories
  * @property {string} bigPreview - Base64
  * @property {Array} bookContentInfo
+ * @property {number} createdAt
+ * @property {number} updatedAt
  */
-
-
 /**
  * @returns {Promise<Book[]>}
  */
 export const getBooks = () => {
   return fetch(`${ API_HOST }/books`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }
 
@@ -34,7 +40,13 @@ export const getBooks = () => {
  */
 export const getBook = (id) => {
   return fetch(`${ API_HOST }/books/${ id }`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }
 
@@ -44,30 +56,86 @@ export const getBook = (id) => {
  */
 export const createBook = (book) => {
   const options = {
-    method: 'POST',
-    headers: {
+    method: 'POST', headers: {
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(book)
+    }, body: JSON.stringify(book)
   }
 
   return fetch(`${ API_HOST }/books`, options)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }
 
 /**
- * @param {FormData} book
+ * @param {Object} book
+ * @param {string} id
  * @returns {Promise<Book>}
  */
-export const updateBook = (book) => {
+export const updateBook = (id, book) => {
   const options = {
-    method: 'PUT',
-    body: book
+    method: 'PUT', headers: {
+      'Content-Type': 'application/json'
+    }, body: JSON.stringify(book)
   }
 
-  return fetch(`${ API_HOST }/books/${ book.id }`, options)
-    .then((response) => response.json())
+  return fetch(`${ API_HOST }/books/${ id }`, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
+    .then((response) => response)
+}
+
+/**
+ * @param {string} id
+ * @returns {Promise<Book>}
+ */
+export const deleteBook = (id) => {
+  const options = {
+    method: 'delete'
+  }
+
+  return fetch(`${ API_HOST }/books/${ id }`, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
+    .then((response) => response)
+}
+
+/**
+ * @param {Object} cover
+ * @param {string} id
+ * @returns {Promise<Book>}
+ */
+export const updateBookCover = (id, cover) => {
+  const data = new FormData()
+  data.append('cover', cover)
+
+  const options = {
+    method: 'PUT', body: data
+  }
+
+  return fetch(`${ API_HOST }/books/${ id }/cover`, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }
 
@@ -78,7 +146,13 @@ export const updateBook = (book) => {
  */
 export const getBookContent = (bookId, bookContentId) => {
   return fetch(`${ API_HOST }/books/${ bookId }/book-content/${ bookContentId }`)
-    .then((response) => response.text())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }
 
@@ -89,11 +163,16 @@ export const getBookContent = (bookId, bookContentId) => {
  */
 export const createBookContent = (bookId, bookContent) => {
   const options = {
-    method: 'PUT',
-    body: bookContent
+    method: 'PUT', body: bookContent
   }
 
   return fetch(`${ API_HOST }/books/${ bookId }/attach`, options)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }

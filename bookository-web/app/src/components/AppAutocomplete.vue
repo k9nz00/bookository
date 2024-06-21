@@ -116,7 +116,7 @@ const props = defineProps({
 const emit = defineEmits(['select'])
 
 const query = ref('')
-const selectedOptionsLocal = ref(props.selectedOptions)
+const selectedOptionsLocal = ref(props.selectedOptions.map(item => item.name))
 
 const displayValue = (() => {
   return (selectedOptionsLocal.value || []).map(item => item.name).join(', ')

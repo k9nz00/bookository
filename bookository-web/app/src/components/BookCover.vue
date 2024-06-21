@@ -7,6 +7,7 @@
     <input
       type="file"
       class="input-file"
+      :disabled="disabled"
       :id="id"
       @change="onUploadCover($event.target.files)"
     >
@@ -15,13 +16,22 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { updateBookCover } from '../api/index.js'
 
 const props = defineProps({
+  bookId: {
+    type: String,
+    required: true
+  },
   preview: {
     type: String,
     default: ''
   },
   isMobile: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
     type: Boolean,
     default: false
   }
@@ -33,6 +43,10 @@ const id = computed(() => {
   return props.isMobile ? 'input-mobile' : 'input-desktop'
 })
 
+const updateCover = (file) => {
+  updateBookCover(props.bookId, file)
+}
+
 // TODO: допустимое расширение файла
 const src = ref('')
 const onUploadCover = (uploadedFiles) => {
@@ -42,7 +56,7 @@ const onUploadCover = (uploadedFiles) => {
   reader.onload = function() {
     src.value  = reader.result
 
-    emit('update:modelValue', file)
+    updateCover(file)
   }
 }
 

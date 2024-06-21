@@ -1,6 +1,8 @@
 <template>
   <div class="flex gap-3 items-center">
-    <p class="inline-block">Скачать в формате:</p>
+    <p class="inline-block">
+      Скачать в формате:
+    </p>
     <AppButton
       class="app-button-link"
       @click="downloadBookContent"

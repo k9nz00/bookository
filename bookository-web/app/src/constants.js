@@ -9,15 +9,12 @@ export const API_HOST = isDev ? 'http://192.168.1.110:8020/api' : window._getEnv
  * @typedef Book
  */
 export const BOOK_MODEL = {
-  id:'',
   name: '',
   author: '',
   annotation: '',
   genre: '',
-  cover: '',
   language: '',
   categories: [],
-  book: ''
 }
 
 export const LANGUAGES = [
