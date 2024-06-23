@@ -56,9 +56,11 @@ export const getBook = (id) => {
  */
 export const createBook = (book) => {
   const options = {
-    method: 'POST', headers: {
+    method: 'POST',
+    headers: {
       'Content-Type': 'application/json'
-    }, body: JSON.stringify(book)
+    },
+    body: JSON.stringify(book)
   }
 
   return fetch(`${ API_HOST }/books`, options)
@@ -67,7 +69,8 @@ export const createBook = (book) => {
         throw new Error(`Ошибка запроса: статус ${response.status}`)
       }
 
-      return response.json()
+      // TODO: return response.json()
+      return true
     })
     .then((response) => response)
 }
