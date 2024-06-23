@@ -1,5 +1,5 @@
 import BookBoard from './views/BookBoard.vue'
-import BookCardView from './components/BookCardView.vue'
+import BookCardView from './components/EditBookCard.vue'
 import AddBookCard from './components/AddBookCard.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 

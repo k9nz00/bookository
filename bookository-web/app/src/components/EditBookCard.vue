@@ -1,8 +1,12 @@
 <template>
   <div class="app-page">
-    <div v-if="loading">Загружается...</div>
+    <div v-if="loading">
+      Загружается...
+    </div>
 
-    <div v-else-if="cardLoadingError">Нет такой книги</div>
+    <div v-else-if="cardLoadingError">
+      Нет такой книги
+    </div>
 
     <form v-else @submit.prevent>
       <div class="app-fields-container">
@@ -11,7 +15,7 @@
           v-if="bookId"
           :book-id="bookId"
           :preview="book.bigPreview"
-          is-mobile
+          :is-mobile="true"
         />
 
         <div class="flex gap-5">
