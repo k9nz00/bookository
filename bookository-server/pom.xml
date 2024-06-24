@@ -17,6 +17,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <hibernate.version>6.2.5.Final</hibernate.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <webp-imageio.version>0.1.6</webp-imageio.version>
     </properties>
     <dependencies>
         <dependency>
@@ -93,9 +94,13 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <!--            <version>8.0.1.Final</version>-->
         </dependency>
 
+        <dependency>
+            <groupId>org.sejda.imageio</groupId>
+            <artifactId>webp-imageio</artifactId>
+            <version>${webp-imageio.version}</version>
+        </dependency>
 
         <!--tests dependencies-->
         <dependency>
