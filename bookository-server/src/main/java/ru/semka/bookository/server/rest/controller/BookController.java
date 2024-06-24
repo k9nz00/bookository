@@ -5,11 +5,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.semka.bookository.server.common.enums.Language;
+import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -18,7 +17,6 @@ import ru.semka.bookository.server.service.BookService;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/books")
@@ -27,21 +25,9 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
-    @PostMapping(
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE}
-    )
-    public void saveBook(
-            @RequestPart(value = "name") String name,
-            @RequestPart(value = "author", required = false) String author,
-            @RequestPart(value = "genre", required = false) String genre,
-            @RequestPart(value = "language", required = false) String language,
-            @RequestPart(value = "annotation", required = false) String annotation,
-            @RequestPart(value = "categories", required = false) Integer[] categories,
-            @RequestPart(name = "book", required = false) MultipartFile book,
-            @RequestPart(name = "cover", required = false) MultipartFile cover) throws IOException {
-        BookRequestDto bookDto = getBookDto(name, author, genre, language, annotation, categories);
-        bookService.save(bookDto, book, cover);
+    @PostMapping
+    public BookEntity saveBook(@Valid @RequestBody BookRequestDto requestDto) throws IOException {
+        return bookService.save(requestDto);
     }
 
     @GetMapping
@@ -92,21 +78,5 @@ public class BookController {
     @DeleteMapping("/{bookId}/cover")
     public void deleteBookCover(@PathVariable int bookId) {
         bookService.deleteBookCover(bookId);
-    }
-
-    private BookRequestDto getBookDto(String name,
-                                      String author,
-                                      String genre,
-                                      String language,
-                                      String annotation,
-                                      Integer[] categories) {
-        return new BookRequestDto(
-                name,
-                author,
-                genre,
-                language != null ? Language.fromValue(language.toUpperCase()) : null,
-                annotation,
-                List.of(categories)
-        );
     }
 }

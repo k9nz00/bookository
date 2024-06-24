@@ -2,12 +2,14 @@ package ru.semka.bookository.server.dao.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Collection;
 
 @Entity
-@Table(schema = "bookository", name = "book")
+@Table(name = "book")
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class BookDetailsEntity extends AbstractBookEntity {
     @OneToOne
     @JoinColumn(name = "id")

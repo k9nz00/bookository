@@ -53,11 +53,10 @@
 
             <!-- ЯЗЫК ОРИГИНАЛА -->
             <AppSelect
+              v-model:selected="book.language"
               placeholder="Выберите язык"
               label="Язык оригинала"
               :options="LANGUAGES"
-              :selected="LANGUAGES.find(item => item.id === book.language)"
-              @select="selectLanguage"
             />
 
             <!-- ЗАГРУЗИТЬ ФАЙЛ КНИГИ -->
@@ -141,11 +140,7 @@ const getCategoriesOptions = () => {
   })
 }
 const selectCategories = (selectedCategories) => {
-  book.value.categories = selectedCategories.join(',')
-}
-
-const selectLanguage = (selectedLanguage) => {
-  book.value.language = selectedLanguage.id
+  book.value.categories = selectedCategories
 }
 
 // TODO: Проверка на тип файла
@@ -167,12 +162,38 @@ onMounted(() => {
 })
 
 const { appendFormData } = useFormData()
-const submit = () => {
-  const formData = appendFormData(book.value)
 
-  createBook(formData)
+const submit = () => {
+  // name -  обязательное поле
+  const filterEmptyFields = (obj) => {
+    return Object.fromEntries(Object.entries(obj).filter(([_, value]) => {
+      if(typeof value === 'object') {
+        return value.length
+      }
+
+      return value
+    }))
+  }
+
+  const filtered = filterEmptyFields(book.value)
+
+  if(Object.keys(filtered).length === 0) {
+    return
+  }
+
+  createBook(filtered)
     .catch((error) => {
       console.log(error)
     })
 }
+
+// const submit = () => {
+//   const formData = appendFormData(book.value)
+//   // TODO: Проверка на пустые поля
+//
+//   createBook(formData)
+//     .catch((error) => {
+//       console.log(error)
+//     })
+// }
 </script>

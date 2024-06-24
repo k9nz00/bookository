@@ -7,7 +7,7 @@ import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.dao.type.BookFormatType;
 
 @Entity
-@Table(schema = "bookository", name = "book_content")
+@Table(name = "book_content")
 @Data
 public class BookContentInfoEntity {
     @Id
