@@ -8,6 +8,7 @@ import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
 import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.PredicateProvider;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
+import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.factory.CriteriaPredicateFactory;
 import ru.semka.bookository.server.mapper.BookMapper;
@@ -34,8 +35,8 @@ public class BookServiceImpl implements BookService {
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
-    public void save(BookRequestDto dto) {
-        bookDao.save(dto);
+    public BookEntity save(BookRequestDto dto) {
+        return bookDao.save(dto);
     }
 
     @Override
