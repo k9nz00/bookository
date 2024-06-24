@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import ru.semka.bookository.server.common.enums.Language;
 
-import java.util.Collection;
+import java.util.Set;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
@@ -37,5 +37,5 @@ public class BookRequestDto {
     private String annotation;
 
     @Parameter
-    private Collection<Integer> categories;
+    private Set<Integer> categories;
 }
