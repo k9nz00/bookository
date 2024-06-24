@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -25,8 +26,8 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public void saveBook(@Valid @RequestBody BookRequestDto requestDto) throws IOException {
-        bookService.save(requestDto);
+    public BookEntity saveBook(@Valid @RequestBody BookRequestDto requestDto) throws IOException {
+        return bookService.save(requestDto);
     }
 
     @GetMapping
