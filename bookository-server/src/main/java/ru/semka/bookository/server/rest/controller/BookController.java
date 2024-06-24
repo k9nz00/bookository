@@ -72,6 +72,7 @@ public class BookController {
     @PutMapping("/{bookId}/cover")
     public void updateBookCover(@PathVariable int bookId,
                                 @RequestPart(name = "cover") MultipartFile cover) throws IOException {
+        //ImageFormat.fromValue(FileUtil.getFileFormat(cover));
         bookService.updateBookCover(bookId, cover);
     }
 
