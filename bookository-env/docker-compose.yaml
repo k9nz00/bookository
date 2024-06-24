@@ -2,7 +2,7 @@ version: "3"
 services:
   adminer:
     image: adminer:4.8.1
-    restart: on-failure
+    restart: always
     ports:
       - "8010:8080"
     networks:
@@ -12,20 +12,21 @@ services:
 
   postgres:
     image: "bookository/postgres:${IMAGE_VERSION}"
-    restart: on-failure
+    restart: always
     ports:
       - "5432:5432"
     networks:
       bookository-default-network:
+    volumes:
+      - bookository-db-volume:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: bookository
 
-
   bookository-server:
     image: "bookository/bookository-server:${IMAGE_VERSION}"
-    restart: on-failure
+    restart: always
     ports:
       - "8020:8020"
       - "38005:38005"
@@ -53,3 +54,6 @@ services:
 networks:
   bookository-default-network:
     driver: bridge
+
+volumes:
+  bookository-db-volume:
