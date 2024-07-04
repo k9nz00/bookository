@@ -1,121 +1,143 @@
 <template>
-  <div class="board">
-    <div class="flex items-start space-x-2 p-2">
-      <BookShelf
-        v-for="shelf of shelves"
-        :key="shelf.name"
-        :shelf="shelf"
-        :books="books"
-        @move-shelf="moveShelf"
-        @move-card-to-shelf="moveCardToShelf"
-        @create-card="createCard"
-        @move-card="moveCard"
-      />
+  <div class="board mx-auto">
 
-      <div class="shelf flex">
-        <input
-          v-model="newShelfName"
-          type="text"
-          class="p-2 mr-2 flex-grow"
-          placeholder="Добавить полку"
-          @keyup.enter="createShelf"
+    <div class="flex justify-center w-full">
+      <div class="book-search-wrapper">
+        <input type="text" class="book-search-input" placeholder="Поиск по названию книги" />
+        <button class="book-search-button" type="button">
+          Найти книгу
+        </button>
+        <button class="book-add-button" type="button">
+          Добавить книгу
+        </button>
+      </div>
+    </div>
+
+
+    <div class="content-wrapper">
+      <div class="book-list">
+        <div
+          v-for="(book, index) in books"
+          :key="book.id + index"
+          class="book"
         >
+          <div class="cover">
+            <img src="../assets/test_book_cover.jpg" alt="test_book_cover">
+          </div>
+
+          <div class="book-name text-2xl font-bold">
+            {{ book.name }}
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <div class="text-lg mb-3">
+              {{ book.author }}
+            </div>
+
+            <div class="category-list">
+              <div v-for="category in book.categories" :key="category.id" class="category">
+                {{ category }}
+              </div>
+            </div>
+          </div>
+
+          <button class="open-book" type="button">
+            Подробнее
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import BookShelf from '../components/BookShelf.vue'
-import defaultBoard from '../default-board.js'
-import clonedeep from 'lodash.clonedeep'
-import { router } from '../router.js'
+import { ref, onMounted } from 'vue'
+
 import { getBooks } from '../api/index.js'
+import { TEST_BOOKS } from '../constants.js'
 
-const books = ref([])
-const loadBooks = () => {
-  getBooks()
-    .then(data => (books.value = data))
-    .catch(error => console.log(error))
-}
-
-onMounted(() => {
-  loadBooks()
-})
-
-const board = ref(defaultBoard)
-const shelves = computed(() => {
-  return board.value.shelves
-})
-
-const newShelfName = ref('')
-const createShelf = () => {
-  const name = newShelfName.value
-
-  if(!name) {
-    return
-  }
-
-  board.value.shelves.push({
-    name,
-    cards: []
-  })
-  newShelfName.value = ''
-}
-
-const moveShelf = ({ shelf, toShelf }) => {
-  const shelves = clonedeep(board.value.shelves)
-
-  const shelfIndex = shelves.findIndex(item => item.id === shelf.id)
-  const toShelfIndex = shelves.findIndex(item => item.id === toShelf.id)
-
-  shelves.splice(shelfIndex, 1)
-  shelves.splice(toShelfIndex, 0, shelf)
-
-  board.value.shelves = shelves
-}
-
-const moveCard = ({ card, toCard }) => {
-  const shelves = clonedeep(board.value.shelves)
-
-  const toCardShelf = shelves.find(shelf => shelf.id === toCard.shelfId).cards || []
-  const toCardIndex = toCardShelf.findIndex(item => item.id === toCard.id)
-
-  board.value.shelves = board.value.shelves.map(shelf => {
-    shelf.cards = shelf.cards.filter(item => item.id !== card.id)
-
-    if(shelf.id === toCard.shelfId) {
-      card.shelfId = shelf.id
-      shelf.cards.splice(toCardIndex, 0, card)
-    }
-
-    return shelf
-  })
-}
-
-const moveCardToShelf = ({ card, toShelf }) => {
-  board.value.shelves = board.value.shelves.map(shelf => {
-    shelf.cards = shelf.cards.filter(item => item.id !== card.id)
-
-    if(shelf.id === toShelf.id) {
-      card.shelfId = shelf.id
-      shelf.cards.push(card)
-    }
-
-    return shelf
-  })
-}
-
-const createCard = (shelfId) => {
-  router.push(`/books/${shelfId}`)
-}
+const books = ref(TEST_BOOKS)
+// const loadBooks = () => {
+//   getBooks()
+//     .then(data => (books.value = data))
+//     .catch(error => {
+//       console.log(error)
+//       books.value = TEST_BOOKS
+//     })
+// }
+//
+// onMounted(() => {
+//   loadBooks()
+// })
 </script>
 
-<style lang="css">
+<style scoped lang="postcss">
 .board {
-  @apply p-4 h-full overflow-auto;
-  background: no-repeat url('../assets/book-cafe.png');
-  background-size: cover;
+  @apply p-4 h-full;
+}
+
+.book-search-wrapper {
+  @apply flex justify-start items-start;
+  gap: 12px;
+  width: 100%;
+  max-width: 1480px;
+}
+
+.book-search-button {
+  @apply bg-blue-600 rounded-lg text-white;
+  padding: 8px;
+  height: 44px;
+}
+
+.book-add-button {
+    @apply border-2 border-blue-600 rounded-lg text-blue-600;
+    padding: 8px;
+    height: 44px;
+}
+
+.book-search-input {
+  @apply bg-gray-50 border-2 border-blue-50 rounded-md p-2 mb-8;
+  width: 80%;
+  position: sticky;
+  top: 0;
+}
+
+.content-wrapper {
+  @apply mx-auto;
+  width: 100%;
+  max-width: 1480px;
+  height: 90vh;
+  overflow: scroll;
+}
+
+.book-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.book {
+  @apply bg-gray-50 border-2 border-blue-50 rounded-md;
+  padding: 20px;
+}
+
+.cover {
+  padding: 32px;
+  border-radius: 12px;
+  max-height: fit-content;
+}
+
+.category-list {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.category {
+  @apply flex items-center justify-center bg-blue-100 rounded-full p-2 truncate text-xs;
+}
+
+.open-book {
+  @apply bg-blue-600 rounded-md p-2 w-full text-white mt-4;
 }
 </style>

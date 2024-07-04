@@ -14,7 +14,6 @@ import { API_HOST } from '../constants.js'
  * @property {Boolean} isAvailable
  * @property {string} language
  * @property {Category[]} categories
- * @property {string} bigPreview - Base64
  * @property {Array} bookContentInfo
  * @property {number} createdAt
  * @property {number} updatedAt

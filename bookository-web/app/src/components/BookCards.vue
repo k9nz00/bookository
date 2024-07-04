@@ -9,15 +9,22 @@
       :transferData="book"
       @click="openCard(book)"
     >
-      <span class="w-full shrink-0 font-bold">
-        {{ book.name }}
-      </span>
-      <p
-        v-if="book.author"
-        class="w-full shrink-0 mt-1 text-sm truncate"
+      <img
+        class="book-cover-small"
+        alt=""
+        :src="coverSrc(book)"
       >
-        {{ book.author }}
-      </p>
+      <div>
+        <span class="w-full shrink-0 font-bold">
+          {{ book.name }}
+        </span>
+        <p
+          v-if="book.author"
+          class="w-full shrink-0 mt-1 text-sm truncate"
+        >
+          {{ book.author }}
+        </p>
+      </div>
     </AppDrag>
   </AppDrop>
 </template>
@@ -42,12 +49,16 @@ const props = defineProps({
 
 const router = useRouter()
 const openCard = (book) => {
-  router.push(`/books/${props.shelfId}/${book.id}`)
+  router.push(`/books/${ props.shelfId }/${ book.id }`)
 }
 
-const emit = defineEmits(['move-card'])
+const coverSrc = (book) => {
+  return 'data:image/gpeg;base64,' + book.smallPreview
+}
+
+const emit = defineEmits([ 'move-card' ])
 const move = (card, toCard) => {
-  if(card.type === 'card') {
+  if (card.type === 'card') {
     emit('move-card', {
       card,
       toCard
@@ -58,6 +69,14 @@ const move = (card, toCard) => {
 
 <style lang="css">
 .card {
-  @apply flex items-center flex-wrap shadow mb-2 py-2 px-2 rounded no-underline bg-green-100;
+  @apply flex items-center flex-wrap gap-2 shadow mb-2 py-2 px-2 rounded no-underline bg-green-100;
+}
+
+.book-cover-small {
+  @apply border border-blue-300 rounded-md;
+  background: url('../assets/vue.svg') no-repeat center;
+  background-size: 50%;
+  width: 50px;
+  height: 50px;
 }
 </style>
