@@ -8,7 +8,7 @@ import java.util.Collection;
 public interface CategoryService {
     CategoryUiDto save(String categoryName);
 
-    CategoryEntity update(int categoryId, String categoryName);
+    CategoryUiDto update(int categoryId, String categoryName);
 
     void delete(int categoryId);
 

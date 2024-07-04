@@ -22,6 +22,7 @@ public class BookRequestDto {
     @Schema(name = "name", requiredMode = REQUIRED, type = "string")
     @NotBlank
     @Length(min = 3)
+    @Parameter(required = true)
     private String name;
 
     @Parameter
