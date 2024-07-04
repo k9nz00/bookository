@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import ru.semka.bookository.server.common.enums.Language;
 import ru.semka.bookository.server.rest.dto.TableCriteria;
+import ru.semka.bookository.server.validator.BookSortColumnValidator;
 
 import java.util.Collection;
 
@@ -32,13 +33,23 @@ public class BookCriteriaDto extends TableCriteria {
     )
     private String genre;
 
+    @Parameter(
+            in = ParameterIn.QUERY
+    )
     private Language language;
 
+    @Parameter(
+            in = ParameterIn.QUERY
+    )
     private Collection<Integer> categories;
 
     @Parameter(
-            in = ParameterIn.QUERY,
-            schema = @Schema(allowableValues = {"id", "name", "genre", "author", "language", "createdAt"})
+            in = ParameterIn.QUERY
     )
+    @Schema(
+            allowableValues = {"id", "name", "genre", "author", "language", "createdAt"},
+            description = "defines the sorting order of books"
+    )
+    @BookSortColumnValidator
     private String sortColumn;
 }

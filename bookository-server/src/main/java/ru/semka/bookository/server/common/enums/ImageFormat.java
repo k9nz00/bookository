@@ -11,7 +11,8 @@ public enum ImageFormat {
     PNG("png"),
     JPEG("jpeg"),
     JPG("jpg"),
-    GIF("gif");
+    GIF("gif"),
+    WEBP("webp");
 
     private final String value;
 
@@ -24,7 +25,7 @@ public enum ImageFormat {
         throw new IllegalArgumentException(String.format(
                 "Invalid image format value: %s. Available values: %s",
                 input,
-                Arrays.toString(Arrays.stream(ImageFormat.values()).map(ImageFormat::name).toArray())
+                Arrays.toString(Arrays.stream(ImageFormat.values()).map(ImageFormat::getValue).toArray())
         ));
 
     }

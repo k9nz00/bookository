@@ -28,14 +28,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryEntity update(int categoryId, String categoryName) {
+    public CategoryUiDto update(int categoryId, String categoryName) {
         return categoryDao.findById(categoryId)
                 .map(entity -> {
                     entity.setName(categoryName);
-                    return categoryDao.save(entity);
-                }).orElseThrow(() -> new ResourceNotFoundException(
-                        "Category with id = %d not found".formatted(categoryId))
-                );
+                    categoryDao.save(entity);
+                    return categoryMapper.categoryEntityToDto(entity);
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Category with id = %d not found".formatted(categoryId)));
     }
 
     @Override

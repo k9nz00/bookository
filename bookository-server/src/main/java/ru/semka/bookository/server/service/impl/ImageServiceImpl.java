@@ -13,10 +13,10 @@ import java.io.IOException;
 public class ImageServiceImpl implements ImageService {
 
     @Override
-    public BufferedImage resizeImage(byte[] imageData) throws IOException {
+    public BufferedImage resizeImage(byte[] imageData) {
         BufferedImage imageFromBytes = createImageFromBytes(imageData);
-        int height = imageFromBytes.getHeight() / 4;
-        int width = imageFromBytes.getWidth() / 4;
+        int height = imageFromBytes.getHeight() / 2;
+        int width = imageFromBytes.getWidth() / 2;
         Image resultingImage = imageFromBytes.getScaledInstance(width, height, Image.SCALE_DEFAULT);
         BufferedImage outputImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
@@ -25,8 +25,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public BufferedImage createImageFromBytes(byte[] imageData) {
-        ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
-        try {
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(imageData)) {
             return ImageIO.read(bais);
         } catch (IOException e) {
             throw new RuntimeException(e);
