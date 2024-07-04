@@ -33,13 +33,19 @@ public class BookCriteriaDto extends TableCriteria {
     )
     private String genre;
 
-    @Parameter
+    @Parameter(
+            in = ParameterIn.QUERY
+    )
     private Language language;
 
-    @Parameter
+    @Parameter(
+            in = ParameterIn.QUERY
+    )
     private Collection<Integer> categories;
 
-    @Parameter
+    @Parameter(
+            in = ParameterIn.QUERY
+    )
     @Schema(
             allowableValues = {"id", "name", "genre", "author", "language", "createdAt"},
             description = "defines the sorting order of books"
