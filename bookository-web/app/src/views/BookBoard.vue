@@ -1,9 +1,8 @@
 <template>
   <div class="board mx-auto">
-
     <div class="flex justify-center w-full">
       <div class="book-search-wrapper">
-        <input type="text" class="book-search-input" placeholder="Поиск по названию книги" />
+        <input type="text" class="book-search-input" placeholder="Напишите название книги" />
         <button class="book-search-button" type="button">
           Найти книгу
         </button>
@@ -13,8 +12,18 @@
       </div>
     </div>
 
-
     <div class="content-wrapper">
+      <!-- Фильтры-->
+      <div class="book-filters flex flex-col gap-2">
+        Категории
+        <template v-for="item in categories" :key="item.id">
+          <label><input type="checkbox" class="pr-1"><span class="pl-1">{{ item.name }}</span></label>
+        </template>
+        Язык
+        <template v-for="item in LANGUAGES" :key="item.id">
+          <label><input type="checkbox" class="pr-1"><span class="pl-1">{{ item.name }}</span></label>
+        </template>
+      </div>
       <div class="book-list">
         <div
           v-for="(book, index) in books"
@@ -36,7 +45,7 @@
 
             <div class="category-list">
               <div v-for="category in book.categories" :key="category.id" class="category">
-                {{ category }}
+                {{ category.name }}
               </div>
             </div>
           </div>
@@ -53,22 +62,35 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-import { getBooks } from '../api/index.js'
-import { TEST_BOOKS } from '../constants.js'
+import { getBooks, getCategories } from '../api/index.js'
+import { TEST_BOOKS, LANGUAGES } from '../constants.js'
 
 const books = ref(TEST_BOOKS)
-// const loadBooks = () => {
-//   getBooks()
-//     .then(data => (books.value = data))
-//     .catch(error => {
-//       console.log(error)
-//       books.value = TEST_BOOKS
-//     })
-// }
-//
-// onMounted(() => {
-//   loadBooks()
-// })
+const loadBooks = async () => {
+  try {
+    books.value = await getBooks()
+  } catch (error) {
+    books.value = TEST_BOOKS
+    alert(error)
+  }
+}
+
+const categories = ref([])
+const loadCategories = async () => {
+  try {
+    categories.value = await getCategories()
+  } catch (error) {
+    alert(error)
+  }
+}
+
+const loading = ref(false)
+onMounted(() => {
+  loading.value = true
+  loadBooks()
+  loadCategories()
+  loading.value = false
+})
 </script>
 
 <style scoped lang="postcss">
@@ -102,8 +124,12 @@ const books = ref(TEST_BOOKS)
   top: 0;
 }
 
+.book-filters {
+  min-width: 240px;
+}
+
 .content-wrapper {
-  @apply mx-auto;
+  @apply mx-auto flex gap-4;
   width: 100%;
   max-width: 1480px;
   height: 90vh;
@@ -118,6 +144,7 @@ const books = ref(TEST_BOOKS)
 
 .book {
   @apply bg-gray-50 border-2 border-blue-50 rounded-md;
+  width: 280px;
   padding: 20px;
 }
 
