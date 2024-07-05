@@ -2,7 +2,8 @@
   <div class="board mx-auto">
     <div class="flex justify-center w-full">
       <div class="book-search-wrapper">
-        <input type="text" class="book-search-input" placeholder="Напишите название книги" />
+        <input type="text" class="book-search-input" placeholder="Поиск по названию" />
+        <input type="text" class="book-search-input" placeholder="Поиск по автору" />
         <button class="book-search-button" type="button">
           Найти книгу
         </button>
@@ -15,14 +16,22 @@
     <div class="content-wrapper">
       <!-- Фильтры-->
       <div class="book-filters flex flex-col gap-2">
-        Категории
+        <span class="font-bold">Категории</span>
         <template v-for="item in categories" :key="item.id">
           <label><input type="checkbox" class="pr-1"><span class="pl-1">{{ item.name }}</span></label>
         </template>
-        Язык
+
+        <span class="font-bold">Язык</span>
         <template v-for="item in LANGUAGES" :key="item.id">
           <label><input type="checkbox" class="pr-1"><span class="pl-1">{{ item.name }}</span></label>
         </template>
+
+        <button class="book-search-button" type="button">
+          Применить
+        </button>
+        <button class="book-add-button" type="button">
+          Сбросить фильтры
+        </button>
       </div>
       <div class="book-list">
         <div
@@ -40,7 +49,7 @@
 
           <div class="flex flex-col gap-2">
             <div class="text-lg mb-3">
-              {{ book.author }}
+              {{ book.author || 'Автор неизвестен' }}
             </div>
 
             <div class="category-list">
@@ -50,9 +59,9 @@
             </div>
           </div>
 
-          <button class="open-book" type="button">
+          <div class="open-book" type="button">
             Подробнее
-          </button>
+          </div>
         </div>
       </div>
     </div>
@@ -119,13 +128,16 @@ onMounted(() => {
 
 .book-search-input {
   @apply bg-gray-50 border-2 border-blue-50 rounded-md p-2 mb-8;
-  width: 80%;
+  flex-grow: 1;
   position: sticky;
   top: 0;
 }
 
 .book-filters {
+  padding-top: 24px;
   min-width: 240px;
+  position: sticky;
+  top: 0;
 }
 
 .content-wrapper {
@@ -137,15 +149,20 @@ onMounted(() => {
 }
 
 .book-list {
+  padding-top: 24px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 }
 
 .book {
-  @apply bg-gray-50 border-2 border-blue-50 rounded-md;
+  @apply bg-gray-50 border-2 border-blue-50 rounded-md hover:scale-105 hover:transition-all;
   width: 280px;
   padding: 20px;
+}
+
+.book:hover {
+  @apply shadow-md;
 }
 
 .cover {
@@ -165,6 +182,10 @@ onMounted(() => {
 }
 
 .open-book {
-  @apply bg-blue-600 rounded-md p-2 w-full text-white mt-4;
+  @apply p-1 text-blue-600 mt-4 text-transparent;
+}
+
+.book:hover .open-book {
+  @apply text-blue-600;
 }
 </style>
