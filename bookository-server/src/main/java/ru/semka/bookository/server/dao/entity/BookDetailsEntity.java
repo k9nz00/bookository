@@ -11,11 +11,7 @@ import java.util.Collection;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class BookDetailsEntity extends AbstractBookEntity {
-    @OneToOne
-    @JoinColumn(name = "id")
-    private BigBookPreviewEntity bigPreview;
-
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id")
-    private Collection<BookContentInfoEntity> bookContentsInfo;
+    private Collection<BookContentEntity> bookContentsInfo;
 }

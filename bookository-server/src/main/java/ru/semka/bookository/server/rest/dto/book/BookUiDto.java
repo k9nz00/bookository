@@ -21,5 +21,4 @@ public class BookUiDto {
     private final Collection<CategoryUiDto> categories;
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
-    private final String smallPreview;
 }

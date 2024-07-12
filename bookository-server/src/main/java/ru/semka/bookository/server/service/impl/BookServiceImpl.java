@@ -1,15 +1,19 @@
 package ru.semka.bookository.server.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
+import ru.semka.bookository.server.dao.BookContentDao;
 import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.PredicateProvider;
+import ru.semka.bookository.server.dao.entity.BookContentEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
-import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.factory.CriteriaPredicateFactory;
 import ru.semka.bookository.server.mapper.BookMapper;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
@@ -19,9 +23,9 @@ import ru.semka.bookository.server.rest.dto.book.BookUiDto;
 import ru.semka.bookository.server.service.BookCoverService;
 import ru.semka.bookository.server.service.BookService;
 import ru.semka.bookository.server.util.FileUtil;
+import ru.semka.bookository.server.util.ResponseUtil;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -29,29 +33,29 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
+    private final BookContentDao bookContentDao;
     private final BookCoverService bookCoverService;
-    private final CriteriaPredicateFactory<BookCriteriaDto, BookWithSmallPreviewEntity> bookCriteriaPredicateFactory;
+    private final CriteriaPredicateFactory<BookCriteriaDto, BookEntity> bookCriteriaPredicateFactory;
     private final BookMapper bookMapper;
-    private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
-    public BookEntity save(BookRequestDto dto) {
-        return bookDao.save(dto);
+    public BookUiDto save(BookRequestDto dto) {
+        return bookMapper.bookEntityToBookUiDto(bookDao.save(dto));
     }
 
     @Override
     public Collection<BookUiDto> getBooks(BookCriteriaDto criteriaDto) {
-        PredicateProvider<BookWithSmallPreviewEntity> predicateProvider = bookCriteriaPredicateFactory.create(criteriaDto);
-        Collection<BookWithSmallPreviewEntity> books = bookDao.getBooks(criteriaDto, predicateProvider);
+        PredicateProvider<BookEntity> predicateProvider = bookCriteriaPredicateFactory.create(criteriaDto);
+        Collection<BookEntity> books = bookDao.getBooks(criteriaDto, predicateProvider);
         return books.stream()
-                .map(bookMapper::bookWithSmallPreviewToBookUiDto)
+                .map(bookMapper::bookEntityToBookUiDto)
                 .toList();
     }
 
     @Override
     public BookUiDto update(int bookId, BookRequestDto dto) {
-        BookWithSmallPreviewEntity entity = bookDao.update(bookId, dto);
-        return bookMapper.bookWithSmallPreviewToBookUiDto(entity);
+        BookEntity entity = bookDao.update(bookId, dto);
+        return bookMapper.bookEntityToBookUiDto(entity);
     }
 
     @Override
@@ -60,14 +64,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBookContent(int bookId, int bookContentId) {
-        bookDao.deleteBookContent(bookId, bookContentId);
+    public void deleteBookContent( int bookContentId) {
+        bookContentDao.deleteById(bookContentId);
     }
 
     @Override
     public void attachBook(int bookId, MultipartFile book) throws IOException {
-        BookFormat type = getType(book);
-        bookDao.saveBookContent(bookId, book, type);
+        BookContentEntity entity = new BookContentEntity();
+        entity.setBookId(bookId);
+        entity.setName(book.getName());
+        entity.setSize(book.getSize());
+        entity.setBookFormat(getFormat(book));
+        entity.setContent(book.getBytes());
+
+        bookContentDao.save(entity);
     }
 
     @Override
@@ -80,9 +90,15 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public String getBookContent(int bookId, int bookContentId) {
-        Optional<byte[]> bookContent = bookDao.getBookContent(bookId, bookContentId);
-        return bookContent.map(encoder::encodeToString)
+    public ResponseEntity<Resource> getBookContent(int bookId, int bookContentId) {
+        Optional<BookContentEntity> byIdAndAndBookId = bookContentDao.findByIdAndAndBookId(bookContentId, bookId);
+        return byIdAndAndBookId
+                .map(entity -> {
+                    Resource resource = new ByteArrayResource(entity.getContent());
+                    return ResponseEntity.ok()
+                            .headers(ResponseUtil.getHeaders(entity.getName()))
+                            .body(resource);
+                })
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Not found book content for book with id = %d and content id = %d".formatted(bookId, bookContentId)
                 ));
@@ -99,7 +115,7 @@ public class BookServiceImpl implements BookService {
         bookCoverService.deleteCover(bookId);
     }
 
-    private BookFormat getType(final MultipartFile book) {
+    private BookFormat getFormat(final MultipartFile book) {
         String fileFormat = FileUtil.getFileFormat(book);
         return BookFormat.fromValue(fileFormat.toUpperCase());
     }

@@ -1,5 +1,8 @@
 package ru.semka.bookository.server.service;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.dao.entity.BookEntity;
@@ -13,11 +16,11 @@ import java.util.Collection;
 
 public interface BookService {
     @Transactional
-    BookEntity save(BookRequestDto dto) throws IOException;
+    BookUiDto save(BookRequestDto dto);
 
     BookUiDto update(int bookId, BookRequestDto dto);
 
-    void deleteBookContent(int bookId, int bookContentId);
+    void deleteBookContent(int bookContentId);
 
     void deleteBook(int bookId);
 
@@ -27,7 +30,7 @@ public interface BookService {
 
     BookDetailsUiDto getDetails(int bookId);
 
-    String getBookContent(int bookId, int bookContentId);
+    ResponseEntity<Resource> getBookContent(int bookId, int bookContentId);
 
     void updateBookCover(int bookId, MultipartFile cover) throws IOException;
 

@@ -5,7 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
-import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 
@@ -18,7 +17,7 @@ public interface BookDao {
     BookEntity save(BookRequestDto dto);
 
     @Transactional
-    BookWithSmallPreviewEntity update(int bookId, BookRequestDto dto);
+    BookEntity update(int bookId, BookRequestDto dto);
 
     @Transactional
     void saveBookContent(int bookId, MultipartFile book, BookFormat bookFormat) throws IOException;
@@ -29,8 +28,7 @@ public interface BookDao {
     @Transactional
     void deleteBookContent(int bookId, int bookContentId);
 
-    Collection<BookWithSmallPreviewEntity> getBooks(BookCriteriaDto criteriaDto,
-                                                    PredicateProvider<BookWithSmallPreviewEntity> predicateProvider);
+    Collection<BookEntity> getBooks(BookCriteriaDto criteriaDto, PredicateProvider<BookEntity> predicateProvider);
 
     Optional<BookDetailsEntity> getDetails(int bookId);
 

@@ -3,12 +3,12 @@ package ru.semka.bookository.server.rest.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -28,14 +28,14 @@ public class BookController {
     @PostMapping
     @Operation(description = "Создание карточки книги")
     @ResponseStatus(HttpStatus.OK)
-    public BookEntity saveBook(@Valid @RequestBody BookRequestDto requestDto) throws IOException {
+    public BookUiDto saveBook(@Valid @RequestBody BookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
     @GetMapping
     @Operation(description = "Создание списка карточек книг")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<BookUiDto> getBooks(@Valid @ParameterObject final BookCriteriaDto criteriaDto) {
+    public Collection<BookUiDto> getBooks(@Valid @RequestBody final BookCriteriaDto criteriaDto) {
         return bookService.getBooks(criteriaDto);
     }
 
@@ -57,7 +57,7 @@ public class BookController {
     @GetMapping("/{bookId}/book-content/{bookContentId}")
     @Operation(description = "Получение контента конкретной книги, прикрепленной к карточке")
     @ResponseStatus(HttpStatus.OK)
-    public String getBookContent(@PathVariable int bookId, @PathVariable int bookContentId) {
+    public ResponseEntity<Resource> getBookContent(@PathVariable int bookId, @PathVariable int bookContentId) {
         return bookService.getBookContent(bookId, bookContentId);
     }
 
@@ -76,11 +76,11 @@ public class BookController {
         bookService.deleteBook(bookId);
     }
 
-    @DeleteMapping("/{bookId}/book-content/{bookContentId}")
+    @DeleteMapping("/book-content/{bookContentId}")
     @Operation(description = "Удаление книжного файла, прикреаленного к карточке книги")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBookContent(@PathVariable int bookId, @PathVariable int bookContentId) {
-        bookService.deleteBookContent(bookId, bookContentId);
+    public void deleteBookContent(@PathVariable int bookContentId) {
+        bookService.deleteBookContent(bookContentId);
     }
 
     @PutMapping("/{bookId}/cover")

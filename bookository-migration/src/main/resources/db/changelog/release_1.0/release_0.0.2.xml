@@ -112,6 +112,7 @@
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="book_id" type="int"/>
+            <column name="name" type="varchar"/>
             <column name="size" type="bigint"/>
             <column name="format" type="bookository.book_format">
                 <constraints nullable="false"/>

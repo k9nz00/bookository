@@ -17,7 +17,6 @@ import ru.semka.bookository.server.dao.PredicateProvider;
 import ru.semka.bookository.server.dao.dto.SearchCriteriaDto;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
-import ru.semka.bookository.server.dao.entity.BookWithSmallPreviewEntity;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.dao.type.BookFormatType;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
@@ -63,8 +62,8 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
-    public BookWithSmallPreviewEntity update(int bookId, BookRequestDto dto) {
-        BookWithSmallPreviewEntity bookEntity = entityManager.find(BookWithSmallPreviewEntity.class, bookId);
+    public BookEntity update(int bookId, BookRequestDto dto) {
+        BookEntity bookEntity = entityManager.find(BookEntity.class, bookId);
         if (Objects.nonNull(dto.getName())) {
             bookEntity.setName(dto.getName());
         }
@@ -89,10 +88,8 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
     }
 
     @Override
-    public Collection<BookWithSmallPreviewEntity> getBooks(BookCriteriaDto criteriaDto,
-                                                           PredicateProvider<BookWithSmallPreviewEntity> predicateProvider) {
-        SearchCriteriaDto<BookWithSmallPreviewEntity> searchCriteria =
-                DaoUtil.createCriteria(criteriaDto, predicateProvider, BookWithSmallPreviewEntity.class);
+    public Collection<BookEntity> getBooks(BookCriteriaDto criteriaDto, PredicateProvider<BookEntity> predicateProvider) {
+        SearchCriteriaDto<BookEntity> searchCriteria = DaoUtil.createCriteria(criteriaDto, predicateProvider, BookEntity.class);
         return execute(searchCriteria);
     }
 
@@ -103,14 +100,16 @@ public class BookDaoImpl extends AbstractDao implements BookDao {
 
     @Override
     public void saveBookContent(int bookId, MultipartFile book, BookFormat bookFormat) throws IOException {
+        //todo переделать на jpa!!!!!!!!!!!!!!!
         CustomType<BookFormat> customType = new CustomType<>(new BookFormatType(), new TypeConfiguration());
         TypedParameterValue<BookFormat> typedParameterValue = new TypedParameterValue<>(customType, bookFormat);
 
         Query nativeQuery = entityManager.createNativeQuery(
-                "INSERT INTO bookository.book_content (book_id, size, format, content) " +
-                        "VALUES (:bookId, :size, CAST(:format AS bookository.book_format), :content) RETURNING id", Integer.class);
+                "INSERT INTO bookository.book_content (book_id, name, size, format, content) " +
+                        "VALUES (:bookId, :name, :size, CAST(:format AS bookository.book_format), :content) RETURNING id", Integer.class);
 
         nativeQuery.setParameter("bookId", bookId);
+        nativeQuery.setParameter("name", book.getName());
         nativeQuery.setParameter("size", book.getSize());
         nativeQuery.setParameter("format", typedParameterValue);
         nativeQuery.setParameter("content", book.getBytes());

@@ -15,37 +15,22 @@ import java.util.Collection;
 @Data
 public class BookCriteriaDto extends TableCriteria {
 
-    @Parameter(
-            in = ParameterIn.QUERY,
-            description = "Фильтрация по имени карточки книги"
-    )
+    @Parameter(in = ParameterIn.QUERY, description = "Фильтрация по имени карточки книги")
     private String name;
 
-    @Parameter(
-            in = ParameterIn.QUERY,
-            description = "Фильтрация по имени автора книги"
-    )
+    @Parameter(in = ParameterIn.QUERY, description = "Фильтрация по имени автора книги")
     private String author;
 
-    @Parameter(
-            in = ParameterIn.QUERY,
-            description = "Фильтрация по жанру"
-    )
+    @Parameter(in = ParameterIn.QUERY, description = "Фильтрация по жанру")
     private String genre;
 
-    @Parameter(
-            in = ParameterIn.QUERY
-    )
+    @Parameter(in = ParameterIn.QUERY)
     private Language language;
 
-    @Parameter(
-            in = ParameterIn.QUERY
-    )
+    @Parameter(in = ParameterIn.QUERY)
     private Collection<Integer> categories;
 
-    @Parameter(
-            in = ParameterIn.QUERY
-    )
+    @Parameter(in = ParameterIn.QUERY)
     @Schema(
             allowableValues = {"id", "name", "genre", "author", "language", "createdAt"},
             description = "defines the sorting order of books"
