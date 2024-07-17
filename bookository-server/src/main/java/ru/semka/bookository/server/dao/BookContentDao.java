@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface BookContentDao extends JpaRepository<BookContentEntity, Integer> {
-
     Optional<BookContentEntity> findByIdAndAndBookId(Integer id, Integer bookId);
 }

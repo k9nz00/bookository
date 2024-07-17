@@ -58,35 +58,21 @@
     <changeSet id="20230717_2317" author="ASemka">
         <preConditions>
             <not>
-                <tableExists schemaName="bookository" tableName="big_book_preview"/>
+                <tableExists schemaName="bookository" tableName="book_cover"/>
             </not>
         </preConditions>
-        <createTable schemaName="bookository" tableName="big_book_preview">
+        <createTable schemaName="bookository" tableName="book_cover">
             <column name="id" type="int"/>
             <column name="size" type="bigint"/>
-            <column name="preview" type="bytea"/>
+            <column name="format" type="varchar"/>
+            <column name="data" type="bytea"/>
         </createTable>
         <addPrimaryKey schemaName="bookository"
-                       tableName="big_book_preview"
+                       tableName="book_cover"
                        columnNames="id"
-                       constraintName="big_book_preview_id_pkey"/>
+                       constraintName="book_cover_id_pkey"/>
     </changeSet>
-    <changeSet id="20230717_2319" author="ASemka">
-        <preConditions>
-            <not>
-                <tableExists schemaName="bookository" tableName="small_book_preview"/>
-            </not>
-        </preConditions>
-        <createTable schemaName="bookository" tableName="small_book_preview">
-            <column name="id" type="int"/>
-            <column name="size" type="bigint"/>
-            <column name="preview" type="bytea"/>
-        </createTable>
-        <addPrimaryKey schemaName="bookository"
-                       tableName="small_book_preview"
-                       columnNames="id"
-                       constraintName="small_book_preview_id_pkey"/>
-    </changeSet>
+
     <changeSet id="20230717_2320" author="ASemka">
         <preConditions>
             <sqlCheck expectedResult="0">
@@ -166,36 +152,17 @@
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*)
                 FROM information_schema.constraint_column_usage
-                WHERE constraint_name = 'big_book_preview_id_fkey'
+                WHERE constraint_name = 'book_cover_id_fkey'
             </sqlCheck>
         </preConditions>
         <sql>
-            ALTER TABLE bookository.big_book_preview
-                ADD CONSTRAINT big_book_preview_id_fkey
+            ALTER TABLE bookository.book_cover
+                ADD CONSTRAINT book_cover_id_fkey
                     FOREIGN KEY (id)
                         REFERENCES bookository.book (id) ON UPDATE CASCADE ON DELETE CASCADE
         </sql>
         <rollback>
-            ALTER TABLE bookository.book_big_preview DROP CONSTRAINT big_book_preview_id_fkey
-        </rollback>
-    </changeSet>
-
-    <changeSet id="20230815_2156" author="ASemka">
-        <preConditions>
-            <sqlCheck expectedResult="0">
-                SELECT COUNT(*)
-                FROM information_schema.constraint_column_usage
-                WHERE constraint_name = 'small_book_preview_id_fkey'
-            </sqlCheck>
-        </preConditions>
-        <sql>
-            ALTER TABLE bookository.small_book_preview
-                ADD CONSTRAINT book_small_preview_book_id_fkey
-                    FOREIGN KEY (id)
-                        REFERENCES bookository.book (id) ON UPDATE CASCADE ON DELETE CASCADE
-        </sql>
-        <rollback>
-            ALTER TABLE bookository.book_small_preview DROP CONSTRAINT small_book_preview_id_fkey
+            ALTER TABLE bookository.book_cover DROP CONSTRAINT book_cover_id_fkey
         </rollback>
     </changeSet>
     <changeSet id="20230815_2157" author="ASemka">

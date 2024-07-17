@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "big_book_preview")
+@Table(name = "book_cover")
 @Data
 public class BookCoverEntity {
     @Id
@@ -17,6 +17,9 @@ public class BookCoverEntity {
     @Column(name = "size")
     private Long size;
 
-    @Column(name = "preview")
-    private byte[] preview;
+    @Column(name = "format")
+    private String format;
+
+    @Column(name = "data")
+    private byte[] data;
 }

@@ -60,16 +60,22 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteBook(int bookId) {
+        if (bookDao.getDetails(bookId).isEmpty()) {
+            throw new ResourceNotFoundException("Книга с id = %d не найдена".formatted(bookId));
+        }
         bookDao.deleteBook(bookId);
     }
 
     @Override
-    public void deleteBookContent( int bookContentId) {
+    public void deleteBookContent(int bookContentId) {
+        if (!bookContentDao.existsById(bookContentId)) {
+            throw new ResourceNotFoundException("Книжный файл с id = %d не найден".formatted(bookContentId));
+        }
         bookContentDao.deleteById(bookContentId);
     }
 
     @Override
-    public void attachBook(int bookId, MultipartFile book) throws IOException {
+    public int saveBookContent(int bookId, MultipartFile book) throws IOException {
         BookContentEntity entity = new BookContentEntity();
         entity.setBookId(bookId);
         entity.setName(book.getName());
@@ -78,6 +84,7 @@ public class BookServiceImpl implements BookService {
         entity.setContent(book.getBytes());
 
         bookContentDao.save(entity);
+        return entity.getId();
     }
 
     @Override
@@ -105,14 +112,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void updateBookCover(int bookId, MultipartFile cover) throws IOException {
-        bookCoverService.deleteCover(bookId);
-        bookCoverService.saveCover(bookId, cover);
+    public void saveBookCover(int bookId, MultipartFile cover) throws IOException {
+        bookCoverService.delete(bookId);
+        bookCoverService.save(bookId, cover);
     }
 
     @Override
     public void deleteBookCover(int bookId) {
-        bookCoverService.deleteCover(bookId);
+        if (!bookCoverService.isExists(bookId)) {
+            throw new ResourceNotFoundException("Обложки для книги с id = %d не найдено".formatted(bookId));
+        }
+        bookCoverService.delete(bookId);
     }
 
     private BookFormat getFormat(final MultipartFile book) {

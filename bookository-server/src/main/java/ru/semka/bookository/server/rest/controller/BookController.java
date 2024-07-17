@@ -13,6 +13,7 @@ import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 import ru.semka.bookository.server.rest.dto.book.BookUiDto;
+import ru.semka.bookository.server.service.BookCoverService;
 import ru.semka.bookository.server.service.BookService;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
+    private final BookCoverService bookCoverService;
 
     @PostMapping
     @Operation(description = "Создание карточки книги")
@@ -33,9 +35,9 @@ public class BookController {
     }
 
     @GetMapping
-    @Operation(description = "Создание списка карточек книг")
+    @Operation(description = "Получение списка карточек книг")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<BookUiDto> getBooks(@Valid @RequestBody final BookCriteriaDto criteriaDto) {
+    public Collection<BookUiDto> getBooks(@Valid final BookCriteriaDto criteriaDto) {
         return bookService.getBooks(criteriaDto);
     }
 
@@ -54,21 +56,6 @@ public class BookController {
         return bookService.update(bookId, dto);
     }
 
-    @GetMapping("/{bookId}/book-content/{bookContentId}")
-    @Operation(description = "Получение контента конкретной книги, прикрепленной к карточке")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Resource> getBookContent(@PathVariable int bookId, @PathVariable int bookContentId) {
-        return bookService.getBookContent(bookId, bookContentId);
-    }
-
-    @PutMapping("{bookId}/attach")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(description = "Прикрепление контента книги к карточке")
-    public void attachBook(@PathVariable int bookId,
-                           @RequestPart(name = "book") MultipartFile book) throws IOException {
-        bookService.attachBook(bookId, book);
-    }
-
     @DeleteMapping("/{bookId}")
     @Operation(description = "Удаление карточки книги и всего что к ней привязано - обложки, и всех книжных файлов")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -76,19 +63,46 @@ public class BookController {
         bookService.deleteBook(bookId);
     }
 
-    @DeleteMapping("/book-content/{bookContentId}")
+
+    //-----------------
+
+    @PostMapping("{bookId}/content")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(description = "Прикрепление контента книги к карточке")
+    public int saveBookContent(@PathVariable int bookId,
+                               @RequestPart(name = "book") MultipartFile book) throws IOException {
+        return bookService.saveBookContent(bookId, book);
+    }
+
+    @GetMapping("/{bookId}/content/{bookContentId}")
+    @Operation(description = "Получение контента конкретной книги, прикрепленной к карточке")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Resource> getBookContent(@PathVariable int bookId, @PathVariable int bookContentId) {
+        return bookService.getBookContent(bookId, bookContentId);
+    }
+
+    @DeleteMapping("/content/{bookContentId}")
     @Operation(description = "Удаление книжного файла, прикреаленного к карточке книги")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBookContent(@PathVariable int bookContentId) {
         bookService.deleteBookContent(bookContentId);
     }
 
-    @PutMapping("/{bookId}/cover")
-    @Operation(description = "Изменение обложки к карточки книги. Старая будет удалена")
+    //------------------------
+
+    @PostMapping("/{bookId}/cover")
+    @Operation(description = "Замена обложки у карточки книги. Старая будет удалена")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBookCover(@PathVariable int bookId,
-                                @RequestPart(name = "cover") MultipartFile cover) throws IOException {
-        bookService.updateBookCover(bookId, cover);
+    public void saveBookCover(@PathVariable int bookId,
+                              @RequestPart(name = "cover") MultipartFile cover) throws IOException {
+        bookService.saveBookCover(bookId, cover);
+    }
+
+    @GetMapping("/cover/{coverId}")
+    @Operation(description = "Замена обложки у карточки книги. Старая будет удалена")
+    @ResponseStatus(HttpStatus.OK)
+    public String getBookCover(@PathVariable int coverId) {
+        return bookCoverService.get(coverId);
     }
 
     @DeleteMapping("/{bookId}/cover")
