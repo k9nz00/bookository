@@ -7,16 +7,19 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "small_book_preview")
+@Table(name = "book_cover")
 @Data
-public class SmallBookPreviewEntity {
+public class BookCoverEntity {
     @Id
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "size")
     private Long size;
 
-    @Column(name = "preview")
-    private byte[] preview;
+    @Column(name = "format")
+    private String format;
+
+    @Column(name = "data")
+    private byte[] data;
 }

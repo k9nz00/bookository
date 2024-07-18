@@ -50,8 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Collection<CategoryUiDto> getAll() {
-        Sort sort = Sort.by(Sort.Direction.ASC, DEFAULT_SORTING_FIELD);
-        return categoryDao.findAll(sort).stream()
+        return categoryDao.findAll(Sort.by(Sort.Direction.ASC, DEFAULT_SORTING_FIELD)).stream()
                 .map(categoryMapper::categoryEntityToDto)
                 .toList();
     }

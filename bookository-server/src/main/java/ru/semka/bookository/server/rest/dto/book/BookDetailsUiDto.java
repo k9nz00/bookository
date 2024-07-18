@@ -22,5 +22,4 @@ public class BookDetailsUiDto {
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
     private final Collection<BookContentInfoUiDto> bookContentInfo;
-    private final String bigPreview;
 }

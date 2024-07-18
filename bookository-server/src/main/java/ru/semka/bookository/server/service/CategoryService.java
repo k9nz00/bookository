@@ -1,6 +1,5 @@
 package ru.semka.bookository.server.service;
 
-import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
 
 import java.util.Collection;
