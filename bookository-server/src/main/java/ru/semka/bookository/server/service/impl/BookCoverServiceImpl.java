@@ -20,6 +20,10 @@ public class BookCoverServiceImpl implements BookCoverService {
 
     @Override
     public void save(int bookId, MultipartFile cover) throws IOException {
+        if (bookCoverDao.existsById(bookId)) {
+            bookCoverDao.deleteById(bookId);
+        }
+
         String fileFormat = FileUtil.getFileFormat(cover);
         ImageFormat format = ImageFormat.fromValue(fileFormat);
 
@@ -33,20 +37,23 @@ public class BookCoverServiceImpl implements BookCoverService {
     }
 
     @Override
+    public String get(int bookId) {
+        return bookCoverDao.findById(bookId)
+                .map(entity -> MapperUtil.getBase64EncodedImage(entity.getData(), entity.getFormat()))
+                .orElseThrow(() -> new ResourceNotFoundException("Не найдена обложка с id = %d".formatted(bookId)));
+
+    }
+
+    @Override
     public void delete(int bookId) {
+        if (!bookCoverDao.existsById(bookId)) {
+            throw new ResourceNotFoundException("Не найдена обложка с id = %d".formatted(bookId));
+        }
         bookCoverDao.deleteById(bookId);
     }
 
     @Override
     public Boolean isExists(int bookId) {
         return bookCoverDao.existsById(bookId);
-    }
-
-    @Override
-    public String get(int coverId) {
-        return bookCoverDao.findById(coverId)
-                .map(entity -> MapperUtil.getBase64EncodedImage(entity.getData(), entity.getFormat()))
-                .orElseThrow(() -> new ResourceNotFoundException("Не найдена обложка с id = %d".formatted(coverId)));
-
     }
 }
