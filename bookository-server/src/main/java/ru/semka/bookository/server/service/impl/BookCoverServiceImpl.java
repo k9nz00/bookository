@@ -46,7 +46,7 @@ public class BookCoverServiceImpl implements BookCoverService {
 
     @Override
     public void delete(int bookId) {
-        if (!bookCoverDao.existsById(bookId)) {
+        if (!isExists(bookId)) {
             throw new ResourceNotFoundException("Не найдена обложка с id = %d".formatted(bookId));
         }
         bookCoverDao.deleteById(bookId);

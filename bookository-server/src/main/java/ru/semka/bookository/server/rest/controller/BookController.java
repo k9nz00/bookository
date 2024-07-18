@@ -32,7 +32,7 @@ public class BookController {
     @Operation(description = "Получение списка карточек книг")
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookUiDto> getBooks(@Valid final BookCriteriaDto criteriaDto) {
-        return bookService.getBooks(criteriaDto);
+        return bookService.getList(criteriaDto);
     }
 
     @GetMapping("/{bookId}")
@@ -54,6 +54,6 @@ public class BookController {
     @Operation(description = "Удаление карточки книги и всего что к ней привязано - обложки, и всех книжных файлов")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable int bookId) {
-        bookService.deleteBook(bookId);
+        bookService.delete(bookId);
     }
 }

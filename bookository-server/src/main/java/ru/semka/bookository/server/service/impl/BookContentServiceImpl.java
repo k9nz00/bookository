@@ -54,7 +54,7 @@ public class BookContentServiceImpl implements BookContentService {
 
     @Override
     public void delete(int bookId, int bookContentId) {
-        if (!bookDao.getDetails(bookId).isPresent() && !bookContentDao.existsById(bookContentId)) {
+        if (bookDao.getDetails(bookId).isEmpty() && !bookContentDao.existsById(bookContentId)) {
             throw new ResourceNotFoundException("Книжный файл с id = %d не найден".formatted(bookContentId));
         }
         bookContentDao.deleteById(bookContentId);
