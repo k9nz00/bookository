@@ -64,7 +64,7 @@
         <createTable schemaName="bookository" tableName="book_cover">
             <column name="id" type="int"/>
             <column name="size" type="bigint"/>
-            <column name="format" type="varchar"/>
+            <column name="format" type="bookository.cover_format"/>
             <column name="data" type="bytea"/>
         </createTable>
         <addPrimaryKey schemaName="bookository"

@@ -69,8 +69,8 @@ public class BookFormatType implements UserType<BookFormat> {
     }
 
     @Override
-    public Serializable disassemble(BookFormat language) {
-        return language;
+    public Serializable disassemble(BookFormat bookFormat) {
+        return bookFormat;
     }
 
     @Override

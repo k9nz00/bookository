@@ -31,7 +31,7 @@ public class BookCoverServiceImpl implements BookCoverService {
         entity.setId(bookId);
         entity.setSize(cover.getSize());
         entity.setData(cover.getBytes());
-        entity.setFormat(format.getValue());
+        entity.setFormat(format);
 
         bookCoverDao.save(entity);
     }
@@ -39,7 +39,7 @@ public class BookCoverServiceImpl implements BookCoverService {
     @Override
     public String get(int bookId) {
         return bookCoverDao.findById(bookId)
-                .map(entity -> MapperUtil.getBase64EncodedImage(entity.getData(), entity.getFormat()))
+                .map(entity -> MapperUtil.getBase64EncodedImage(entity.getData(), entity.getFormat().getValue()))
                 .orElseThrow(() -> new ResourceNotFoundException("Не найдена обложка с id = %d".formatted(bookId)));
 
     }

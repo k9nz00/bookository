@@ -21,6 +21,12 @@
         </sql>
     </changeSet>
 
+    <changeSet id="20240718_2246" author="ASemka">
+        <sql>
+            CREATE TYPE bookository.cover_format AS enum ('JPEG', 'JPG', 'PNG', 'GIFF', 'TIFF', 'SVG', 'BMP', 'WEBP');
+        </sql>
+    </changeSet>
+
     <changeSet id="20230722_1516" author="ASemka">
         <preConditions>
             <not>
