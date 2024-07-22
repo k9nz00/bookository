@@ -13,3 +13,7 @@ databaseConnectionProperties:
   password: ${DB_PASS:postgres}
   poolName: ${DB_POOL_NAME:HikariCPPool}
   maxPoolSize: ${DB_POOL_SIZE:1}
+
+seeding-data:
+  enable: ${SEED_DATA_ENABLE:true}
+  changeLog: ${SEED_DATA_CLASSPATH:classpath:db/changelog/changelog-for-seed-data.yml}
