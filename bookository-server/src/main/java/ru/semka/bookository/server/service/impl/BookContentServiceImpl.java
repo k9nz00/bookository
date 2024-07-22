@@ -11,6 +11,7 @@ import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
 import ru.semka.bookository.server.dao.BookContentDao;
 import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.entity.BookContentEntity;
+import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.service.BookContentService;
 import ru.semka.bookository.server.util.FileUtil;
 import ru.semka.bookository.server.util.ResponseUtil;
@@ -42,9 +43,13 @@ public class BookContentServiceImpl implements BookContentService {
         Optional<BookContentEntity> byIdAndAndBookId = bookContentDao.findByIdAndAndBookId(bookContentId, bookId);
         return byIdAndAndBookId
                 .map(entity -> {
+                    Optional<BookDetailsEntity> details = bookDao.getDetails(bookId);
+                    String bookName = details.map(book -> "%s.%s".formatted(book.getName(), entity.getBookFormat().name().toLowerCase()))
+                            .orElseGet(() -> "%s.%s".formatted(entity.getName(), entity.getBookFormat().name().toLowerCase()));
                     Resource resource = new ByteArrayResource(entity.getContent());
+
                     return ResponseEntity.ok()
-                            .headers(ResponseUtil.getHeaders(entity.getName()))
+                            .headers(ResponseUtil.getHeaders(bookName))
                             .body(resource);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(
