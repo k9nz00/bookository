@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/seed-data/add_books.xml
+  - include:
+      file: db/changelog/seed-data/add_categories.xml
+  - include:
+      file: db/changelog/seed-data/add_covers.xml
+  - include:
+      file: db/changelog/seed-data/add_book_content.xml
