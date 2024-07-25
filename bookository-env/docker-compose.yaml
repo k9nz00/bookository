@@ -23,6 +23,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: bookository
+      SEED_DATA_ENABLE: true
 
   bookository-server:
     image: "bookository/bookository-server:${IMAGE_VERSION}"

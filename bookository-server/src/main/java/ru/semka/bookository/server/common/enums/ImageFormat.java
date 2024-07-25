@@ -12,7 +12,11 @@ public enum ImageFormat {
     JPEG("jpeg"),
     JPG("jpg"),
     GIF("gif"),
-    WEBP("webp");
+    WEBP("webp"),
+    TIFF("tiff"),
+    SVG("svg"),
+    BMP("bmp"),
+    ;
 
     private final String value;
 

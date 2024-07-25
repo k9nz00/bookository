@@ -4,36 +4,56 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.ImageFormat;
+import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
 import ru.semka.bookository.server.dao.BookCoverDao;
+import ru.semka.bookository.server.dao.entity.BookCoverEntity;
 import ru.semka.bookository.server.service.BookCoverService;
-import ru.semka.bookository.server.service.ImageService;
 import ru.semka.bookository.server.util.FileUtil;
+import ru.semka.bookository.server.util.MapperUtil;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
 public class BookCoverServiceImpl implements BookCoverService {
     private final BookCoverDao bookCoverDao;
-    private final ImageService imageService;
 
     @Override
-    public void saveCover(int bookId, MultipartFile cover) throws IOException {
-        BufferedImage smallImage = imageService.resizeImage(cover.getBytes());
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageFormat imageFormat = ImageFormat.fromValue(FileUtil.getFileFormat(cover));
-        ImageIO.write(smallImage, imageFormat.getValue(), baos);
-        byte[] bytes = baos.toByteArray();
-        bookCoverDao.saveBigCover(bookId, cover);
-        bookCoverDao.saveSmallCover(bookId, bytes.length, bytes);
+    public void save(int bookId, MultipartFile cover) throws IOException {
+        if (bookCoverDao.existsById(bookId)) {
+            bookCoverDao.deleteById(bookId);
+        }
+
+        String fileFormat = FileUtil.getFileFormat(cover);
+        ImageFormat format = ImageFormat.fromValue(fileFormat);
+
+        BookCoverEntity entity = new BookCoverEntity();
+        entity.setId(bookId);
+        entity.setSize(cover.getSize());
+        entity.setData(cover.getBytes());
+        entity.setFormat(format);
+
+        bookCoverDao.save(entity);
     }
 
     @Override
-    public void deleteCover(int bookId) {
-        bookCoverDao.deleteBigCover(bookId);
-        bookCoverDao.deleteSmallCover(bookId);
+    public String get(int bookId) {
+        return bookCoverDao.findById(bookId)
+                .map(entity -> MapperUtil.getBase64EncodedImage(entity.getData(), entity.getFormat().getValue()))
+                .orElseThrow(() -> new ResourceNotFoundException("Не найдена обложка с id = %d".formatted(bookId)));
+
+    }
+
+    @Override
+    public void delete(int bookId) {
+        if (!isExists(bookId)) {
+            throw new ResourceNotFoundException("Не найдена обложка с id = %d".formatted(bookId));
+        }
+        bookCoverDao.deleteById(bookId);
+    }
+
+    @Override
+    public Boolean isExists(int bookId) {
+        return bookCoverDao.existsById(bookId);
     }
 }

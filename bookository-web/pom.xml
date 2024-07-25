@@ -10,6 +10,11 @@
     <artifactId>bookository-web</artifactId>
     <packaging>pom</packaging>
     <name>bookository-web</name>
+
+    <properties>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+    </properties>
+
     <dependencies>
 
     </dependencies>
