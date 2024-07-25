@@ -15,3 +15,7 @@ export {
   updateCategory,
   deleteCategory
 } from './categories.js'
+
+export {
+  getCover
+} from './cover.js'

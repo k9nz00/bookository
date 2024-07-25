@@ -1,13 +1,12 @@
 <template>
   <div class="flex gap-3 items-center">
-    <p class="inline-block">
-      Скачать в формате:
-    </p>
     <AppButton
+      v-for="content in bookContent"
+      :key="content.id"
       class="app-button-link"
-      @click="downloadBookContent"
+      @click="loadBookContent(content.id)"
     >
-      {{ bookContent.format }}
+      {{ book.name + '.' + content.format.toLowerCase() + ' '}} <span class="font-bold">{{ content.size }}</span>
     </AppButton>
   </div>
 </template>
@@ -15,10 +14,11 @@
 <script setup>
 import AppButton from './AppButton.vue'
 import { getBookContent } from '../api/index.js'
+import { API_HOST } from '../constants.js'
 
 const props = defineProps({
-  bookName: {
-    type: String,
+  book: {
+    type: Object,
     required: true
   },
   bookContent: {
@@ -27,28 +27,31 @@ const props = defineProps({
   }
 })
 
-const downloadBookContent = () => {
-  const bookId = props.bookContent.bookId
-  const contentId = props.bookContent.id
-
-  getBookContent(bookId, contentId).then((response) => {
-    const binaryString = window.atob(response)
-    const textString = new TextDecoder().decode(new Uint8Array([...binaryString].map(char => char.charCodeAt(0))))
-    const blob = new Blob([textString], { type: 'text/plain' })
-
-    const objectUrl = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.setAttribute('href', objectUrl)
-
-    const fileName = `${props.bookName || 'без_названия'}.${props.bookContent.format.toLowerCase()}`
-
-    link.setAttribute('download', fileName)
-    link.style.display = 'none'
-
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+const loadBookContent = (contentId) => {
+  let name
+  return fetch(`${ API_HOST }/books/${props.book.id}/content/${contentId}`, {
+    method: 'GET',
+    mode: 'cors'
   })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      name = decodeURIComponent(response.headers.get('Real-File-Name'))
+      return response.blob()
+    })
+    .then(result => {
+      const url = window.URL.createObjectURL(result);
+      const a = document.createElement('a')
+      a.href = url
+      a.download = name
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      window.URL.revokeObjectURL(url)
+    })
 }
+
 </script>
 

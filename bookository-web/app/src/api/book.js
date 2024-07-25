@@ -1,4 +1,5 @@
 import { API_HOST } from '../constants.js'
+import { getCover } from './cover.js'
 
 /**
  * @typedef {import('./categories.js').Category}

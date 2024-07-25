@@ -14,7 +14,6 @@
         <BookCover
           v-if="bookId"
           :book-id="bookId"
-          :preview="book.bigPreview"
           :is-mobile="true"
         />
 
@@ -53,13 +52,16 @@
             />
 
             <!-- КАТЕГОРИИ -->
-            <AppAutocomplete
-              placeholder="Добавьте категорию"
-              label="Категории"
-              :options="categories"
-              :selected-options="book.categories"
-              @select="selectCategories"
-            />
+            <div class="flex gap-5">
+              <div
+                v-for="category in book.categories"
+                :key="category.id"
+                class="category-label"
+              >
+                {{ category.name }}
+              </div>
+            </div>
+
 
             <!-- ЯЗЫК ОРИГИНАЛА -->
             <AppSelect
@@ -70,17 +72,18 @@
             />
 
             <!-- ЗАГРУЗИТЬ ФАЙЛ КНИГИ -->
-            <input
-              v-if="bookId"
-              type="file"
-              :disabled="!bookId"
-              @change="loadBookFile($event.target.files)"
-            >
+<!--            <input-->
+<!--              v-if="bookId"-->
+<!--              type="file"-->
+<!--              :disabled="!bookId"-->
+<!--              @change="loadBookFile($event.target.files)"-->
+<!--            >-->
 
             <!-- СКАЧАТЬ В ФОРМАТЕ -->
-            <template v-for="content in book.bookContentInfo" :key="content.id">
-              <BookDownloader :book-content="content" :book-name="book.name" />
-            </template>
+            <BookDownloader
+              :book="book"
+              :book-content="book.bookContentInfo"
+            />
           </div>
         </div>
 
@@ -100,9 +103,9 @@
           </AppIconButton>
 
           <!-- СОХРАНИТЬ -->
-          <AppSubmitButton class="bg-blue-100" @click="submit">
-            Сохранить
-          </AppSubmitButton>
+<!--          <AppSubmitButton class="bg-blue-100" @click="submit">-->
+<!--            Сохранить-->
+<!--          </AppSubmitButton>-->
 
           <AppSubmitButton class="bg-red-400" @click="deleteCurrentBook">
             Удалить книгу
@@ -182,8 +185,9 @@ onMounted(() => {
   })
 })
 
+
 const submit = () => {
-  if(!book.value.name) {
+  if (!book.value.name) {
     alert('Нельзя сохранить книгу без названия')
     return
   }
@@ -194,10 +198,10 @@ const submit = () => {
     annotation: book.value.annotation || '',
     genre: book.value.genre || '',
     language: book.value.language || '',
-    categories: (book.value.categories || []).map(category => category.id ? category.id : category),
+    categories: (book.value.categories || []).map(category => category.id ? category.id : category)
   }
 
-  if(bookId.value) {
+  if (bookId.value) {
     updateBook(bookId.value, clean(updatedBook))
       .then(() => {
         alert('Книга успешно обновлена!')
@@ -210,7 +214,7 @@ const submit = () => {
     createBook(clean(updatedBook))
       .then(() => {
         // TODO: bookId
-        router.push({path: route.path, query: {id: '123'} })
+        router.push({ path: route.path, query: { id: '123' } })
       })
       .catch((error) => {
         alert(error)
@@ -224,3 +228,11 @@ const deleteCurrentBook = () => {
   backToBooks()
 }
 </script>
+
+<style scoped>
+.category-label {
+  @apply border-2 border-blue-600 rounded-xl pr-1 pl-1;
+  width: fit-content;
+}
+
+</style>

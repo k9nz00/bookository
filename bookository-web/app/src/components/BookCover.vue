@@ -1,7 +1,11 @@
 <template>
   <div :class="isMobile ? 'block md:hidden' : 'hidden md:block'">
     <label :for="id">
-      <img class="book-cover" alt="" :src="src" >
+      <img
+        class="book-cover"
+        alt=""
+        :src="cover"
+      >
     </label>
 
     <input
@@ -17,15 +21,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { updateBookCover } from '../api/index.js'
+import { useCover } from '../hooks/useCover.js'
 
 const props = defineProps({
   bookId: {
-    type: String,
+    type: Number,
     required: true
-  },
-  preview: {
-    type: String,
-    default: ''
   },
   isMobile: {
     type: Boolean,
@@ -37,7 +38,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits([ 'update:modelValue' ])
 
 const id = computed(() => {
   return props.isMobile ? 'input-mobile' : 'input-desktop'
@@ -51,17 +52,18 @@ const updateCover = (file) => {
 const src = ref('')
 const onUploadCover = (uploadedFiles) => {
   const file = uploadedFiles[0]
-  let reader = new FileReader()
+  const reader = new FileReader()
   reader.readAsDataURL(file)
-  reader.onload = function() {
-    src.value  = reader.result
+  reader.onload = function () {
+    src.value = reader.result
 
     updateCover(file)
   }
 }
 
+const { cover, loadCover } = useCover()
 onMounted(() => {
-  src.value = props.preview
+  loadCover(props.bookId)
 })
 </script>
 

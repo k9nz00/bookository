@@ -35,13 +35,11 @@
       </div>
       <div class="book-list">
         <div
-          v-for="(book, index) in books"
-          :key="book.id + index"
+          v-for="(book) in books"
+          :key="JSON.stringify(book)"
           class="book"
         >
-          <div class="cover">
-            <img src="../assets/test_book_cover.jpg" alt="test_book_cover">
-          </div>
+          <BookCover :book-id="book.id" />
 
           <div class="book-name text-2xl font-bold">
             {{ book.name }}
@@ -59,7 +57,7 @@
             </div>
           </div>
 
-          <div class="open-book" type="button">
+          <div class="open-book" type="button" @click="openBookDetails(book.id)">
             Подробнее
           </div>
         </div>
@@ -73,6 +71,8 @@ import { ref, onMounted } from 'vue'
 
 import { getBooks, getCategories } from '../api/index.js'
 import { TEST_BOOKS, LANGUAGES } from '../constants.js'
+import { useRouter } from 'vue-router'
+import BookCover from '../components/BookCover.vue'
 
 const books = ref(TEST_BOOKS)
 const loadBooks = async () => {
@@ -93,6 +93,11 @@ const loadCategories = async () => {
   }
 }
 
+const router = useRouter()
+const openBookDetails = (id) => {
+  router.push(`/books/${ id }`)
+}
+
 const loading = ref(false)
 onMounted(() => {
   loading.value = true
@@ -104,7 +109,8 @@ onMounted(() => {
 
 <style scoped lang="postcss">
 .board {
-  @apply p-4 h-full;
+  @apply h-full;
+  padding: 100px 40px;
 }
 
 .book-search-wrapper {
