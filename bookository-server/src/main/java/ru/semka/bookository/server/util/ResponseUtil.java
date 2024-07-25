@@ -15,6 +15,8 @@ public class ResponseUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(fileName.replace(" ", "_"), StandardCharsets.UTF_8));
+        headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Real-File-Name");
+        headers.add("Real-File-Name", URLEncoder.encode(fileName.replace(" ", "_"), StandardCharsets.UTF_8));
         return headers;
     }
 }
