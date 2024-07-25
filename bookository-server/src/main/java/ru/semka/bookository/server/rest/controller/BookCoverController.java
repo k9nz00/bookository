@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.semka.bookository.server.rest.dto.cover.CoverDto;
 import ru.semka.bookository.server.service.BookCoverService;
 
 import java.io.IOException;
@@ -30,8 +31,8 @@ public class BookCoverController {
     @GetMapping("/{bookId}/cover")
     @Operation(description = "Получение обложки книги. Возвращает строку в base64 кодировании")
     @ResponseStatus(HttpStatus.OK)
-    public String getBookCover(@PathVariable int bookId) {
-        return bookCoverService.get(bookId);
+    public CoverDto getBookCover(@PathVariable int bookId) {
+        return new CoverDto(bookCoverService.get(bookId));
     }
 
     @DeleteMapping("/{bookId}/cover")
