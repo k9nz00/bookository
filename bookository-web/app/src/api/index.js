@@ -4,7 +4,9 @@ export {
   createBook,
   updateBook,
   getBookContent,
-  createBookContent
+  createBookContent,
+  updateBookCover,
+  deleteBook
 } from './book.js'
 
 export {
@@ -13,3 +15,7 @@ export {
   updateCategory,
   deleteCategory
 } from './categories.js'
+
+export {
+  getCover
+} from './cover.js'

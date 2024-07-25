@@ -11,7 +11,13 @@ import { API_HOST } from '../constants.js'
  */
 export const getCategories = () => {
   return fetch(`${ API_HOST }/categories`)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }
 
@@ -26,7 +32,13 @@ export const createCategory = (category) => {
   }
 
   return fetch(`${ API_HOST }/categories`, options)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }
 
@@ -41,7 +53,13 @@ export const updateCategory = (category) => {
   }
 
   return fetch(`${ API_HOST }/categories/${ category.id }`, options)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }
 
@@ -55,6 +73,12 @@ export const deleteCategory = (id) => {
   }
 
   return fetch(`${ API_HOST }/categories/${ id }`, options)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка запроса: статус ${response.status}`)
+      }
+
+      return response.json()
+    })
     .then((response) => response)
 }

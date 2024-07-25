@@ -1,121 +1,197 @@
 <template>
-  <div class="board">
-    <div class="flex items-start space-x-2 p-2">
-      <BookShelf
-        v-for="shelf of shelves"
-        :key="shelf.name"
-        :shelf="shelf"
-        :books="books"
-        @move-shelf="moveShelf"
-        @move-card-to-shelf="moveCardToShelf"
-        @create-card="createCard"
-        @move-card="moveCard"
-      />
+  <div class="board mx-auto">
+    <div class="flex justify-center w-full">
+      <div class="book-search-wrapper">
+        <input type="text" class="book-search-input" placeholder="Поиск по названию" />
+        <input type="text" class="book-search-input" placeholder="Поиск по автору" />
+        <button class="book-search-button" type="button">
+          Найти книгу
+        </button>
+        <button class="book-add-button" type="button">
+          Добавить книгу
+        </button>
+      </div>
+    </div>
 
-      <div class="shelf flex">
-        <input
-          v-model="newShelfName"
-          type="text"
-          class="p-2 mr-2 flex-grow"
-          placeholder="Добавить полку"
-          @keyup.enter="createShelf"
+    <div class="content-wrapper">
+      <!-- Фильтры-->
+      <div class="book-filters flex flex-col gap-2">
+        <span class="font-bold">Категории</span>
+        <template v-for="item in categories" :key="item.id">
+          <label><input type="checkbox" class="pr-1"><span class="pl-1">{{ item.name }}</span></label>
+        </template>
+
+        <span class="font-bold">Язык</span>
+        <template v-for="item in LANGUAGES" :key="item.id">
+          <label><input type="checkbox" class="pr-1"><span class="pl-1">{{ item.name }}</span></label>
+        </template>
+
+        <button class="book-search-button" type="button">
+          Применить
+        </button>
+        <button class="book-add-button" type="button">
+          Сбросить фильтры
+        </button>
+      </div>
+      <div class="book-list">
+        <div
+          v-for="(book) in books"
+          :key="JSON.stringify(book)"
+          class="book"
         >
+          <BookCover :book-id="book.id" />
+
+          <div class="book-name text-2xl font-bold">
+            {{ book.name }}
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <div class="text-lg mb-3">
+              {{ book.author || 'Автор неизвестен' }}
+            </div>
+
+            <div class="category-list">
+              <div v-for="category in book.categories" :key="category.id" class="category">
+                {{ category.name }}
+              </div>
+            </div>
+          </div>
+
+          <div class="open-book" type="button" @click="openBookDetails(book.id)">
+            Подробнее
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import BookShelf from '../components/BookShelf.vue'
-import defaultBoard from '../default-board.js'
-import clonedeep from 'lodash.clonedeep'
-import { router } from '../router.js'
-import { getBooks } from '../api/index.js'
+import { ref, onMounted } from 'vue'
 
-const books = ref([])
-const loadBooks = () => {
-  getBooks()
-    .then(data => (books.value = data))
-    .catch(error => console.log(error))
-}
+import { getBooks, getCategories } from '../api/index.js'
+import { TEST_BOOKS, LANGUAGES } from '../constants.js'
+import { useRouter } from 'vue-router'
+import BookCover from '../components/BookCover.vue'
 
-onMounted(() => {
-  loadBooks()
-})
-
-const board = ref(defaultBoard)
-const shelves = computed(() => {
-  return board.value.shelves
-})
-
-const newShelfName = ref('')
-const createShelf = () => {
-  const name = newShelfName.value
-
-  if(!name) {
-    return
+const books = ref(TEST_BOOKS)
+const loadBooks = async () => {
+  try {
+    books.value = await getBooks()
+  } catch (error) {
+    books.value = TEST_BOOKS
+    alert(error)
   }
-
-  board.value.shelves.push({
-    name,
-    cards: []
-  })
-  newShelfName.value = ''
 }
 
-const moveShelf = ({ shelf, toShelf }) => {
-  const shelves = clonedeep(board.value.shelves)
-
-  const shelfIndex = shelves.findIndex(item => item.id === shelf.id)
-  const toShelfIndex = shelves.findIndex(item => item.id === toShelf.id)
-
-  shelves.splice(shelfIndex, 1)
-  shelves.splice(toShelfIndex, 0, shelf)
-
-  board.value.shelves = shelves
+const categories = ref([])
+const loadCategories = async () => {
+  try {
+    categories.value = await getCategories()
+  } catch (error) {
+    alert(error)
+  }
 }
 
-const moveCard = ({ card, toCard }) => {
-  const shelves = clonedeep(board.value.shelves)
-
-  const toCardShelf = shelves.find(shelf => shelf.id === toCard.shelfId).cards || []
-  const toCardIndex = toCardShelf.findIndex(item => item.id === toCard.id)
-
-  board.value.shelves = board.value.shelves.map(shelf => {
-    shelf.cards = shelf.cards.filter(item => item.id !== card.id)
-
-    if(shelf.id === toCard.shelfId) {
-      card.shelfId = shelf.id
-      shelf.cards.splice(toCardIndex, 0, card)
-    }
-
-    return shelf
-  })
+const router = useRouter()
+const openBookDetails = (id) => {
+  router.push(`/books/${ id }`)
 }
 
-const moveCardToShelf = ({ card, toShelf }) => {
-  board.value.shelves = board.value.shelves.map(shelf => {
-    shelf.cards = shelf.cards.filter(item => item.id !== card.id)
-
-    if(shelf.id === toShelf.id) {
-      card.shelfId = shelf.id
-      shelf.cards.push(card)
-    }
-
-    return shelf
-  })
-}
-
-const createCard = (shelfId) => {
-  router.push(`/books/${shelfId}`)
-}
+const loading = ref(false)
+onMounted(() => {
+  loading.value = true
+  loadBooks()
+  loadCategories()
+  loading.value = false
+})
 </script>
 
-<style lang="css">
+<style scoped lang="postcss">
 .board {
-  @apply p-4 h-full overflow-auto;
-  background: no-repeat url('../assets/book-cafe.png');
-  background-size: cover;
+  @apply h-full;
+  padding: 100px 40px;
+}
+
+.book-search-wrapper {
+  @apply flex justify-start items-start;
+  gap: 12px;
+  width: 100%;
+  max-width: 1480px;
+}
+
+.book-search-button {
+  @apply bg-blue-600 rounded-lg text-white;
+  padding: 8px;
+  height: 44px;
+}
+
+.book-add-button {
+    @apply border-2 border-blue-600 rounded-lg text-blue-600;
+    padding: 8px;
+    height: 44px;
+}
+
+.book-search-input {
+  @apply bg-gray-50 border-2 border-blue-50 rounded-md p-2 mb-8;
+  flex-grow: 1;
+  position: sticky;
+  top: 0;
+}
+
+.book-filters {
+  padding-top: 24px;
+  min-width: 240px;
+  position: sticky;
+  top: 0;
+}
+
+.content-wrapper {
+  @apply mx-auto flex gap-4;
+  width: 100%;
+  max-width: 1480px;
+  height: 90vh;
+  overflow: scroll;
+}
+
+.book-list {
+  padding-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.book {
+  @apply bg-gray-50 border-2 border-blue-50 rounded-md hover:scale-105 hover:transition-all;
+  width: 280px;
+  padding: 20px;
+}
+
+.book:hover {
+  @apply shadow-md;
+}
+
+.cover {
+  padding: 32px;
+  border-radius: 12px;
+  max-height: fit-content;
+}
+
+.category-list {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.category {
+  @apply flex items-center justify-center bg-blue-100 rounded-full p-2 truncate text-xs;
+}
+
+.open-book {
+  @apply p-1 text-blue-600 mt-4 text-transparent;
+}
+
+.book:hover .open-book {
+  @apply text-blue-600;
 }
 </style>

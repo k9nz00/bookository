@@ -1,12 +1,17 @@
 <template>
   <div :class="isMobile ? 'block md:hidden' : 'hidden md:block'">
     <label :for="id">
-      <img class="book-cover" alt="" :src="src" >
+      <img
+        class="book-cover"
+        alt=""
+        :src="cover"
+      >
     </label>
 
     <input
       type="file"
       class="input-file"
+      :disabled="disabled"
       :id="id"
       @change="onUploadCover($event.target.files)"
     >
@@ -15,39 +20,50 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { updateBookCover } from '../api/index.js'
+import { useCover } from '../hooks/useCover.js'
 
 const props = defineProps({
-  preview: {
-    type: String,
-    default: ''
+  bookId: {
+    type: Number,
+    required: true
   },
   isMobile: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
     type: Boolean,
     default: false
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits([ 'update:modelValue' ])
 
 const id = computed(() => {
   return props.isMobile ? 'input-mobile' : 'input-desktop'
 })
 
+const updateCover = (file) => {
+  updateBookCover(props.bookId, file)
+}
+
 // TODO: допустимое расширение файла
 const src = ref('')
 const onUploadCover = (uploadedFiles) => {
   const file = uploadedFiles[0]
-  let reader = new FileReader()
+  const reader = new FileReader()
   reader.readAsDataURL(file)
-  reader.onload = function() {
-    src.value  = reader.result
+  reader.onload = function () {
+    src.value = reader.result
 
-    emit('update:modelValue', file)
+    updateCover(file)
   }
 }
 
+const { cover, loadCover } = useCover()
 onMounted(() => {
-  src.value = props.preview
+  loadCover(props.bookId)
 })
 </script>
 

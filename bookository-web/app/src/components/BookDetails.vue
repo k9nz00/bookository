@@ -1,21 +1,30 @@
 <template>
   <div class="app-page">
-    <div v-if="loading">Загружается...</div>
+    <div v-if="loading">
+      Загружается...
+    </div>
 
-    <div v-else-if="cardLoadingError">Нет такой книги</div>
+    <div v-else-if="cardLoadingError">
+      Нет такой книги
+    </div>
 
     <form v-else @submit.prevent>
       <div class="app-fields-container">
         <!-- ОБЛОЖКА MOBILE -->
         <BookCover
-          v-model="book.cover"
-          :preview="book.bigPreview"
-          is-mobile
+          v-if="bookId"
+          :book-id="bookId"
+          :is-mobile="true"
         />
 
         <div class="flex gap-5">
           <!-- ОБЛОЖКА DESKTOP -->
-          <BookCover v-model="book.cover" :preview="book.bigPreview" />
+          <BookCover
+            v-if="bookId"
+            :book-id="bookId"
+            :disabled="!bookId"
+            :preview="book.bigPreview"
+          />
 
           <!-- НАЗВАНИЕ -->
           <div class="w-full space-y-4">
@@ -43,13 +52,16 @@
             />
 
             <!-- КАТЕГОРИИ -->
-            <AppAutocomplete
-              placeholder="Добавьте категорию"
-              label="Категории"
-              :options="categories"
-              :selected-options="book.categories"
-              @select="selectCategories"
-            />
+            <div class="flex gap-5">
+              <div
+                v-for="category in book.categories"
+                :key="category.id"
+                class="category-label"
+              >
+                {{ category.name }}
+              </div>
+            </div>
+
 
             <!-- ЯЗЫК ОРИГИНАЛА -->
             <AppSelect
@@ -60,15 +72,18 @@
             />
 
             <!-- ЗАГРУЗИТЬ ФАЙЛ КНИГИ -->
-            <input
-              type="file"
-              @change="loadBookFile($event.target.files)"
-            >
+<!--            <input-->
+<!--              v-if="bookId"-->
+<!--              type="file"-->
+<!--              :disabled="!bookId"-->
+<!--              @change="loadBookFile($event.target.files)"-->
+<!--            >-->
 
             <!-- СКАЧАТЬ В ФОРМАТЕ -->
-            <template v-for="content in book.bookContentInfo" :key="content.id">
-              <BookDownloader :book-content="content" :book-name="book.name" />
-            </template>
+            <BookDownloader
+              :book="book"
+              :book-content="book.bookContentInfo"
+            />
           </div>
         </div>
 
@@ -88,8 +103,12 @@
           </AppIconButton>
 
           <!-- СОХРАНИТЬ -->
-          <AppSubmitButton @click="submit">
-            Сохранить
+<!--          <AppSubmitButton class="bg-blue-100" @click="submit">-->
+<!--            Сохранить-->
+<!--          </AppSubmitButton>-->
+
+          <AppSubmitButton class="bg-red-400" @click="deleteCurrentBook">
+            Удалить книгу
           </AppSubmitButton>
         </div>
       </div>
@@ -110,10 +129,10 @@ import BookDownloader from './BookDownloader.vue'
 import BookCover from './BookCover.vue'
 
 import { BOOK_MODEL, LANGUAGES } from '../constants.js'
-import { getCategories, getBook, createBook } from '../api/index.js'
+import { getCategories, getBook, createBook, updateBook, deleteBook } from '../api/index.js'
+import clean from 'lodash-clean'
 
 import { useRoute, useRouter } from 'vue-router'
-import { useFormData } from '../hooks/useFormData.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -121,17 +140,22 @@ const backToBooks = () => {
   router.push('/')
 }
 
-const bookId = ref(route.params.bookId)
+const bookId = computed(() => {
+  return route.params.bookId
+})
+
 const book = ref(BOOK_MODEL)
+const cardLoadingError = ref(false)
 const getBookCard = () => {
   if (bookId.value) {
-    return getBook(bookId.value).then(data => (book.value = data))
+    return getBook(bookId.value)
+      .then(data => (book.value = data))
+      .catch(() => {
+        cardLoadingError.value = true
+      })
   }
   return Promise.resolve()
 }
-const cardLoadingError = computed(() => {
-  return !loading.value && bookId.value && !book.value.name
-})
 
 const categories = ref([])
 const getCategoriesOptions = () => {
@@ -161,39 +185,54 @@ onMounted(() => {
   })
 })
 
-const { appendFormData } = useFormData()
 
 const submit = () => {
-  // name -  обязательное поле
-  const filterEmptyFields = (obj) => {
-    return Object.fromEntries(Object.entries(obj).filter(([_, value]) => {
-      if(typeof value === 'object') {
-        return value.length
-      }
-
-      return value
-    }))
-  }
-
-  const filtered = filterEmptyFields(book.value)
-
-  if(Object.keys(filtered).length === 0) {
+  if (!book.value.name) {
+    alert('Нельзя сохранить книгу без названия')
     return
   }
 
-  createBook(filtered)
-    .catch((error) => {
-      console.log(error)
-    })
+  const updatedBook = {
+    name: book.value.name,
+    author: book.value.author || '',
+    annotation: book.value.annotation || '',
+    genre: book.value.genre || '',
+    language: book.value.language || '',
+    categories: (book.value.categories || []).map(category => category.id ? category.id : category)
+  }
+
+  if (bookId.value) {
+    updateBook(bookId.value, clean(updatedBook))
+      .then(() => {
+        alert('Книга успешно обновлена!')
+      })
+      .catch((error) => {
+        alert(error)
+        console.log(error)
+      })
+  } else {
+    createBook(clean(updatedBook))
+      .then(() => {
+        // TODO: bookId
+        router.push({ path: route.path, query: { id: '123' } })
+      })
+      .catch((error) => {
+        alert(error)
+        console.log(error)
+      })
+  }
 }
 
-// const submit = () => {
-//   const formData = appendFormData(book.value)
-//   // TODO: Проверка на пустые поля
-//
-//   createBook(formData)
-//     .catch((error) => {
-//       console.log(error)
-//     })
-// }
+const deleteCurrentBook = () => {
+  deleteBook(bookId.value)
+  backToBooks()
+}
 </script>
+
+<style scoped>
+.category-label {
+  @apply border-2 border-blue-600 rounded-xl pr-1 pl-1;
+  width: fit-content;
+}
+
+</style>
