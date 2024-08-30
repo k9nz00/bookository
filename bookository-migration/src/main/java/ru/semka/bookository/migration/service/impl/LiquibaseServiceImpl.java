@@ -34,5 +34,6 @@ public class LiquibaseServiceImpl extends SpringLiquibase implements LiquibaseSe
         if (liquibaseContext.isReleaseLocks()) {
             liquibase.forceReleaseLocks();
         }
+        super.performUpdate(liquibase);
     }
 }

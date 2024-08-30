@@ -2,6 +2,7 @@ package ru.semka.bookository.migration.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.web.bind.annotation.*;
 import ru.semka.bookository.migration.dto.MigrationUpdateContext;
 import ru.semka.bookository.migration.dto.UpdateRequestDto;
@@ -32,6 +33,6 @@ public class MigrationController {
 
     @PostMapping("/{profileId}/rollback")
     public void rollback(@PathVariable("profileId") MigrationDbProfile profileId) {
-
+        throw new NotImplementedException();
     }
 }
