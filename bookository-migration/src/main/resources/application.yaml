@@ -12,7 +12,7 @@ spring:
 
 liquibase:
   change-log-path: ${MIGRATION_CHANGE_LOG_PATH:classpath:db/changelog}
-
+  default-schema: ${MIGRATION_DEFAULT_SCHEMA:public}
 
 databaseConnectionProperties:
   driverClassName: ${DB_DRIVER_CLASS_NAME:org.postgresql.Driver}

@@ -24,6 +24,20 @@ services:
       POSTGRES_DB: bookository
       SEED_DATA_ENABLE: true
 
+  postgrestest:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    networks:
+      bookository-default-network:
+    #    volumes:
+    #      - bookository-db-volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bookository
+      SEED_DATA_ENABLE: true
+
   bookository-server:
     image: "bookository/bookository-server:${IMAGE_VERSION}"
     restart: always

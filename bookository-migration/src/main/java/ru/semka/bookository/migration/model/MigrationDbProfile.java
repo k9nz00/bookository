@@ -6,10 +6,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MigrationDbProfile {
-    DEFAULT("default"),
-    SEEDDATA("seed-data");
+    DEFAULT("default", "org.postgresql.Driver"),
+    SEEDDATA("seed-data", "org.postgresql.Driver");
 
     private final String value;
+    private final String driverClassName;
 
     public static MigrationDbProfile fromValue(String value) {
         for (MigrationDbProfile dbProfile : MigrationDbProfile.values()) {
