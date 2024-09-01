@@ -8,8 +8,9 @@
     </parent>
 
     <artifactId>bookository-migration</artifactId>
-    <packaging>jar</packaging>
     <name>bookository-migration</name>
+    <packaging>jar</packaging>
+    <version>0.0.1</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -125,6 +126,7 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker-maven-plugin.version}</version>
                 <configuration>
                     <skip>${skip-build-image}</skip>
                     <images>

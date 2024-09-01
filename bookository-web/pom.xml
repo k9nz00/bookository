@@ -8,8 +8,9 @@
     </parent>
 
     <artifactId>bookository-web</artifactId>
-    <packaging>pom</packaging>
     <name>bookository-web</name>
+    <packaging>pom</packaging>
+    <version>0.0.1</version>
 
     <properties>
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
