@@ -1,0 +1,9 @@
+FROM ubuntu:18.04
+
+RUN apt update \
+    && apt update \
+    && apt install -y curl wget
+
+COPY ./bookository-env/migration/executor.sh /opt/executor.sh
+
+ENTRYPOINT ["sh", "-c", "/opt/executor.sh"]

@@ -7,3 +7,5 @@ fi
 echo "IMAGE_VERSION=${IMAGE_VERSION}" > bookository-env/.env
 
 mvn clean install -DskipTests -PwithDocker -Ddocker.image.version="$IMAGE_VERSION"
+
+docker build --file ./bookository-env/dockerfiiles/Dockerfile-executor-migration-scripts --tag bookository/migration-scripts-executor:"${IMAGE_VERSION}" .

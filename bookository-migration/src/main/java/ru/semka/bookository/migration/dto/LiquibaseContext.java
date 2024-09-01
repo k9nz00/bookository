@@ -3,8 +3,8 @@ package ru.semka.bookository.migration.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import ru.semka.bookository.migration.model.LiquibaseCommand;
-import ru.semka.bookository.migration.model.MigrationDbProfile;
+import ru.semka.bookository.migration.enums.LiquibaseCommand;
+import ru.semka.bookository.migration.enums.MigrationDbProfile;
 
 import java.time.LocalDateTime;
 import java.util.Map;

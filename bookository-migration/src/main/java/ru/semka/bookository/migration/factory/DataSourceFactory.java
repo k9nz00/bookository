@@ -1,6 +1,6 @@
 package ru.semka.bookository.migration.factory;
 
-import ru.semka.bookository.migration.model.MigrationDbProfile;
+import ru.semka.bookository.migration.enums.MigrationDbProfile;
 
 import javax.sql.DataSource;
 

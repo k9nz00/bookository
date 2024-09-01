@@ -2,14 +2,12 @@ package ru.semka.bookository.migration.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.semka.bookository.migration.model.MigrationDbProfile;
+import ru.semka.bookository.migration.enums.MigrationDbProfile;
 
 import java.io.File;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MigrationUtil {
-    public static final String PG_DRIVER_CLASS_NAME = "org.postgresql.Driver";
-    public static final String CLICKHOUSE_DRIVER_CLASS_NAME = "ru.yandex.clickhouse.ClickHouseDriver";
     private static final String CHANGE_LOG_FILE_TEMPLATE = "changelog-%s.yml";
 
     public static String createChangeLogName(String changeLogDirectoryPath, MigrationDbProfile dbProfile) {

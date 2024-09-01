@@ -2,8 +2,8 @@ package ru.semka.bookository.migration.dto;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import ru.semka.bookository.migration.model.LiquibaseCommand;
-import ru.semka.bookository.migration.model.MigrationDbProfile;
+import ru.semka.bookository.migration.enums.LiquibaseCommand;
+import ru.semka.bookository.migration.enums.MigrationDbProfile;
 
 @EqualsAndHashCode(callSuper = false)
 @Getter

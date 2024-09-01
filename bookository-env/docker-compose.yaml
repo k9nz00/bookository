@@ -55,6 +55,17 @@ services:
     depends_on:
       - postgres
 
+  bookository-migration-executor:
+    image: "bookository/migration-scripts-executor:${IMAGE_VERSION}"
+    restart: on-failure
+    networks:
+      bookository-default-network:
+    volumes:
+      - "./migration/scripts/:/opt/scripts:ro"
+    depends_on:
+      - postgres
+      - bookository-migration
+
 #  bookository-web:
 #    image: bookository/bookository-web:br_it
 #    restart: on-failure

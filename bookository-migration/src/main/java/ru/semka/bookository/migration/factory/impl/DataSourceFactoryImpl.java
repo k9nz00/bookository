@@ -2,8 +2,8 @@ package ru.semka.bookository.migration.factory.impl;
 
 import com.zaxxer.hikari.util.DriverDataSource;
 import org.springframework.stereotype.Component;
+import ru.semka.bookository.migration.enums.MigrationDbProfile;
 import ru.semka.bookository.migration.factory.DataSourceFactory;
-import ru.semka.bookository.migration.model.MigrationDbProfile;
 
 import javax.sql.DataSource;
 import java.util.Properties;

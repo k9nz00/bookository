@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import ru.semka.bookository.migration.configuration.properties.LiquibaseProperties;
-import ru.semka.bookository.migration.model.MigrationDbProfile;
+import ru.semka.bookository.migration.enums.MigrationDbProfile;
 import ru.semka.bookository.migration.util.MigrationUtil;
 import ru.semka.bookository.migration.validation.MigrationProfileValidator;
 

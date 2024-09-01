@@ -1,4 +1,4 @@
-package ru.semka.bookository.migration.model;
+package ru.semka.bookository.migration.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

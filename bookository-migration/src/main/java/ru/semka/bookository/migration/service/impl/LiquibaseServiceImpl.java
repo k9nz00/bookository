@@ -5,16 +5,17 @@ import liquibase.exception.LiquibaseException;
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
 import ru.semka.bookository.migration.dto.LiquibaseContext;
+import ru.semka.bookository.migration.service.LiquibaseCommandExecutor;
 import ru.semka.bookository.migration.service.LiquibaseService;
 
 import javax.sql.DataSource;
 
 @Slf4j
 public class LiquibaseServiceImpl extends SpringLiquibase implements LiquibaseService {
-
     private final LiquibaseContext liquibaseContext;
+    private final LiquibaseCommandExecutor executor;
 
-    public LiquibaseServiceImpl(DataSource dataSource, LiquibaseContext liquibaseContext) {
+    public LiquibaseServiceImpl(DataSource dataSource, LiquibaseContext liquibaseContext, LiquibaseCommandExecutor executor) {
         this.setDataSource(dataSource);
         this.setChangeLog(liquibaseContext.getChangeLog());
         this.setDefaultSchema(liquibaseContext.getSchema());
@@ -22,6 +23,7 @@ public class LiquibaseServiceImpl extends SpringLiquibase implements LiquibaseSe
         this.setChangeLogParameters(liquibaseContext.getChangeLogParams());
 
         this.liquibaseContext = liquibaseContext;
+        this.executor = executor;
     }
 
     @Override
@@ -34,6 +36,6 @@ public class LiquibaseServiceImpl extends SpringLiquibase implements LiquibaseSe
         if (liquibaseContext.isReleaseLocks()) {
             liquibase.forceReleaseLocks();
         }
-        super.performUpdate(liquibase);
+        executor.executeMigrationCommand(this, liquibase, liquibaseContext);
     }
 }
