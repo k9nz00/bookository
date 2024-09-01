@@ -11,11 +11,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>ru.semka</groupId>
-    <artifactId>bookository</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>ru.semka.bookository</groupId>
+    <artifactId>bookository-parent</artifactId>
+    <version>0.0.1</version>
     <packaging>pom</packaging>
-    <name>bookository</name>
+    <name>bookository-parent</name>
 
     <description>Demo project for Spring Boot</description>
 
@@ -30,10 +30,10 @@
 
         <!-- plugin versions-->
         <docker.image.version>${project.version}</docker.image.version>
-        <docker-maven-plugin.version>0.43.0</docker-maven-plugin.version>
+        <docker-maven-plugin.version>0.45.0</docker-maven-plugin.version>
 
         <skip-build-image>false</skip-build-image>
-        <skip-build-web-ui-image>false</skip-build-web-ui-image>
+        <skip-build-web-ui-image>true</skip-build-web-ui-image>
     </properties>
 
     <dependencies>

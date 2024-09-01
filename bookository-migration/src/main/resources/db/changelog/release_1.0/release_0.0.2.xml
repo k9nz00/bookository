@@ -26,7 +26,7 @@
             </not>
         </preConditions>
         <createTable schemaName="bookository" tableName="book">
-            <column name="id" type="int" defaultValue="nextval('seq_book_id')">
+            <column name="id" type="int" defaultValue="nextval('bookository.seq_book_id')">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="name" type="varchar">
@@ -94,7 +94,7 @@
             </not>
         </preConditions>
         <createTable schemaName="bookository" tableName="book_content">
-            <column name="id" type="int" defaultValue="nextval('seq_book_content_id')">
+            <column name="id" type="int" defaultValue="nextval('bookository.seq_book_content_id')">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="book_id" type="int"/>
