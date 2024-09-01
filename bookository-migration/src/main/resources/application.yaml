@@ -1,19 +1,15 @@
+server:
+  port: ${MIGRATION_SERVER_PORT:8030}
+
 spring:
-  liquibase:
+  application:
+    name: ^project.name^
+
+liquibase:
+  change-log-path: ${MIGRATION_CHANGE_LOG_PATH:classpath:db/changelog}
+  default-schema: ${MIGRATION_DEFAULT_SCHEMA:public}
+
+springdoc:
+  api-docs:
+    path: /api-docs
     enabled: true
-    change-log: classpath:${CHANGE_LOG_FILE_PATH:db/changelog/changelog-default.yml}
-    default-schema: public
-
-databaseConnectionProperties:
-  driverClassName: ${DB_DRIVER_CLASS_NAME:org.postgresql.Driver}
-  jdbcUrl: ${DB_URL:jdbc:postgresql://localhost:5432/bookository}
-  database: ${DB_NAME:bookository}
-  schema: ${DB_SCHEMA:bookository}
-  login: ${DB_USER:postgres}
-  password: ${DB_PASS:postgres}
-  poolName: ${DB_POOL_NAME:HikariCPPool}
-  maxPoolSize: ${DB_POOL_SIZE:1}
-
-seeding-data:
-  enable: ${SEED_DATA_ENABLE:true}
-  changeLog: ${SEED_DATA_CLASSPATH:classpath:db/changelog/changelog-for-seed-data.yml}

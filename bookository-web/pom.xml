@@ -2,14 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>ru.semka</groupId>
-        <artifactId>bookository</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <groupId>ru.semka.bookository</groupId>
+        <artifactId>bookository-parent</artifactId>
+        <version>0.0.1</version>
     </parent>
 
     <artifactId>bookository-web</artifactId>
-    <packaging>pom</packaging>
     <name>bookository-web</name>
+    <packaging>pom</packaging>
+    <version>0.0.1</version>
 
     <properties>
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>

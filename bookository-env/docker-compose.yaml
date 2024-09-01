@@ -10,7 +10,7 @@ services:
       - postgres
 
   postgres:
-    image: "bookository/postgres:${IMAGE_VERSION}"
+    image: postgres:15
     restart: always
     ports:
       - "5432:5432"
@@ -18,15 +18,16 @@ services:
       bookository-default-network:
     volumes:
       - bookository-db-volume:/var/lib/postgresql/data
+      - "./resources/covers/:/opt/covers:ro"
+      - "./resources/books/:/opt/books:ro"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: bookository
-      SEED_DATA_ENABLE: true
 
   bookository-server:
     image: "bookository/bookository-server:${IMAGE_VERSION}"
-    restart: always
+    restart: on-failure
     ports:
       - "8020:8020"
       - "38005:38005"
@@ -38,6 +39,32 @@ services:
       DB_PWD: "postgres"
     depends_on:
       - postgres
+
+  bookository-migration:
+    image: "bookository/bookository-migration:${IMAGE_VERSION}"
+    restart: on-failure
+    ports:
+      - "8030:8030"
+      - "38006:38006"
+    networks:
+      bookository-default-network:
+    environment:
+      MIGRATION_SERVER_PORT: 8030
+      MIGRATION_CHANGE_LOG_PATH: "classpath:db/changelog"
+      MIGRATION_DEFAULT_SCHEMA: "public"
+    depends_on:
+      - postgres
+
+  bookository-migration-executor:
+    image: "bookository/migration-scripts-executor:${IMAGE_VERSION}"
+    restart: on-failure
+    networks:
+      bookository-default-network:
+    volumes:
+      - "./migration/scripts/:/opt/scripts:ro"
+    depends_on:
+      - postgres
+      - bookository-migration
 
 #  bookository-web:
 #    image: bookository/bookository-web:br_it

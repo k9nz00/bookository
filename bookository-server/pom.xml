@@ -2,14 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>ru.semka</groupId>
-        <artifactId>bookository</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <groupId>ru.semka.bookository</groupId>
+        <artifactId>bookository-parent</artifactId>
+        <version>0.0.1</version>
     </parent>
 
     <artifactId>bookository-server</artifactId>
-    <packaging>jar</packaging>
     <name>bookository-server</name>
+    <packaging>jar</packaging>
+    <version>0.0.1</version>
 
     <properties>
         <java.version>17</java.version>
@@ -195,6 +196,7 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker-maven-plugin.version}</version>
                 <configuration>
                     <skip>${skip-build-image}</skip>
                     <images>
