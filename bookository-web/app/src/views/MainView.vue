@@ -1,5 +1,5 @@
 <template>
-  <div class="board mx-auto">
+  <div>
     <div class="flex justify-center w-full">
       <div class="book-search-wrapper">
         <input type="text" class="book-search-input" placeholder="Поиск по названию" />
@@ -92,11 +92,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="postcss">
-.board {
-  @apply h-full;
-  padding: 100px 40px;
-}
-
 .book-search-wrapper {
   @apply flex justify-start items-start;
   gap: 12px;
