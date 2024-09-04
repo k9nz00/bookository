@@ -13,7 +13,10 @@
       </div>
     </div>
 
-    <div class="content-wrapper">
+    <div v-if="isBooksLoading">
+      Загружаем книги
+    </div>
+    <div v-else class="content-wrapper">
       <!-- Фильтры-->
       <div class="book-filters flex flex-col gap-2">
         <span class="font-bold">Категории</span>
@@ -67,43 +70,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
-import { getBooks, getCategories } from '../api/index.js'
-import { TEST_BOOKS, LANGUAGES } from '../constants.js'
+import { LANGUAGES } from '../constants.js'
 import { useRouter } from 'vue-router'
+import { useCategories, useBooks } from '../hooks'
 import BookCover from '../components/BookCover.vue'
 
-const books = ref(TEST_BOOKS)
-const loadBooks = async () => {
-  try {
-    books.value = await getBooks()
-  } catch (error) {
-    books.value = TEST_BOOKS
-    alert(error)
-  }
-}
-
-const categories = ref([])
-const loadCategories = async () => {
-  try {
-    categories.value = await getCategories()
-  } catch (error) {
-    alert(error)
-  }
-}
+const { categories, loadCategories }  = useCategories()
+const { isBooksLoading, books, loadBooks } = useBooks()
 
 const router = useRouter()
 const openBookDetails = (id) => {
   router.push(`/books/${ id }`)
 }
 
-const loading = ref(false)
 onMounted(() => {
-  loading.value = true
   loadBooks()
   loadCategories()
-  loading.value = false
 })
 </script>
 
@@ -169,12 +153,6 @@ onMounted(() => {
 
 .book:hover {
   @apply shadow-md;
-}
-
-.cover {
-  padding: 32px;
-  border-radius: 12px;
-  max-height: fit-content;
 }
 
 .category-list {
