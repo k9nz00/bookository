@@ -1,5 +1,4 @@
 import { API_HOST } from '../constants.js'
-import { getCover } from './cover.js'
 
 /**
  * @typedef {import('./categories.js').Category}
@@ -22,8 +21,8 @@ import { getCover } from './cover.js'
 /**
  * @returns {Promise<Book[]>}
  */
-export const getBooks = () => {
-  return fetch(`${ API_HOST }/books`)
+export const getBooks = (params) => {
+  return fetch(`${ API_HOST }/books?author=${params.author}&name=${params.name}`)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Ошибка запроса: статус ${response.status}`)

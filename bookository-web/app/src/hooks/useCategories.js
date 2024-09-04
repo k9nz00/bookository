@@ -7,7 +7,7 @@ export function useCategories() {
     try {
       categories.value = await getCategories()
     } catch (error) {
-      alert(error)
+      console.log(error)
     }
   }
 

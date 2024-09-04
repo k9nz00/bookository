@@ -2,12 +2,12 @@
   <div>
     <div class="flex justify-center w-full">
       <div class="book-search-wrapper">
-        <input type="text" class="book-search-input" placeholder="Поиск по названию" />
-        <input type="text" class="book-search-input" placeholder="Поиск по автору" />
+        <input v-model="params.name" type="text" class="book-search-input" placeholder="Поиск по названию" />
+        <input v-model="params.author" type="text" class="book-search-input" placeholder="Поиск по автору" />
         <button class="book-search-button" type="button">
           Найти книгу
         </button>
-        <button class="book-add-button" type="button">
+        <button class="book-add-button" type="button" @click="loadBooks">
           Добавить книгу
         </button>
       </div>
@@ -78,7 +78,7 @@ import { useCategories, useBooks } from '../hooks'
 import BookCover from '../components/BookCover.vue'
 
 const { categories, loadCategories }  = useCategories()
-const { isBooksLoading, books, loadBooks } = useBooks()
+const { isBooksLoading, books, params, loadBooks } = useBooks()
 
 const router = useRouter()
 const openBookDetails = (id) => {
