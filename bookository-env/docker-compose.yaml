@@ -12,7 +12,7 @@ services:
       - postgres
 
   postgres:
-    image: postgres:15
+    image: postgres:15.8
     hostname: postgres
     container_name: postgres
     restart: always
@@ -48,6 +48,8 @@ services:
 
   bookository-migration:
     image: "bookository/bookository-migration:${IMAGE_VERSION}"
+    hostname: bookository-migration
+    container_name: bookository-migration
     restart: on-failure
     ports:
       - "8030:8030"
@@ -63,6 +65,8 @@ services:
 
   bookository-migration-executor:
     image: "bookository/migration-scripts-executor:${IMAGE_VERSION}"
+    hostname: bookository-migration-executor
+    container_name: bookository-migration-executor
     restart: on-failure
     volumes:
       - "./migration/scripts/:/opt/scripts:ro"
