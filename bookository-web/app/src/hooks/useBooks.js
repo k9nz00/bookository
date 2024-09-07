@@ -37,6 +37,9 @@ export function useBooks() {
   const clearParams = async () => {
     params.value.name = ''
     params.value.author = ''
+    params.value.language = ''
+    params.value.genre = ''
+    params.value.categories = []
     await loadBooks()
   }
 
