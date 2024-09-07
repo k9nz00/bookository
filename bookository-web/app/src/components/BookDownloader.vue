@@ -1,19 +1,17 @@
 <template>
   <div class="flex gap-3 items-center">
-    <AppButton
+    <button
       v-for="content in bookContent"
       :key="content.id"
       class="app-button-link"
       @click="loadBookContent(content.id)"
     >
       {{ book.name + '.' + content.format.toLowerCase() + ' '}} <span class="font-bold">{{ content.size }}</span>
-    </AppButton>
+    </button>
   </div>
 </template>
 
 <script setup>
-import AppButton from './AppButton.vue'
-import { getBookContent } from '../api/index.js'
 import { API_HOST } from '../constants.js'
 
 const props = defineProps({

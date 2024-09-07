@@ -41,7 +41,7 @@ import {
 } from '@headlessui/vue'
 
 import AppSelectOptions from './AppSelectOptions.vue'
-import ChevronUpDownIcon from './ChevronUpDownIcon.vue'
+import ChevronUpDownIcon from './icons/ChevronUpDownIcon.vue'
 
 import { ref, computed, watch } from 'vue'
 

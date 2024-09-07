@@ -15,7 +15,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import ArrowLeftIcon from './ArrowLeftIcon.vue'
+import ArrowLeftIcon from './icons/ArrowLeftIcon.vue'
 
 const props = defineProps({
   type: {

@@ -75,7 +75,7 @@ import { onMounted } from 'vue'
 import { LANGUAGES } from '../constants.js'
 import { useRouter } from 'vue-router'
 import { useCategories, useBooks } from '../hooks'
-import BookCover from '../components/BookCover.vue'
+import { BookCover } from '../components'
 
 const { categories, loadCategories }  = useCategories()
 const { isBooksLoading, books, params, loadBooks } = useBooks()

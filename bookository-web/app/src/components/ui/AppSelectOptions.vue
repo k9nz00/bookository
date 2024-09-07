@@ -38,7 +38,7 @@ import {
   ListboxOption
 } from '@headlessui/vue'
 
-import CheckIcon from './CheckIcon.vue'
+import CheckIcon from './icons/CheckIcon.vue'
 
 const props = defineProps({
   options: {
