@@ -25,7 +25,7 @@
 
       <div>
         <div class="font-bold text-white pb-3">Жанры</div>
-        <div v-for="item in ['Роман', 'Сказка', 'Поэма', 'Повесть', 'Пьеса']" :key="item.id" class="pb-2">
+        <div v-for="item in ['Роман', 'Сказка', 'Поэма', 'Повесть', 'Пьеса']" :key="item" class="pb-2">
           <label><input type="checkbox" class="pr-1"><span class="pl-1 text-white">{{ item }}</span></label>
         </div>
       </div>
@@ -34,13 +34,21 @@
       <div>
         <div class="font-bold text-white pb-3">Язык</div>
         <div v-for="item in LANGUAGES" :key="item.id" class="pb-2">
-          <label><input type="checkbox" class="pr-1"><span class="pl-1 text-white">{{ item.name }}</span></label>
+          <label>
+            <input
+              type="radio"
+              name="languageGroup"
+              class="pr-1"
+              :value="item.id"
+              @change="selectLanguageParam(item.id)"
+            >
+            <span class="pl-1 text-white">{{ item.name }}</span>
+          </label>
         </div>
       </div>
     </div>
 
-
-    <div class="content-wrapper">
+    <div>
       <div v-if="isBooksLoading">
         Загружаем книги
       </div>
@@ -87,7 +95,14 @@ import { useBooks, useCategories } from '../hooks'
 import { BookCover } from '../components'
 
 const { categories, loadCategories } = useCategories()
-const { isBooksLoading, books, params, loadBooks, clearParams } = useBooks()
+const {
+  isBooksLoading,
+  books,
+  params,
+  loadBooks,
+  selectLanguageParam,
+  clearParams
+} = useBooks()
 
 const router = useRouter()
 const openBookDetails = (id) => {
@@ -117,12 +132,6 @@ onMounted(() => {
   @apply flex gap-20 pb-3 py-6;
   min-width: 240px;
   top: 0;
-}
-
-.content-wrapper {
-  @apply mx-auto flex gap-4;
-  width: 100%;
-  height: 90vh;
 }
 
 .book-list {

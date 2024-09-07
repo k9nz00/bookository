@@ -4,7 +4,8 @@ import { getBooks } from '../api'
 export function useBooks() {
   const params = ref({
     name: '',
-    author: ''
+    author: '',
+    language: ''
   })
 
   const filteredParams = computed(() => {
@@ -12,6 +13,10 @@ export function useBooks() {
       return value
     }))
   })
+
+  const selectLanguageParam = (languageId) => {
+    params.value.language = languageId
+  }
 
   const clearParams = async () => {
     params.value.name = ''
@@ -37,6 +42,7 @@ export function useBooks() {
     books,
     params,
     loadBooks,
+    selectLanguageParam,
     clearParams
   }
 }
