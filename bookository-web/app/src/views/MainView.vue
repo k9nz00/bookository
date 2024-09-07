@@ -4,12 +4,12 @@
       <div class="book-search-wrapper">
         <input v-model="params.name" type="text" class="book-search-input" placeholder="Поиск по названию" />
         <input v-model="params.author" type="text" class="book-search-input" placeholder="Поиск по автору" />
-        <button class="book-search-button" type="button">
+        <button class="book-search-button" type="button" @click="loadBooks">
           Найти книгу
         </button>
-        <button class="book-add-button" type="button" @click="loadBooks">
-          Добавить книгу
-        </button>
+<!--        <button class="book-add-button" type="button">-->
+<!--          Добавить книгу-->
+<!--        </button>-->
       </div>
     </div>
 

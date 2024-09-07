@@ -1,4 +1,5 @@
 import { API_HOST } from '../constants.js'
+import axios from 'axios'
 
 /**
  * @typedef {import('./categories.js').Category}
@@ -21,16 +22,9 @@ import { API_HOST } from '../constants.js'
 /**
  * @returns {Promise<Book[]>}
  */
-export const getBooks = (params) => {
-  return fetch(`${ API_HOST }/books?author=${params.author}&name=${params.name}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка запроса: статус ${response.status}`)
-      }
-
-      return response.json()
-    })
-    .then((response) => response)
+export const getBooks = async (params) => {
+  const response = await axios.get(`${ API_HOST }/books`, { params })
+  return response.data
 }
 
 /**
