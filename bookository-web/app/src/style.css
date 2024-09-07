@@ -2,13 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+
+body {
+    @apply bg-sky-900;
+}
+
 #app {
-    @apply text-sm lg:text-base;
+    @apply text-sm lg:text-base flex justify-center;
     font-family: Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
-    height: 100vh;
+}
+
+.page-wrapper {
+    @apply p-8;
+    width: 100%;
+    max-width: 1480px;
+}
+
+/* buttons */
+.outline-button {
+    @apply border-2 border-white rounded-lg text-white;
+    padding: 8px;
+    height: 44px;
+}
+
+.filled-button {
+    @apply bg-blue-600 rounded-lg text-white;
+    padding: 8px;
+    height: 44px;
 }
 
 /* tablet, mobile */

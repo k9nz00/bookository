@@ -1,20 +1,26 @@
 import { ref, computed } from 'vue'
 import { getBooks } from '../api'
 
-const params = ref({
-  name: '',
-  author: ''
-})
-
-const filteredParams = computed(() => {
-  return Object.fromEntries(Object.entries(params.value).filter(([ _, value ]) => {
-    return value
-  }))
-})
-
-const isBooksLoading = ref(false)
 export function useBooks() {
+  const params = ref({
+    name: '',
+    author: ''
+  })
+
+  const filteredParams = computed(() => {
+    return Object.fromEntries(Object.entries(params.value).filter(([ _, value ]) => {
+      return value
+    }))
+  })
+
+  const clearParams = async () => {
+    params.value.name = ''
+    params.value.author = ''
+    await loadBooks()
+  }
+
   const books = ref([])
+  const isBooksLoading = ref(false)
   const loadBooks = async () => {
     isBooksLoading.value = true
     try {
@@ -30,6 +36,7 @@ export function useBooks() {
     isBooksLoading,
     books,
     params,
-    loadBooks
+    loadBooks,
+    clearParams
   }
 }

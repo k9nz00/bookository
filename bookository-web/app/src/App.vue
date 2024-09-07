@@ -1,5 +1,5 @@
 <template>
-  <div class="p-8">
+  <div class="page-wrapper">
     <router-view />
   </div>
 </template>

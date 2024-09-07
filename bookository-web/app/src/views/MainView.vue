@@ -1,42 +1,51 @@
 <template>
   <div>
+    <!-- ПОИСК ПО АВТОРУ И НАЗВАНИЮ -->
     <div class="flex justify-center w-full">
       <div class="book-search-wrapper">
-        <input v-model="params.name" type="text" class="book-search-input" placeholder="Поиск по названию" />
         <input v-model="params.author" type="text" class="book-search-input" placeholder="Поиск по автору" />
-        <button class="book-search-button" type="button" @click="loadBooks">
+        <input v-model="params.name" type="text" class="book-search-input" placeholder="Поиск по названию" />
+        <button class="filled-button" type="button" @click="loadBooks">
           Найти книгу
         </button>
-<!--        <button class="book-add-button" type="button">-->
-<!--          Добавить книгу-->
-<!--        </button>-->
-      </div>
-    </div>
-
-    <div v-if="isBooksLoading">
-      Загружаем книги
-    </div>
-    <div v-else class="content-wrapper">
-      <!-- Фильтры-->
-      <div class="book-filters flex flex-col gap-2">
-        <span class="font-bold">Категории</span>
-        <template v-for="item in categories" :key="item.id">
-          <label><input type="checkbox" class="pr-1"><span class="pl-1">{{ item.name }}</span></label>
-        </template>
-
-        <span class="font-bold">Язык</span>
-        <template v-for="item in LANGUAGES" :key="item.id">
-          <label><input type="checkbox" class="pr-1"><span class="pl-1">{{ item.name }}</span></label>
-        </template>
-
-        <button class="book-search-button" type="button">
-          Применить
-        </button>
-        <button class="book-add-button" type="button">
+        <button class="outline-button" type="button" @click="clearParams">
           Сбросить фильтры
         </button>
       </div>
-      <div class="book-list">
+    </div>
+
+    <!-- ФИЛЬТРЫ-->
+    <div class="book-filters">
+      <div>
+        <div class="font-bold text-white pb-3">Категории</div>
+        <div v-for="item in categories" :key="item.id" class="pb-2">
+          <label><input type="checkbox" class="pr-1"><span class="pl-1 text-white">{{ item.name }}</span></label>
+        </div>
+      </div>
+
+      <div>
+        <div class="font-bold text-white pb-3">Жанры</div>
+        <div v-for="item in ['Роман', 'Сказка', 'Поэма', 'Повесть', 'Пьеса']" :key="item.id" class="pb-2">
+          <label><input type="checkbox" class="pr-1"><span class="pl-1 text-white">{{ item }}</span></label>
+        </div>
+      </div>
+
+
+      <div>
+        <div class="font-bold text-white pb-3">Язык</div>
+        <div v-for="item in LANGUAGES" :key="item.id" class="pb-2">
+          <label><input type="checkbox" class="pr-1"><span class="pl-1 text-white">{{ item.name }}</span></label>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="content-wrapper">
+      <div v-if="isBooksLoading">
+        Загружаем книги
+      </div>
+
+      <div v-else class="book-list">
         <div
           v-for="(book) in books"
           :key="JSON.stringify(book)"
@@ -44,7 +53,7 @@
         >
           <BookCover :book-id="book.id" />
 
-          <div class="book-name text-2xl font-bold">
+          <div class="book-name text-2xl font-bold pt-5">
             {{ book.name }}
           </div>
 
@@ -74,11 +83,11 @@ import { onMounted } from 'vue'
 
 import { LANGUAGES } from '../constants.js'
 import { useRouter } from 'vue-router'
-import { useCategories, useBooks } from '../hooks'
+import { useBooks, useCategories } from '../hooks'
 import { BookCover } from '../components'
 
-const { categories, loadCategories }  = useCategories()
-const { isBooksLoading, books, params, loadBooks } = useBooks()
+const { categories, loadCategories } = useCategories()
+const { isBooksLoading, books, params, loadBooks, clearParams } = useBooks()
 
 const router = useRouter()
 const openBookDetails = (id) => {
@@ -96,41 +105,24 @@ onMounted(() => {
   @apply flex justify-start items-start;
   gap: 12px;
   width: 100%;
-  max-width: 1480px;
-}
-
-.book-search-button {
-  @apply bg-blue-600 rounded-lg text-white;
-  padding: 8px;
-  height: 44px;
-}
-
-.book-add-button {
-    @apply border-2 border-blue-600 rounded-lg text-blue-600;
-    padding: 8px;
-    height: 44px;
 }
 
 .book-search-input {
   @apply bg-gray-50 border-2 border-blue-50 rounded-md p-2 mb-8;
   flex-grow: 1;
-  position: sticky;
   top: 0;
 }
 
 .book-filters {
-  padding-top: 24px;
+  @apply flex gap-20 pb-3 py-6;
   min-width: 240px;
-  position: sticky;
   top: 0;
 }
 
 .content-wrapper {
   @apply mx-auto flex gap-4;
   width: 100%;
-  max-width: 1480px;
   height: 90vh;
-  overflow: scroll;
 }
 
 .book-list {
@@ -138,12 +130,13 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
+  max-width: 1480px;
 }
 
 .book {
   @apply bg-gray-50 border-2 border-blue-50 rounded-md hover:scale-105 hover:transition-all;
-  width: 280px;
   padding: 20px;
+  align-self: start;
 }
 
 .book:hover {
