@@ -120,7 +120,6 @@
 import { onMounted, ref, computed } from 'vue'
 
 import AppSelect from './AppSelect.vue'
-import AppAutocomplete from './AppAutocomplete.vue'
 import AppInput from './AppInput.vue'
 import AppTextarea from './AppTextarea.vue'
 import AppSubmitButton from './AppSubmitButton.vue'
@@ -128,7 +127,7 @@ import AppIconButton from './AppIconButton.vue'
 import BookDownloader from './BookDownloader.vue'
 import BookCover from './BookCover.vue'
 
-import { BOOK_MODEL, LANGUAGES } from '../constants.js'
+import { LANGUAGES } from '../constants.js'
 import { getCategories, getBook, createBook, updateBook, deleteBook } from '../api/index.js'
 import clean from 'lodash-clean'
 
@@ -144,7 +143,7 @@ const bookId = computed(() => {
   return route.params.bookId
 })
 
-const book = ref(BOOK_MODEL)
+const book = ref()
 const cardLoadingError = ref(false)
 const getBookCard = () => {
   if (bookId.value) {
