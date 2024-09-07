@@ -19,7 +19,15 @@
       <div>
         <div class="font-bold text-white pb-3">Категории</div>
         <div v-for="item in categories" :key="item.id" class="pb-2">
-          <label><input type="checkbox" class="pr-1"><span class="pl-1 text-white">{{ item.name }}</span></label>
+          <label>
+            <input
+              type="checkbox"
+              class="pr-1"
+              :value="item.id"
+              @input="selectCategoryParam($event.target.value)"
+            >
+            <span class="pl-1 text-white">{{ item.name }}</span>
+          </label>
         </div>
       </div>
 
@@ -100,6 +108,7 @@ const {
   books,
   params,
   loadBooks,
+  selectCategoryParam,
   selectLanguageParam,
   clearParams
 } = useBooks()

@@ -5,17 +5,33 @@ export function useBooks() {
   const params = ref({
     name: '',
     author: '',
-    language: ''
+    language: '',
+    genre: '',
+    categories: []
   })
 
   const filteredParams = computed(() => {
-    return Object.fromEntries(Object.entries(params.value).filter(([ _, value ]) => {
-      return value
+    const filtered =  Object.fromEntries(Object.entries(params.value).filter(([ _, value ]) => {
+      return value && value.length
     }))
+
+    if(filtered.categories) {
+      filtered.categories = filtered.categories.toString()
+    }
+
+    return filtered
   })
 
   const selectLanguageParam = (languageId) => {
     params.value.language = languageId
+  }
+
+  const selectCategoryParam = (categoryId) => {
+    if(params.value.categories.includes(categoryId)) {
+      params.value.categories = params.value.categories.filter(item => item !== categoryId)
+    } else {
+      params.value.categories.push(categoryId)
+    }
   }
 
   const clearParams = async () => {
@@ -43,6 +59,7 @@ export function useBooks() {
     params,
     loadBooks,
     selectLanguageParam,
+    selectCategoryParam,
     clearParams
   }
 }
