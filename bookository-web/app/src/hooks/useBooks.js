@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { getBooks } from '../api'
+import { removeEmptyFieldsFromObject } from '../utils'
 
 export function useBooks() {
   const filterParams = ref({
@@ -10,16 +11,14 @@ export function useBooks() {
     categories: []
   })
 
-  const queryParams = computed(() => {
-    const filtered =  Object.fromEntries(Object.entries(filterParams.value).filter(([ _, value ]) => {
-      return value && value.length
-    }))
+  const preparedFilterParams = computed(() => {
+    const params = removeEmptyFieldsFromObject(filterParams.value)
 
-    if(filtered.categories) {
-      filtered.categories = filtered.categories.toString()
+    if(params.categories) {
+      params.categories = params.categories.toString()
     }
 
-    return filtered
+    return params
   })
 
   const clearFilterParams = async () => {
@@ -36,7 +35,7 @@ export function useBooks() {
   const loadBooks = async () => {
     isBooksLoading.value = true
     try {
-      books.value = await getBooks(queryParams.value)
+      books.value = await getBooks(preparedFilterParams.value)
     } catch (error) {
       console.log(error)
     } finally {

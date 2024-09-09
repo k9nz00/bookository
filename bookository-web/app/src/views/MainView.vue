@@ -6,7 +6,7 @@
         <input v-model="filterParams.author" type="text" class="book-search-input" placeholder="Поиск по автору" />
         <input v-model="filterParams.name" type="text" class="book-search-input" placeholder="Поиск по названию" />
         <button class="filled-button" type="button" @click="loadBooks">
-          Найти книгу
+          Найти книги
         </button>
         <button class="outline-button" type="button" @click="clearFilterParams">
           Сбросить фильтры
