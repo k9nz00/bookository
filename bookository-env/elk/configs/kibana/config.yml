@@ -1,0 +1,15 @@
+server:
+  name: kibana
+  host: 0.0.0.0
+  publicBaseUrl: "http://localhost:5601"
+
+monitoring:
+  ui:
+    container:
+      elasticsearch:
+        enabled: true # Для корректного сбора метрик с elastic search, запущенного в контейнере
+
+elasticsearch:
+  hosts: [ "http://elasticsearch:9200" ]
+  username: elastic
+  password: MyPw123
