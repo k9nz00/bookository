@@ -3,19 +3,22 @@ export {
   getBook,
   createBook,
   updateBook,
-  getBookContent,
-  createBookContent,
   updateBookCover,
   deleteBook
-} from './book.js'
+} from './book'
 
 export {
   getCategories,
   createCategory,
   updateCategory,
   deleteCategory
-} from './categories.js'
+} from './categories'
 
 export {
   getCover
-} from './cover.js'
+} from './cover'
+
+export {
+  getBookContent,
+  createBookContent,
+} from './book-content'
