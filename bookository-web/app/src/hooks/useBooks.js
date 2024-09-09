@@ -28,7 +28,7 @@ export function useBooks() {
 
   const selectCategoryParam = (categoryId) => {
     if(params.value.categories.includes(categoryId)) {
-      params.value.categories = params.value.categories.filter(item => item !== categoryId)
+      params.value.categories = params.value.categories.filter((item) => item !== categoryId)
     } else {
       params.value.categories.push(categoryId)
     }

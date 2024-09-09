@@ -24,7 +24,8 @@
               type="checkbox"
               class="pr-1"
               :value="item.id"
-              @input="selectCategoryParam($event.target.value)"
+              :checked="isCategoryChecked(item.id, params.categories)"
+              @change="selectCategoryParam(item.id)"
             >
             <span class="pl-1 text-white">{{ item.name }}</span>
           </label>
@@ -37,7 +38,6 @@
           <label><input type="checkbox" class="pr-1"><span class="pl-1 text-white">{{ item }}</span></label>
         </div>
       </div>
-
 
       <div>
         <div class="font-bold text-white pb-3">Язык</div>
@@ -102,7 +102,7 @@ import { useRouter } from 'vue-router'
 import { useBooks, useCategories } from '../hooks'
 import { BookCover } from '../components'
 
-const { categories, loadCategories } = useCategories()
+const { categories, loadCategories, isCategoryChecked } = useCategories()
 const {
   isBooksLoading,
   books,
