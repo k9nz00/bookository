@@ -1,12 +1,10 @@
-import BookBoard from './views/BookBoard.vue'
-import BookCardView from './components/BookDetails.vue'
-import AddBookCard from './components/AddBookCard.vue'
+import MainView from './views/MainView.vue'
+import BookView from './views/BookView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
-  { path: '/', component: BookBoard },
-  { path: '/books/:bookId', component: BookCardView },
-  { path: '/books/:shelfId', component: AddBookCard },
+  { path: '/', component: MainView },
+  { path: '/books/:bookId', component: BookView },
 ]
 
 export const router = createRouter({

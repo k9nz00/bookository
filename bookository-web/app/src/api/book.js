@@ -1,5 +1,5 @@
 import { API_HOST } from '../constants.js'
-import { getCover } from './cover.js'
+import axios from 'axios'
 
 /**
  * @typedef {import('./categories.js').Category}
@@ -22,16 +22,9 @@ import { getCover } from './cover.js'
 /**
  * @returns {Promise<Book[]>}
  */
-export const getBooks = () => {
-  return fetch(`${ API_HOST }/books`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка запроса: статус ${response.status}`)
-      }
-
-      return response.json()
-    })
-    .then((response) => response)
+export const getBooks = async (params) => {
+  const response = await axios.get(`${ API_HOST }/books`, { params })
+  return response.data
 }
 
 /**

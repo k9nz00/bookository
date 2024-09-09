@@ -79,8 +79,8 @@ import {
   ComboboxOption,
   TransitionRoot,
 } from '@headlessui/vue'
-import CheckIcon from './CheckIcon.vue'
-import ChevronUpDownIcon from './ChevronUpDownIcon.vue'
+import CheckIcon from './icons/CheckIcon.vue'
+import ChevronUpDownIcon from './icons/ChevronUpDownIcon.vue'
 
 const props = defineProps({
   options: {
