@@ -26,6 +26,11 @@ export function useBooks() {
     params.value.language = languageId
   }
 
+  const selectGenreParam = (genre) => {
+    debugger
+    params.value.genre = genre
+  }
+
   const selectCategoryParam = (categoryId) => {
     if(params.value.categories.includes(categoryId)) {
       params.value.categories = params.value.categories.filter((item) => item !== categoryId)
@@ -61,6 +66,7 @@ export function useBooks() {
     books,
     params,
     loadBooks,
+    selectGenreParam,
     selectLanguageParam,
     selectCategoryParam,
     clearParams

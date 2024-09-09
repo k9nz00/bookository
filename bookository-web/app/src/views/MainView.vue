@@ -33,9 +33,19 @@
       </div>
 
       <div>
-        <div class="font-bold text-white pb-3">Жанры</div>
+        <div class="font-bold text-white pb-3">Жанр</div>
         <div v-for="item in ['Роман', 'Сказка', 'Поэма', 'Повесть', 'Пьеса']" :key="item" class="pb-2">
-          <label><input type="checkbox" class="pr-1"><span class="pl-1 text-white">{{ item }}</span></label>
+          <label>
+            <input
+              type="radio"
+              name="genreGroup"
+              class="pr-1"
+              :value="item"
+              :checked="params.genre === item"
+              @change="selectGenreParam(item)"
+            >
+            <span class="pl-1 text-white">{{ item }}</span>
+          </label>
         </div>
       </div>
 
@@ -48,6 +58,7 @@
               name="languageGroup"
               class="pr-1"
               :value="item.id"
+              :checked="params.language === item.id"
               @change="selectLanguageParam(item.id)"
             >
             <span class="pl-1 text-white">{{ item.name }}</span>
@@ -110,6 +121,7 @@ const {
   loadBooks,
   selectCategoryParam,
   selectLanguageParam,
+  selectGenreParam,
   clearParams
 } = useBooks()
 
