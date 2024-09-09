@@ -37,12 +37,11 @@
         <div v-for="item in ['Роман', 'Сказка', 'Поэма', 'Повесть', 'Пьеса']" :key="item" class="pb-2">
           <label>
             <input
+              v-model="params.genre"
+              :value="item"
               type="radio"
               name="genreGroup"
               class="pr-1"
-              :value="item"
-              :checked="params.genre === item"
-              @change="selectFilterParam('genre', item)"
             >
             <span class="pl-1 text-white">{{ item }}</span>
           </label>
@@ -54,12 +53,11 @@
         <div v-for="item in LANGUAGES" :key="item.id" class="pb-2">
           <label>
             <input
+              v-model="params.language"
+              :value="item.id"
               type="radio"
               name="languageGroup"
               class="pr-1"
-              :value="item.id"
-              :checked="params.language === item.id"
-              @change="selectFilterParam('language', item.id)"
             >
             <span class="pl-1 text-white">{{ item.name }}</span>
           </label>
