@@ -23,30 +23,40 @@
             disabled
           />
 
-          <div class="w-full space-y-4">
-            <div>{{ book.name }}</div>
-            <div>{{ book.author }}</div>
-            <div>{{ book.genre }}</div>
-            <div>{{ book.language }}</div>
+          <div class="flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="text-xl font-bold">{{ book.author }}, {{ book.name }}</div>
 
-            <div class="flex gap-5">
-              <div
-                v-for="category in book.categories"
-                :key="category.id"
-                class="category-label"
-              >
-                {{ category.name }}
+              <p>{{ book.annotation }}</p>
+
+              <div class="flex gap-2 pt-5">
+                <div
+                  v-for="category in book.categories"
+                  :key="category.id"
+                  class="rounded-lg border border-white px-2"
+                >
+                  {{ category.name }}
+                </div>
+
+                <div class="rounded-lg border border-white px-2">
+                  {{ book.genre }}
+                </div>
+
+                <div class="rounded-lg border border-white px-2">
+                  {{ book.language }}
+                </div>
               </div>
             </div>
 
             <BookDownloader
+              class="pt-5"
               :book="book"
               :book-content="book.bookContentInfo"
             />
           </div>
         </div>
 
-        <p>{{ book.annotation }}</p>
+      <a href="/" class="underline underline-offset-4">Назад к списку книг</a>
       </div>
   </div>
 </template>
@@ -64,17 +74,10 @@ const route = useRoute()
 const { book, loadBook, isBookLoading, hasBookLoadingError } = useBooks()
 
 const bookId = computed(() => {
-  return route.params.bookId
+  return route.params.bookId || ''
 })
 onMounted(() => {
   loadBook(bookId.value)
 })
 </script>
 
-<style scoped>
-.category-label {
-  @apply border-2 border-blue-600 rounded-xl pr-1 pl-1;
-  width: fit-content;
-}
-
-</style>

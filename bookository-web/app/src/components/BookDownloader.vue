@@ -1,13 +1,15 @@
 <template>
-  <div class="flex gap-3 items-center">
-    <button
+  <div class="flex flex-col gap-3 items-start">
+    <div
       v-for="content in bookContent"
       :key="content.id"
-      class="app-button-link"
       @click="loadBookContent(content.id)"
     >
-      {{ book.name + '.' + content.format.toLowerCase() + ' '}} <span class="font-bold">{{ content.size }}</span>
-    </button>
+      &#11015;
+      <span class="underline underline-offset-4 cursor-pointer">
+        {{ book.name + '.' + content.format.toLowerCase() + ' '}} <span class="font-bold">({{ content.size }})</span>
+      </span>
+    </div>
   </div>
 </template>
 
