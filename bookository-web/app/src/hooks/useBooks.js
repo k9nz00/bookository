@@ -22,15 +22,6 @@ export function useBooks() {
     return filtered
   })
 
-  const selectLanguageParam = (languageId) => {
-    params.value.language = languageId
-  }
-
-  const selectGenreParam = (genre) => {
-    debugger
-    params.value.genre = genre
-  }
-
   const selectCategoryParam = (categoryId) => {
     if(params.value.categories.includes(categoryId)) {
       params.value.categories = params.value.categories.filter((item) => item !== categoryId)
@@ -39,7 +30,15 @@ export function useBooks() {
     }
   }
 
-  const clearParams = async () => {
+  const selectFilterParam = (paramType, selectedParam) => {
+    if(paramType === 'category') {
+      selectCategoryParam(selectedParam)
+    }
+
+    params.value[paramType] = selectedParam
+  }
+
+  const clearFilterParams = async () => {
     params.value.name = ''
     params.value.author = ''
     params.value.language = ''
@@ -66,9 +65,7 @@ export function useBooks() {
     books,
     params,
     loadBooks,
-    selectGenreParam,
-    selectLanguageParam,
-    selectCategoryParam,
-    clearParams
+    selectFilterParam,
+    clearFilterParams
   }
 }

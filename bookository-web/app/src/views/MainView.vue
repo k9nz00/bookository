@@ -8,7 +8,7 @@
         <button class="filled-button" type="button" @click="loadBooks">
           Найти книгу
         </button>
-        <button class="outline-button" type="button" @click="clearParams">
+        <button class="outline-button" type="button" @click="clearFilterParams">
           Сбросить фильтры
         </button>
       </div>
@@ -25,7 +25,7 @@
               class="pr-1"
               :value="item.id"
               :checked="isCategoryChecked(item.id, params.categories)"
-              @change="selectCategoryParam(item.id)"
+              @change="selectFilterParam('category', item.id)"
             >
             <span class="pl-1 text-white">{{ item.name }}</span>
           </label>
@@ -42,7 +42,7 @@
               class="pr-1"
               :value="item"
               :checked="params.genre === item"
-              @change="selectGenreParam(item)"
+              @change="selectFilterParam('genre', item)"
             >
             <span class="pl-1 text-white">{{ item }}</span>
           </label>
@@ -59,7 +59,7 @@
               class="pr-1"
               :value="item.id"
               :checked="params.language === item.id"
-              @change="selectLanguageParam(item.id)"
+              @change="selectFilterParam('language', item.id)"
             >
             <span class="pl-1 text-white">{{ item.name }}</span>
           </label>
@@ -119,10 +119,8 @@ const {
   books,
   params,
   loadBooks,
-  selectCategoryParam,
-  selectLanguageParam,
-  selectGenreParam,
-  clearParams
+  selectFilterParam,
+  clearFilterParams
 } = useBooks()
 
 const router = useRouter()
