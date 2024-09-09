@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { getBooks } from '../api'
 
 export function useBooks() {
-  const params = ref({
+  const filterParams = ref({
     name: '',
     author: '',
     language: '',
@@ -10,8 +10,8 @@ export function useBooks() {
     categories: []
   })
 
-  const filteredParams = computed(() => {
-    const filtered =  Object.fromEntries(Object.entries(params.value).filter(([ _, value ]) => {
+  const queryParams = computed(() => {
+    const filtered =  Object.fromEntries(Object.entries(filterParams.value).filter(([ _, value ]) => {
       return value && value.length
     }))
 
@@ -22,28 +22,12 @@ export function useBooks() {
     return filtered
   })
 
-  const selectCategoryParam = (categoryId) => {
-    if(params.value.categories.includes(categoryId)) {
-      params.value.categories = params.value.categories.filter((item) => item !== categoryId)
-    } else {
-      params.value.categories.push(categoryId)
-    }
-  }
-
-  const selectFilterParam = (paramType, selectedParam) => {
-    if(paramType === 'category') {
-      selectCategoryParam(selectedParam)
-    }
-
-    params.value[paramType] = selectedParam
-  }
-
   const clearFilterParams = async () => {
-    params.value.name = ''
-    params.value.author = ''
-    params.value.language = ''
-    params.value.genre = ''
-    params.value.categories = []
+    filterParams.value.name = ''
+    filterParams.value.author = ''
+    filterParams.value.language = ''
+    filterParams.value.genre = ''
+    filterParams.value.categories = []
     await loadBooks()
   }
 
@@ -52,7 +36,7 @@ export function useBooks() {
   const loadBooks = async () => {
     isBooksLoading.value = true
     try {
-      books.value = await getBooks(filteredParams.value)
+      books.value = await getBooks(queryParams.value)
     } catch (error) {
       console.log(error)
     } finally {
@@ -63,9 +47,8 @@ export function useBooks() {
   return {
     isBooksLoading,
     books,
-    params,
+    filterParams,
     loadBooks,
-    selectFilterParam,
     clearFilterParams
   }
 }

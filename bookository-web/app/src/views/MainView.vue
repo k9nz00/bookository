@@ -3,8 +3,8 @@
     <!-- ПОИСК ПО АВТОРУ И НАЗВАНИЮ -->
     <div class="flex justify-center w-full">
       <div class="book-search-wrapper">
-        <input v-model="params.author" type="text" class="book-search-input" placeholder="Поиск по автору" />
-        <input v-model="params.name" type="text" class="book-search-input" placeholder="Поиск по названию" />
+        <input v-model="filterParams.author" type="text" class="book-search-input" placeholder="Поиск по автору" />
+        <input v-model="filterParams.name" type="text" class="book-search-input" placeholder="Поиск по названию" />
         <button class="filled-button" type="button" @click="loadBooks">
           Найти книгу
         </button>
@@ -21,11 +21,11 @@
         <div v-for="item in categories" :key="item.id" class="pb-2">
           <label>
             <input
+              v-model="filterParams.categories"
+              :value="item.id"
               type="checkbox"
               class="pr-1"
-              :value="item.id"
-              :checked="isCategoryChecked(item.id, params.categories)"
-              @change="selectFilterParam('category', item.id)"
+              name="categoryGroup"
             >
             <span class="pl-1 text-white">{{ item.name }}</span>
           </label>
@@ -37,7 +37,7 @@
         <div v-for="item in ['Роман', 'Сказка', 'Поэма', 'Повесть', 'Пьеса']" :key="item" class="pb-2">
           <label>
             <input
-              v-model="params.genre"
+              v-model="filterParams.genre"
               :value="item"
               type="radio"
               name="genreGroup"
@@ -53,7 +53,7 @@
         <div v-for="item in LANGUAGES" :key="item.id" class="pb-2">
           <label>
             <input
-              v-model="params.language"
+              v-model="filterParams.language"
               :value="item.id"
               type="radio"
               name="languageGroup"
@@ -111,13 +111,12 @@ import { useRouter } from 'vue-router'
 import { useBooks, useCategories } from '../hooks'
 import { BookCover } from '../components'
 
-const { categories, loadCategories, isCategoryChecked } = useCategories()
+const { categories, loadCategories } = useCategories()
 const {
   isBooksLoading,
   books,
-  params,
+  filterParams,
   loadBooks,
-  selectFilterParam,
   clearFilterParams
 } = useBooks()
 

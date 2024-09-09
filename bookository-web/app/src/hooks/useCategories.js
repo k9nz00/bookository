@@ -11,13 +11,8 @@ export function useCategories() {
     }
   }
 
-  const isCategoryChecked = (category, checkedCategories) => {
-    return checkedCategories.includes(category)
-  }
-
   return {
     categories,
-    loadCategories,
-    isCategoryChecked
+    loadCategories
   }
 }
