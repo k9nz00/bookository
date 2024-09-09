@@ -76,7 +76,7 @@
           :key="JSON.stringify(book)"
           class="book"
         >
-          <BookCover :book-id="book.id" />
+          <BookCover :book-id="book.id" disabled />
 
           <div class="book-name text-2xl font-bold pt-5">
             {{ book.name }}

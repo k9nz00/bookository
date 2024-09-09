@@ -3,7 +3,7 @@
     <div
       v-for="content in bookContent"
       :key="content.id"
-      @click="loadBookContent(content.id)"
+      @click="getBookContent(book.id, content.id)"
     >
       &#11015;
       <span class="underline underline-offset-4 cursor-pointer">
@@ -14,9 +14,9 @@
 </template>
 
 <script setup>
-import { API_HOST } from '../constants.js'
+import { getBookContent } from '../api/index.js'
 
-const props = defineProps({
+defineProps({
   book: {
     type: Object,
     required: true
@@ -26,32 +26,4 @@ const props = defineProps({
     required: true
   }
 })
-
-const loadBookContent = (contentId) => {
-  let name
-  return fetch(`${ API_HOST }/books/${props.book.id}/content/${contentId}`, {
-    method: 'GET',
-    mode: 'cors'
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      name = decodeURIComponent(response.headers.get('Real-File-Name'))
-      return response.blob()
-    })
-    .then(result => {
-      const url = window.URL.createObjectURL(result);
-      const a = document.createElement('a')
-      a.href = url
-      a.download = name
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      window.URL.revokeObjectURL(url)
-    })
-}
-
 </script>
-
