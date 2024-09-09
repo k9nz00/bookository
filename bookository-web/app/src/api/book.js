@@ -6,6 +6,14 @@ import axios from 'axios'
  */
 
 /**
+ * @typedef  BookContentInfo
+ * @property {number} id
+ * @property {number} bookId
+ * @property {string} format
+ * @property {string} size
+ */
+
+/**
  * @typedef {Object} Book
  * @property {number} id
  * @property {string} name
@@ -15,7 +23,7 @@ import axios from 'axios'
  * @property {Boolean} isAvailable
  * @property {string} language
  * @property {Category[]} categories
- * @property {Array} bookContentInfo
+ * @property {BookContentInfo[]} bookContentInfo
  * @property {number} createdAt
  * @property {number} updatedAt
  */
