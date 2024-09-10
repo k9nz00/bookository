@@ -2,7 +2,7 @@ package ru.semka.bookository.server.util;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
-import ru.semka.bookository.server.common.properties.DefaultApplicationProperties;
+import ru.semka.bookository.server.configuration.properties.DefaultApplicationProperties;
 
 import java.time.Clock;
 import java.time.ZoneOffset;
