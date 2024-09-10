@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue'
-import { getBooks } from '../api'
+import { getBooks, getBook } from '../api'
 import { removeEmptyFieldsFromObject } from '../utils'
 
 export function useBooks() {
@@ -43,11 +43,30 @@ export function useBooks() {
     }
   }
 
+  const book = ref(null)
+  const isBookLoading = ref(false)
+  const hasBookLoadingError = ref(false)
+  const loadBook = async (id) => {
+    isBookLoading.value = true
+    hasBookLoadingError.value = false
+    try {
+      book.value = await getBook(id)
+    } catch (error) {
+      hasBookLoadingError.value = true
+      console.log(error)
+    } finally {
+      isBookLoading.value = false
+    }
+  }
+
   return {
     isBooksLoading,
+    isBookLoading,
     books,
+    book,
     filterParams,
     loadBooks,
+    loadBook,
     clearFilterParams
   }
 }

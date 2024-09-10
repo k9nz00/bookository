@@ -76,7 +76,7 @@
           :key="JSON.stringify(book)"
           class="book"
         >
-          <BookCover :book-id="book.id" />
+          <BookCover :book-id="book.id" disabled />
 
           <div class="book-name text-2xl font-bold pt-5">
             {{ book.name }}
@@ -94,7 +94,7 @@
             </div>
           </div>
 
-          <div class="open-book" type="button" @click="openBookDetails(book.id)">
+          <div class="open-book cursor-pointer" type="button" @click="openBookDetails(book.id)">
             Подробнее
           </div>
         </div>
@@ -175,14 +175,14 @@ onMounted(() => {
 }
 
 .category {
-  @apply flex items-center justify-center bg-blue-100 rounded-full p-2 truncate text-xs;
+  @apply flex items-center justify-center bg-blue-100 rounded-lg p-2 truncate text-xs;
 }
 
 .open-book {
-  @apply p-1 text-blue-600 mt-4 text-transparent;
+  @apply p-1 mt-4 text-transparent;
 }
 
 .book:hover .open-book {
-  @apply text-blue-600;
+  @apply text-blue-900;
 }
 </style>

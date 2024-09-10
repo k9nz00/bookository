@@ -6,6 +6,14 @@ import axios from 'axios'
  */
 
 /**
+ * @typedef  BookContentInfo
+ * @property {number} id
+ * @property {number} bookId
+ * @property {string} format
+ * @property {string} size
+ */
+
+/**
  * @typedef {Object} Book
  * @property {number} id
  * @property {string} name
@@ -15,7 +23,7 @@ import axios from 'axios'
  * @property {Boolean} isAvailable
  * @property {string} language
  * @property {Category[]} categories
- * @property {Array} bookContentInfo
+ * @property {BookContentInfo[]} bookContentInfo
  * @property {number} createdAt
  * @property {number} updatedAt
  */
@@ -125,44 +133,6 @@ export const updateBookCover = (id, cover) => {
   }
 
   return fetch(`${ API_HOST }/books/${ id }/cover`, options)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка запроса: статус ${response.status}`)
-      }
-
-      return response.json()
-    })
-    .then((response) => response)
-}
-
-/**
- * @param {string} bookId
- * @param {string} bookContentId
- * @returns {Promise<String>}
- */
-export const getBookContent = (bookId, bookContentId) => {
-  return fetch(`${ API_HOST }/books/${ bookId }/book-content/${ bookContentId }`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка запроса: статус ${response.status}`)
-      }
-
-      return response.json()
-    })
-    .then((response) => response)
-}
-
-/**
- * @param {string} bookId
- * @param {string} bookContent
- * @returns {Promise<void>}
- */
-export const createBookContent = (bookId, bookContent) => {
-  const options = {
-    method: 'PUT', body: bookContent
-  }
-
-  return fetch(`${ API_HOST }/books/${ bookId }/attach`, options)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Ошибка запроса: статус ${response.status}`)
