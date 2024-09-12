@@ -1,6 +1,5 @@
 package ru.semka.bookository.server.util;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,7 +16,7 @@ import static org.mockito.Mockito.when;
 class FileUtilTest {
 
     @ParameterizedTest
-    @MethodSource("ru.semka.bookository.server.util.FileUtilTest#getFileFormats")
+    @MethodSource("getFileFormats")
     void getFileFormat(String fileName, String formatValue) {
         Resource resource = mock(Resource.class);
         MultipartFile multipartFile = mock(MultipartFile.class);
@@ -29,9 +28,9 @@ class FileUtilTest {
         assertEquals(formatValue, fileFormat);
     }
 
-    @Test
-    void getFileFormat_FileWithOutFormat() {
-        String fileName = "test";
+    @ParameterizedTest
+    @MethodSource("getFileFormatsForError")
+    void getFileFormat_FileWithOutFormat(String fileName) {
         Resource resource = mock(Resource.class);
         MultipartFile multipartFile = mock(MultipartFile.class);
 
@@ -51,6 +50,13 @@ class FileUtilTest {
                 Arguments.of("test.txt", "txt"),
                 Arguments.of("test.pdf", "pdf"),
                 Arguments.of("test.doc", "doc")
+        );
+    }
+
+    private static Stream<Arguments> getFileFormatsForError() {
+        return Stream.of(
+                Arguments.of("test"),
+                Arguments.of((Object) null)
         );
     }
 }

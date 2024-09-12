@@ -25,8 +25,12 @@ spring:
         use_sql_comments: false
         format_sql: true
         default_schema: bookository
-
 # Добавить метку о способе сортировки nullable значений. См книгу jpa & hibernate!!
+
+app-config:
+  system-offset-id: ${SYSTEM-OFFSET-ID:+03}
+  pagination:
+    default-limit: 15
 
 server:
   port: 8020
@@ -54,11 +58,6 @@ management:
       show-details: always
     shutdown:
       enabled: false
-
-app-config:
-  system-offset-id: ${SYSTEM-OFFSET-ID:+03}
-  pagination:
-    default-limit: 15
 
 springdoc:
   swagger-ui:
