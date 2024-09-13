@@ -17,7 +17,7 @@
     <packaging>pom</packaging>
     <name>bookository-parent</name>
 
-    <description>Demo project for Spring Boot</description>
+    <description>Bookository - учебный проект. Сайт электронной библиотеки</description>
 
     <modules>
         <module>bookository-migration</module>
@@ -27,13 +27,16 @@
 
     <properties>
         <spring-boot.version>3.3.1</spring-boot.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
 
-        <!-- plugin versions-->
+        <!-- plugins versions-->
         <docker.image.version>${project.version}</docker.image.version>
         <docker-maven-plugin.version>0.45.0</docker-maven-plugin.version>
 
+        <!-- plugins properties-->
         <skip-build-image>false</skip-build-image>
         <skip-build-web-ui-image>true</skip-build-web-ui-image>
+        <jacoco-min-coverage>0</jacoco-min-coverage>
     </properties>
 
     <dependencies>
@@ -42,7 +45,12 @@
             <artifactId>spring-boot-dependencies</artifactId>
             <version>${spring-boot.version}</version>
             <type>pom</type>
-            <scope>import</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
