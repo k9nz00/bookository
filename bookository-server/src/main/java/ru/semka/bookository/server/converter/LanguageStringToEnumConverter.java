@@ -7,6 +7,6 @@ import ru.semka.bookository.server.common.enums.Language;
 public class LanguageStringToEnumConverter implements Converter<String, Language> {
     @Override
     public Language convert(String source) {
-        return Language.valueOf(source.toUpperCase());
+        return Language.fromValue(source.toUpperCase());
     }
 }
