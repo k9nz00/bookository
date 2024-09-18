@@ -33,7 +33,7 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Создание новой категории книг")
     public CategoryUiDto saveCategory(@Valid @RequestBody CreateBookCategoriesRequestDto dto) {
-        return categoryService.save(dto.getName());
+        return categoryService.save(dto);
     }
 
     @PutMapping("/{categoryId}")
@@ -41,7 +41,7 @@ public class CategoryController {
     @Operation(description = "Обновление категории книг")
     public CategoryUiDto updateCategory(@PathVariable int categoryId,
                                         @Valid @RequestBody UpdateBookCategoriesRequestDto dto) {
-        return categoryService.update(categoryId, dto.getName());
+        return categoryService.update(categoryId, dto);
     }
 
     @DeleteMapping("/{categoryId}")

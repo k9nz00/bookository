@@ -25,16 +25,4 @@ public class SecurityConfig //extends WebSecurityConfigurerAdapter
 //                .antMatchers("/**").authenticated().and().httpBasic().and().logout()
 //                .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
 //    }
-
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowCredentials(true);
-//        config.addAllowedHeader("*");
-//        config.addAllowedOriginPattern("*");
-//        config.addAllowedMethod("*");
-//        source.registerCorsConfiguration("/**", config);
-//        return new CorsFilter(source);
-//    }
 }

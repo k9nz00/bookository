@@ -1,6 +1,7 @@
 package ru.semka.bookository.server.util;
 
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.mapstruct.Named;
 import ru.semka.bookository.server.dao.entity.BookContentEntity;
@@ -10,7 +11,7 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Objects;
 
-@UtilityClass
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MapperUtil {
     private static final Base64.Encoder ENCODER = Base64.getEncoder();
 

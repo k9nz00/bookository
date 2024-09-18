@@ -3,6 +3,8 @@ package ru.semka.bookository.server.validator.impl;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.Getter;
+import org.springframework.stereotype.Component;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.validator.AbstractStringValidator;
 import ru.semka.bookository.server.validator.BookSortColumnValidator;
@@ -11,6 +13,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
+@Component
+@Getter
 public class BookSortColumnValidatorImpl
         extends AbstractStringValidator
         implements ConstraintValidator<BookSortColumnValidator, String> {

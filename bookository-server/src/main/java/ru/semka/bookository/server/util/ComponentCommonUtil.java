@@ -1,21 +1,21 @@
 package ru.semka.bookository.server.util;
 
-import lombok.Data;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.semka.bookository.server.common.properties.DefaultApplicationProperties;
+import ru.semka.bookository.server.configuration.properties.DefaultApplicationProperties;
 
 import java.time.Clock;
 import java.time.ZoneOffset;
 
 @Component
-@Data
+@Getter
 public class ComponentCommonUtil {
-    public final DefaultApplicationProperties properties;
     private final ZoneOffset zoneOffset;
     private final Clock systemClock;
 
+    @Autowired
     public ComponentCommonUtil(DefaultApplicationProperties properties) {
-        this.properties = properties;
         zoneOffset = ZoneOffset.of(properties.getSystemOffsetId());
         systemClock = Clock.system(zoneOffset);
     }

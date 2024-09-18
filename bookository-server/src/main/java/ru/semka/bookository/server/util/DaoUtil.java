@@ -1,11 +1,12 @@
 package ru.semka.bookository.server.util;
 
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.semka.bookository.server.dao.PredicateProvider;
 import ru.semka.bookository.server.dao.dto.SearchCriteriaDto;
 import ru.semka.bookository.server.rest.dto.TableCriteria;
 
-@UtilityClass
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DaoUtil {
     public static <T> SearchCriteriaDto<T> createCriteria(TableCriteria tableCriteria,
                                                           PredicateProvider<T> provider,

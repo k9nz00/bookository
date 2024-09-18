@@ -10,11 +10,12 @@ import java.util.Objects;
 public class FileUtil {
     public static String getFileFormat(final MultipartFile file) {
         String filename = file.getResource().getFilename();
+
         if (Objects.nonNull(filename) && filename.contains(".")) {
             int indexFormat = filename.lastIndexOf(".");
             return filename.substring(indexFormat + 1);
         } else {
-            throw new IllegalArgumentException("File not contain the type of file extension");
+            throw new IllegalArgumentException("File [%s] not contain the type of file extension".formatted(filename));
         }
     }
 }
