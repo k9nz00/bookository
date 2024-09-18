@@ -19,7 +19,7 @@ public class BookCoverServiceImpl implements BookCoverService {
     private final BookCoverDao bookCoverDao;
 
     @Override
-    public void save(int bookId, MultipartFile cover) throws IOException {
+    public void save(int bookId, MultipartFile cover) {
         if (bookCoverDao.existsById(bookId)) {
             bookCoverDao.deleteById(bookId);
         }
@@ -30,9 +30,13 @@ public class BookCoverServiceImpl implements BookCoverService {
         BookCoverEntity entity = new BookCoverEntity();
         entity.setId(bookId);
         entity.setSize(cover.getSize());
-        entity.setData(cover.getBytes());
         entity.setFormat(format);
 
+        try {
+            entity.setData(cover.getBytes());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
         bookCoverDao.save(entity);
     }
 

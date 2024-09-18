@@ -10,8 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.rest.dto.cover.CoverDto;
 import ru.semka.bookository.server.service.BookCoverService;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping(value = "/api/books")
 @Validated
@@ -24,7 +22,7 @@ public class BookCoverController {
     @Operation(description = "Замена обложки у карточки книги. Старая будет удалена")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void saveBookCover(@PathVariable int bookId,
-                              @RequestPart(name = "cover") MultipartFile cover) throws IOException {
+                              @RequestPart(name = "cover") MultipartFile cover) {
         bookCoverService.save(bookId, cover);
     }
 

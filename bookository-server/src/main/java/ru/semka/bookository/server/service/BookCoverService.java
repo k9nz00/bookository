@@ -2,10 +2,8 @@ package ru.semka.bookository.server.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 public interface BookCoverService {
-    void save(int bookId, MultipartFile cover) throws IOException;
+    void save(int bookId, MultipartFile cover);
 
     String get(int bookId);
 

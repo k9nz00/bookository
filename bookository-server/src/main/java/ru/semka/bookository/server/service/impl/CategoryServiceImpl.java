@@ -8,6 +8,8 @@ import ru.semka.bookository.server.dao.CategoryDao;
 import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.mapper.CategoryMapper;
 import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.CreateBookCategoriesRequestDto;
+import ru.semka.bookository.server.rest.dto.bookcategory.UpdateBookCategoriesRequestDto;
 import ru.semka.bookository.server.service.CategoryService;
 
 import java.util.Collection;
@@ -20,18 +22,18 @@ public class CategoryServiceImpl implements CategoryService {
     private final static String DEFAULT_SORTING_FIELD = "name";
 
     @Override
-    public CategoryUiDto save(String categoryName) {
+    public CategoryUiDto save(CreateBookCategoriesRequestDto dto) {
         CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setName(categoryName);
+        categoryEntity.setName(dto.getName());
         categoryDao.save(categoryEntity);
         return categoryMapper.categoryEntityToDto(categoryEntity);
     }
 
     @Override
-    public CategoryUiDto update(int categoryId, String categoryName) {
+    public CategoryUiDto update(int categoryId, UpdateBookCategoriesRequestDto dto) {
         return categoryDao.findById(categoryId)
                 .map(entity -> {
-                    entity.setName(categoryName);
+                    entity.setName(dto.getName());
                     categoryDao.save(entity);
                     return categoryMapper.categoryEntityToDto(entity);
                 })
