@@ -1,7 +1,9 @@
 package ru.semka.bookository.server.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
 import ru.semka.bookository.server.dao.BookDao;
 import ru.semka.bookository.server.dao.PredicateProvider;
@@ -9,17 +11,20 @@ import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
 import ru.semka.bookository.server.factory.CriteriaPredicateFactory;
 import ru.semka.bookository.server.mapper.BookMapper;
-import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
-import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
-import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
-import ru.semka.bookository.server.rest.dto.book.BookUiDto;
+import ru.semka.bookository.server.rest.dto.book.*;
 import ru.semka.bookository.server.service.BookService;
+import ru.semka.bookository.server.service.CsvService;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookServiceImpl implements BookService {
+    private final CsvService csvService;
     private final BookDao bookDao;
     private final CriteriaPredicateFactory<BookCriteriaDto, BookEntity> bookCriteriaPredicateFactory;
     private final BookMapper bookMapper;
@@ -27,6 +32,23 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookUiDto save(BookRequestDto dto) {
         return bookMapper.bookEntityToBookUiDto(bookDao.save(dto));
+    }
+
+    @Override
+    public Integer saveFromFile(MultipartFile file) {
+        Collection<BookCsvDto> bookCsvDtos;
+        try (InputStreamReader inputStreamReader = new InputStreamReader(file.getInputStream())) {
+            bookCsvDtos = csvService.parseCsv(inputStreamReader, BookCsvDto.class);
+        } catch (IOException exception) {
+            log.error("Ошибка чтения файла %s".formatted(file.getName()));
+            bookCsvDtos = Collections.emptyList();
+        }
+
+        return bookCsvDtos.stream()
+                .map(bookMapper::csvDtoToBookRequestDto)
+                .map(this::save)
+                .toList()
+                .size();
     }
 
     @Override

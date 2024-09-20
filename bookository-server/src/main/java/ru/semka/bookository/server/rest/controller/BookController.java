@@ -7,6 +7,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -27,6 +28,12 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public BookUiDto saveBook(@Valid @RequestBody BookRequestDto requestDto) {
         return bookService.save(requestDto);
+    }
+
+    @PostMapping("/saveFromFile")
+    @Operation(description = "Получение подробной карточки книги")
+    public Integer saveFromFile(@RequestPart(name = "file") MultipartFile file) {
+        return bookService.saveFromFile(file);
     }
 
     @GetMapping
