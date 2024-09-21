@@ -11,5 +11,7 @@ liquibase:
 
 springdoc:
   api-docs:
-    path: /api-docs
+    path: "/api-docs"
     enabled: true
+  swagger-ui:
+    path: "/bookository-migration-swagger"

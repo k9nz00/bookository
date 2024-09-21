@@ -8,7 +8,7 @@ public abstract class AbstractStringValidator {
     public boolean isValid(final String value,
                            final ConstraintValidatorContext constraintValidatorContext,
                            final Collection<String> availableValues) {
-        if (value == null || availableValues.contains(value)) {
+        if (availableValues.contains(value)) {
             return true;
         } else {
             constraintValidatorContext.disableDefaultConstraintViolation();

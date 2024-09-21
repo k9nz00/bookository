@@ -25,7 +25,7 @@ import { useCover } from '../hooks/useCover.js'
 
 const props = defineProps({
   bookId: {
-    type: Number,
+    type: [Number, String],
     required: true
   },
   isMobile: {
@@ -37,8 +37,6 @@ const props = defineProps({
     default: false
   }
 })
-
-const emit = defineEmits([ 'update:modelValue' ])
 
 const id = computed(() => {
   return props.isMobile ? 'input-mobile' : 'input-desktop'
@@ -70,8 +68,8 @@ onMounted(() => {
 <style>
 .book-cover {
   @apply border border-blue-300 rounded-md;
-  min-height: 300px;
-  min-width: 250px;
+  height: 438px;
+  min-width: 292px;
   background: url('../assets/vue.svg') no-repeat center;
   background-size: 50%;
 }

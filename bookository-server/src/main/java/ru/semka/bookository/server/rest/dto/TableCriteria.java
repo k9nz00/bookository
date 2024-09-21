@@ -16,7 +16,7 @@ public abstract class TableCriteria {
     @Max(50)
     @Parameter(
             in = ParameterIn.QUERY,
-            schema = @Schema(example = "5",
+            schema = @Schema(example = "10",
                     defaultValue = "10",
                     description = "Result size limit"),
             description = "Result size limit")
@@ -24,7 +24,7 @@ public abstract class TableCriteria {
 
     @Parameter(
             in = ParameterIn.QUERY,
-            schema = @Schema(example = "10",
+            schema = @Schema(example = "0",
                     defaultValue = "0",
                     description = "Slice of the first item in the collection to return"))
     private Integer offset;

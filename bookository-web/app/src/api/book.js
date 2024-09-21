@@ -1,8 +1,16 @@
 import { API_HOST } from '../constants.js'
-import { getCover } from './cover.js'
+import axios from 'axios'
 
 /**
  * @typedef {import('./categories.js').Category}
+ */
+
+/**
+ * @typedef  BookContentInfo
+ * @property {number} id
+ * @property {number} bookId
+ * @property {string} format
+ * @property {string} size
  */
 
 /**
@@ -15,23 +23,16 @@ import { getCover } from './cover.js'
  * @property {Boolean} isAvailable
  * @property {string} language
  * @property {Category[]} categories
- * @property {Array} bookContentInfo
+ * @property {BookContentInfo[]} bookContentInfo
  * @property {number} createdAt
  * @property {number} updatedAt
  */
 /**
  * @returns {Promise<Book[]>}
  */
-export const getBooks = () => {
-  return fetch(`${ API_HOST }/books`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка запроса: статус ${response.status}`)
-      }
-
-      return response.json()
-    })
-    .then((response) => response)
+export const getBooks = async (params) => {
+  const response = await axios.get(`${ API_HOST }/books`, { params })
+  return response.data
 }
 
 /**
@@ -132,44 +133,6 @@ export const updateBookCover = (id, cover) => {
   }
 
   return fetch(`${ API_HOST }/books/${ id }/cover`, options)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка запроса: статус ${response.status}`)
-      }
-
-      return response.json()
-    })
-    .then((response) => response)
-}
-
-/**
- * @param {string} bookId
- * @param {string} bookContentId
- * @returns {Promise<String>}
- */
-export const getBookContent = (bookId, bookContentId) => {
-  return fetch(`${ API_HOST }/books/${ bookId }/book-content/${ bookContentId }`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка запроса: статус ${response.status}`)
-      }
-
-      return response.json()
-    })
-    .then((response) => response)
-}
-
-/**
- * @param {string} bookId
- * @param {string} bookContent
- * @returns {Promise<void>}
- */
-export const createBookContent = (bookId, bookContent) => {
-  const options = {
-    method: 'PUT', body: bookContent
-  }
-
-  return fetch(`${ API_HOST }/books/${ bookId }/attach`, options)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Ошибка запроса: статус ${response.status}`)

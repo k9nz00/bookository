@@ -5,7 +5,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
+import ru.semka.bookository.server.rest.dto.book.BookCsvDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
+import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
 import ru.semka.bookository.server.rest.dto.book.BookUiDto;
 import ru.semka.bookository.server.util.MapperUtil;
 
@@ -20,4 +22,6 @@ public interface BookMapper {
 
     @Mapping(source = "entity.bookContentsInfo", target = "bookContentInfo", qualifiedByName = "getContentInfo")
     BookDetailsUiDto bookDetailsEntityToBookDetailsDto(BookDetailsEntity entity);
+
+    BookRequestDto csvDtoToBookRequestDto(BookCsvDto dto);
 }
