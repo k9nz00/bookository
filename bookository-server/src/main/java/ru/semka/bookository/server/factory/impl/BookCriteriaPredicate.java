@@ -28,11 +28,11 @@ public class BookCriteriaPredicate implements CriteriaPredicateFactory<BookCrite
                             ("%" + value + "%").toLowerCase()
                     )));
 
-            Optional.ofNullable(input.getAuthor())
-                    .ifPresent(value -> predicates.add(builder.like(
-                            builder.lower(root.get(BookEntity_.author)),
-                            ("%" + value + "%").toLowerCase()
-                    )));
+//            Optional.ofNullable(input.getAuthor())
+//                    .ifPresent(value -> predicates.add(builder.like(
+//                            builder.lower(root.get(BookEntity_.authors)),
+//                            ("%" + value + "%").toLowerCase()
+//                    )));
 
             Optional.ofNullable(input.getGenre())
                     .ifPresent(value -> predicates.add(builder.like(
