@@ -21,6 +21,12 @@
                        tableName="author"
                        columnNames="id"
                        constraintName="author_id_pkey"/>
+        <addUniqueConstraint
+                schemaName="bookository"
+                tableName="author"
+                columnNames="first_name,sur_name,last_name"
+                constraintName="author_qk"
+        />
     </changeSet>
 
     <changeSet id="20240929_2340" author="ASemka">
