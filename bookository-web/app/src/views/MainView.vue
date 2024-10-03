@@ -131,7 +131,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped lang="postcss">
+<style scoped>
 .book-search-wrapper {
   @apply flex justify-start items-start;
   gap: 12px;
