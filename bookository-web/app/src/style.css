@@ -17,7 +17,7 @@
 
 /* buttons */
 .outline-button {
-    @apply border-2 border-white rounded-lg text-white;
+    @apply border-2 border-blue-600 rounded-lg text-blue-600;
     padding: 8px;
     height: 44px;
 }
