@@ -17,7 +17,7 @@
     <!-- ФИЛЬТРЫ-->
     <div class="book-filters">
       <div>
-        <div class="font-bold text-white pb-3">Категории</div>
+        <div class="font-bold pb-3">Категории</div>
         <div v-for="item in categories" :key="item.id" class="pb-2">
           <label>
             <input
@@ -27,13 +27,13 @@
               class="pr-1"
               name="categoryGroup"
             >
-            <span class="pl-1 text-white">{{ item.name }}</span>
+            <span class="pl-1">{{ item.name }}</span>
           </label>
         </div>
       </div>
 
       <div>
-        <div class="font-bold text-white pb-3">Жанр</div>
+        <div class="font-bold pb-3">Жанр</div>
         <div v-for="item in ['Роман', 'Сказка', 'Поэма', 'Повесть', 'Пьеса']" :key="item" class="pb-2">
           <label>
             <input
@@ -43,13 +43,13 @@
               name="genreGroup"
               class="pr-1"
             >
-            <span class="pl-1 text-white">{{ item }}</span>
+            <span class="pl-1">{{ item }}</span>
           </label>
         </div>
       </div>
 
       <div>
-        <div class="font-bold text-white pb-3">Язык</div>
+        <div class="font-bold pb-3">Язык</div>
         <div v-for="item in LANGUAGES" :key="item.id" class="pb-2">
           <label>
             <input
@@ -59,7 +59,7 @@
               name="languageGroup"
               class="pr-1"
             >
-            <span class="pl-1 text-white">{{ item.name }}</span>
+            <span class="pl-1">{{ item.name }}</span>
           </label>
         </div>
       </div>
@@ -131,7 +131,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped lang="postcss">
+<style scoped>
 .book-search-wrapper {
   @apply flex justify-start items-start;
   gap: 12px;

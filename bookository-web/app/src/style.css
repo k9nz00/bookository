@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-body {
-    @apply bg-sky-900;
-}
-
 #app {
     @apply text-sm lg:text-base flex justify-center;
     font-family: Helvetica, Arial, sans-serif;
@@ -22,7 +17,7 @@ body {
 
 /* buttons */
 .outline-button {
-    @apply border-2 border-white rounded-lg text-white;
+    @apply border-2 border-blue-600 rounded-lg text-blue-600;
     padding: 8px;
     height: 44px;
 }
@@ -31,59 +26,4 @@ body {
     @apply bg-blue-600 rounded-lg text-white;
     padding: 8px;
     height: 44px;
-}
-
-/* tablet, mobile */
-.app-fields-container {
-    @apply flex flex-col gap-y-4;
-}
-
-.app-field-wrapper {
-    @apply flex flex-col;
-    @apply text-left font-bold;
-}
-
-.app-field {
-    @apply pb-2 font-normal;
-    @apply border-b border-gray-300;
-    height: 32px;
-}
-
-.app-buttons-container {
-    @apply flex flex-col gap-4 mt-5;
-}
-
-.app-button {
-    @apply p-2;
-    min-width: 200px;
-}
-
-.app-button-link {
-    min-width: fit-content;
-}
-
-.app-button.bordered {
-    @apply bg-transparent border border-blue-200 flex items-center gap-2;
-}
-
-/* desktop */
-@media (min-width: 768px) {
-    .app-buttons-container {
-        @apply flex-row;
-    }
-
-    .app-fields-container {
-        @apply flex gap-y-4;
-    }
-
-    .app-field-wrapper {
-        @apply grid grid-flow-col items-center gap-4;
-        @apply font-bold;
-        grid-template-columns: 1fr 5fr;
-        text-align: left;
-    }
-
-    .app-field {
-        @apply p-2;
-    }
 }
