@@ -1,5 +1,5 @@
 <template>
-  <div class="app-page text-white">
+  <div class="app-page">
     <div v-if="isBookLoading">
       Загружается...
     </div>

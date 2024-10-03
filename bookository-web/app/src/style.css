@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-body {
-    @apply bg-sky-900;
-}
-
 #app {
     @apply text-sm lg:text-base flex justify-center;
     font-family: Helvetica, Arial, sans-serif;
