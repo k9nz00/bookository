@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/seed-data/add_covers.xml
   - include:
       file: db/changelog/seed-data/add_book_content.xml
+  - include:
+      file: db/changelog/seed-data/add_authors.xml

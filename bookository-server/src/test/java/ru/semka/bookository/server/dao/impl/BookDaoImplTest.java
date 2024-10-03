@@ -5,22 +5,21 @@ import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.semka.bookository.server.common.enums.Language;
-import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
+import ru.semka.bookository.server.dao.entity.AuthorEntity;
 import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
 import ru.semka.bookository.server.dao.entity.BookEntity;
+import ru.semka.bookository.server.dao.entity.CategoryEntity;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
-import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
-import ru.semka.bookository.server.util.ComponentCommonUtil;
 
-import java.time.Clock;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -28,83 +27,24 @@ import static org.mockito.Mockito.*;
 class BookDaoImplTest {
     private final int defaultLimit = 15;
     private final EntityManager entityManager = mock(EntityManager.class);
-    private final ComponentCommonUtil commonUtil = mock(ComponentCommonUtil.class);
-    private final BookDaoImpl bookDao = new BookDaoImpl(entityManager, commonUtil, defaultLimit);
-
-    @BeforeEach
-    void setUp() {
-        Clock clock = Clock.systemUTC();
-        when(commonUtil.getSystemClock()).thenReturn(clock);
-    }
+    private final BookDaoImpl bookDao = new BookDaoImpl(entityManager, defaultLimit);
 
     @Test
     void save() {
         bookDao.save(getRequestDto());
+
         verify(entityManager).merge(argThat(entityToSave -> {
             BookEntity book = (BookEntity) entityToSave;
 
             assertEquals("name", book.getName());
-            assertEquals("author", book.getAuthor());
             assertEquals("genre", book.getGenre());
             assertEquals("annotation", book.getAnnotation());
             assertEquals(Language.RU, book.getLanguage());
-            assertEquals(3, book.getCategories().size());
+            assertEquals(1, book.getCategories().size());
 
             return true;
         }));
 
-    }
-
-    @Test
-    void update() {
-        int bookId = 1;
-        BookEntity entity = mock(BookEntity.class);
-        when(entityManager.find(eq(BookEntity.class), anyInt())).thenReturn(entity);
-        when(entityManager.merge(entity)).thenReturn(entity);
-
-        bookDao.update(bookId, getRequestDto());
-
-        verify(entity).setName("name");
-        verify(entity).setAuthor("author");
-        verify(entity).setGenre("genre");
-        verify(entity).setAnnotation("annotation");
-        verify(entity).setLanguage(Language.RU);
-        verify(entity).setUpdatedAt(any());
-
-        verify(entity).setCategories(argThat(categoryEntities -> {
-            assertEquals(3, categoryEntities.size());
-            return true;
-        }));
-    }
-
-    @Test
-    void updateWithNullableDto() {
-        int bookId = 1;
-        BookEntity entity = mock(BookEntity.class);
-        when(entityManager.find(eq(BookEntity.class), anyInt())).thenReturn(entity);
-        when(entityManager.merge(entity)).thenReturn(entity);
-
-        bookDao.update(bookId, mock(BookRequestDto.class));
-
-        verify(entity, never()).setName(anyString());
-        verify(entity, never()).setAuthor(anyString());
-        verify(entity, never()).setGenre(anyString());
-        verify(entity, never()).setAnnotation(anyString());
-        verify(entity, never()).setLanguage(any());
-        verify(entity).setUpdatedAt(any());
-        verify(entity, never()).setCategories(any());
-    }
-
-    @Test
-    void updateNotFound() {
-        int bookId = 1;
-        when(entityManager.find(any(), anyInt())).thenReturn(null);
-
-        ResourceNotFoundException exception = assertThrows(
-                ResourceNotFoundException.class,
-                () -> bookDao.update(bookId, getRequestDto())
-        );
-        assertEquals("Не найдена карточка книги с id = 1", exception.getMessage());
     }
 
     @Test
@@ -155,15 +95,15 @@ class BookDaoImplTest {
         }));
     }
 
-    private BookRequestDto getRequestDto() {
-        BookRequestDto dto = mock(BookRequestDto.class);
+    private BookEntity getRequestDto() {
+        BookEntity dto = mock(BookEntity.class);
         when(dto.getName()).thenReturn("name");
-        when(dto.getAuthor()).thenReturn("author");
+        when(dto.getAuthors()).thenReturn(List.of(mock(AuthorEntity.class)));
         when(dto.getGenre()).thenReturn("genre");
         when(dto.getAnnotation()).thenReturn("annotation");
         when(dto.getLanguage()).thenReturn(Language.RU);
         when(dto.getLanguage()).thenReturn(Language.RU);
-        when(dto.getCategories()).thenReturn(Set.of(1, 2, 3));
+        when(dto.getCategories()).thenReturn(Set.of(mock(CategoryEntity.class)));
 
         return dto;
     }
