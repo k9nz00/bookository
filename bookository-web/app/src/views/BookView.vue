@@ -9,15 +9,7 @@
     </div>
 
     <div v-else-if="book" class="app-fields-container">
-        <!-- ОБЛОЖКА MOBILE -->
-        <BookCover
-          :book-id="bookId"
-          is-mobile
-          disabled
-        />
-
         <div class="flex gap-5">
-          <!-- ОБЛОЖКА DESKTOP -->
           <BookCover
             :book-id="bookId"
             disabled

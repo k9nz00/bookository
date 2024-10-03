@@ -121,7 +121,7 @@ export const deleteBook = (id) => {
 
 /**
  * @param {Object} cover
- * @param {string} id
+ * @param {number} id
  * @returns {Promise<Book>}
  */
 export const updateBookCover = (id, cover) => {

@@ -1,6 +1,6 @@
 <template>
-  <div :class="isMobile ? 'block md:hidden' : 'hidden md:block'">
-    <label :for="id">
+  <div>
+    <label for="input-file">
       <img
         class="book-cover"
         alt=""
@@ -10,43 +10,29 @@
 
     <input
       type="file"
+      id="input-file"
       class="input-file"
       :disabled="disabled"
-      :id="id"
       @change="onUploadCover($event.target.files)"
     >
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { updateBookCover } from '../api/index.js'
+import { ref, onMounted } from 'vue'
 import { useCover } from '../hooks/useCover.js'
 
 const props = defineProps({
-  bookId: {
-    type: [Number, String],
-    required: true
-  },
-  isMobile: {
-    type: Boolean,
-    default: false
-  },
+  bookId: Number,
   disabled: {
     type: Boolean,
     default: false
   }
 })
 
-const id = computed(() => {
-  return props.isMobile ? 'input-mobile' : 'input-desktop'
-})
+const { updateCover } = useCover()
 
-const updateCover = (file) => {
-  updateBookCover(props.bookId, file)
-}
-
-// TODO: допустимое расширение файла
+// TODO: SPBR-53 допустимое расширение файла
 const src = ref('')
 const onUploadCover = (uploadedFiles) => {
   const file = uploadedFiles[0]
@@ -55,7 +41,7 @@ const onUploadCover = (uploadedFiles) => {
   reader.onload = function () {
     src.value = reader.result
 
-    updateCover(file)
+    updateCover(props.bookId, file)
   }
 }
 
