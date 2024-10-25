@@ -66,17 +66,15 @@ services:
       - postgres
       - bookository-migration
 
-#  bookository-web:
-#    image: bookository/bookository-web:br_it
-#    restart: on-failure
-#    network_mode: bridge
-#    ports:
-#      - "81:3000"
-#    networks:
-#      bookository-default-network:
-#
-#    environment:
-#      API_HOST: "http://localhost:8020/api"
+  bookository-web:
+    image: "bookository/bookository-web:${IMAGE_VERSION}"
+    restart: on-failure
+    ports:
+      - "81:3000"
+    networks:
+      bookository-default-network:
+    environment:
+      API_HOST: "http://localhost:8020/api"
 
 networks:
   bookository-default-network:
