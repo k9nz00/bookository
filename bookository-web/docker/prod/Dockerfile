@@ -1,6 +1,7 @@
 FROM node:16.17-alpine
 WORKDIR /app
 
+# возможно это лишнее
 RUN npm install pm2 -g
 
 RUN mkdir /configs
@@ -17,4 +18,5 @@ RUN npm run build
 # 1. Generate env file (yarn public-env)
 # 2. start web-server
 CMD npm run public-env \
-    && pm2-runtime /configs/pm2.config.js
+    && npm run build \
+    && npm run preview

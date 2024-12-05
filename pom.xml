@@ -34,7 +34,7 @@
 
         <!-- plugins properties-->
         <skip-build-image>false</skip-build-image>
-        <skip-build-web-ui-image>true</skip-build-web-ui-image>
+        <skip-build-web-ui-image>false</skip-build-web-ui-image>
         <jacoco-min-coverage>0</jacoco-min-coverage>
     </properties>
 
