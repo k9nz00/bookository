@@ -21,8 +21,13 @@ public abstract class AbstractBookEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "author")
-    private String author;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "author_book",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private Collection<AuthorEntity> authors;
 
     @Column(name = "genre")
     private String genre;

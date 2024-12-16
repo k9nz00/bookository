@@ -20,7 +20,6 @@ import ru.semka.bookository.server.common.dto.ErrorValidationDto;
 import ru.semka.bookository.server.common.exception.ResourceNotFoundException;
 import ru.semka.bookository.server.util.ExceptionUtil;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -100,15 +99,6 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
     public ApiErrorResponseDto handleError(final ResourceNotFoundException e) {
         return new ApiErrorResponseDto(
                 HttpStatus.NOT_FOUND.value(),
-                ExceptionUtils.getRootCause(e).getMessage(),
-                null);
-    }
-
-    @ExceptionHandler(SQLException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiErrorResponseDto handleError(final SQLException e) {
-        return new ApiErrorResponseDto(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 ExceptionUtils.getRootCause(e).getMessage(),
                 null);
     }

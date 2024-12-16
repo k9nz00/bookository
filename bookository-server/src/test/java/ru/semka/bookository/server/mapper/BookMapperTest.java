@@ -3,10 +3,7 @@ package ru.semka.bookository.server.mapper;
 import org.junit.jupiter.api.Test;
 import ru.semka.bookository.server.common.enums.BookFormat;
 import ru.semka.bookository.server.common.enums.Language;
-import ru.semka.bookository.server.dao.entity.BookContentEntity;
-import ru.semka.bookository.server.dao.entity.BookDetailsEntity;
-import ru.semka.bookository.server.dao.entity.BookEntity;
-import ru.semka.bookository.server.dao.entity.CategoryEntity;
+import ru.semka.bookository.server.dao.entity.*;
 import ru.semka.bookository.server.rest.dto.book.BookCsvDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -15,6 +12,7 @@ import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +29,6 @@ class BookMapperTest {
 
         assertEquals(entity.getId(), uiDto.id());
         assertEquals(entity.getName(), uiDto.name());
-        assertEquals(entity.getAuthor(), uiDto.author());
         assertEquals(entity.getGenre(), uiDto.genre());
         assertEquals(entity.getAnnotation(), uiDto.annotation());
         assertEquals(entity.getIsAvailable(), uiDto.isAvailable());
@@ -39,6 +36,8 @@ class BookMapperTest {
         assertEquals(entity.getCreatedAt(), uiDto.createdAt());
         assertEquals(entity.getUpdatedAt(), uiDto.updatedAt());
 
+        //todo Сделать более корректную проверку
+        assertEquals(entity.getAuthors().size(), uiDto.authors().size());
         assertEquals(entity.getCategories().size(), uiDto.categories().size());
     }
 
@@ -63,7 +62,7 @@ class BookMapperTest {
 
         assertEquals(bookDetailsEntity.getId(), detailsUiDto.id());
         assertEquals(bookDetailsEntity.getName(), detailsUiDto.name());
-        assertEquals(bookDetailsEntity.getAuthor(), detailsUiDto.author());
+
         assertEquals(bookDetailsEntity.getGenre(), detailsUiDto.genre());
         assertEquals(bookDetailsEntity.getAnnotation(), detailsUiDto.annotation());
         assertEquals(bookDetailsEntity.getLanguage(), detailsUiDto.language());
@@ -78,6 +77,9 @@ class BookMapperTest {
         CategoryUiDto uiDto = categoriesFromUiDto.stream().findFirst().get();
         assertEquals(categoryEntity.getId(), uiDto.id());
         assertEquals(categoryEntity.getName(), uiDto.name());
+
+        //todo Сделать более корректную проверку
+        assertEquals(bookDetailsEntity.getAuthors().size(), detailsUiDto.authors().size());
     }
 
     @Test
@@ -100,7 +102,6 @@ class BookMapperTest {
         BookRequestDto bookRequestDto = mapper.csvDtoToBookRequestDto(bookCsvDto);
 
         assertEquals(bookCsvDto.getName(), bookRequestDto.getName());
-        assertEquals(bookCsvDto.getAuthor(), bookRequestDto.getAuthor());
         assertEquals(bookCsvDto.getGenre(), bookRequestDto.getGenre());
         assertEquals(bookCsvDto.getLanguage(), bookRequestDto.getLanguage());
         assertEquals(bookCsvDto.getAnnotation(), bookRequestDto.getAnnotation());
@@ -124,11 +125,17 @@ class BookMapperTest {
     private BookEntity getEntity(boolean withCategories) {
         String createTimeStamp = "2024-09-20 23:16:25";
         String updateTimeStamp = "2024-09-21 23:16:25";
+        AuthorEntity authorEntity = new AuthorEntity(
+                1,
+                "Александр",
+                "Сергеевич",
+                "Пушкин"
+        );
 
         BookEntity entity = new BookEntity();
         entity.setId(1);
         entity.setName("name");
-        entity.setAuthor("author");
+        entity.setAuthors(Collections.singleton(authorEntity));
         entity.setGenre("genre");
         entity.setAnnotation("annotation");
         entity.setIsAvailable(true);
@@ -151,6 +158,13 @@ class BookMapperTest {
         String createTimeStamp = "2024-09-20 23:16:25";
         String updateTimeStamp = "2024-09-21 23:16:25";
 
+        AuthorEntity authorEntity = new AuthorEntity(
+                1,
+                "Александр",
+                "Сергеевич",
+                "Пушкин"
+        );
+
         BookContentEntity bookContentEntity = new BookContentEntity();
         bookContentEntity.setId(10);
         bookContentEntity.setBookId(1);
@@ -162,7 +176,7 @@ class BookMapperTest {
         BookDetailsEntity detailsEntity = new BookDetailsEntity();
         detailsEntity.setId(1);
         detailsEntity.setName("name");
-        detailsEntity.setAuthor("author");
+        detailsEntity.setAuthors(Collections.singleton(authorEntity));
         detailsEntity.setGenre("genre");
         detailsEntity.setAnnotation("annotation");
         detailsEntity.setIsAvailable(true);
@@ -183,11 +197,9 @@ class BookMapperTest {
         return detailsEntity;
     }
 
-
     private BookCsvDto getBookCsvDto(boolean withCategories) {
         BookCsvDto csvDto = new BookCsvDto();
         csvDto.setName("name");
-        csvDto.setAuthor("author");
         csvDto.setGenre("genre");
         csvDto.setLanguage(Language.RU);
         csvDto.setAnnotation("annotation");

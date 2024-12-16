@@ -5,12 +5,13 @@ import ru.semka.bookository.server.rest.dto.bookcategory.CategoryUiDto;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Set;
 
 
 public record BookUiDto(
         Integer id,
         String name,
-        String author,
+        Set<AuthorUiDto> authors,
         String genre,
         String annotation,
         Boolean isAvailable,

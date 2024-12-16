@@ -29,7 +29,7 @@ public class BookContentServiceImpl implements BookContentService {
     public int save(int bookId, MultipartFile book) throws IOException {
         BookContentEntity entity = new BookContentEntity();
         entity.setBookId(bookId);
-        entity.setName(book.getName());
+        entity.setName(book.getResource().getFilename());
         entity.setSize(book.getSize());
         entity.setBookFormat(getFormat(book));
         entity.setContent(book.getBytes());

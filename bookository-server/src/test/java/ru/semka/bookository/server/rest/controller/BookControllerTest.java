@@ -3,6 +3,7 @@ package ru.semka.bookository.server.rest.controller;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.multipart.MultipartFile;
 import ru.semka.bookository.server.common.enums.Language;
+import ru.semka.bookository.server.rest.dto.author.AuthorRequestDto;
 import ru.semka.bookository.server.rest.dto.book.BookCriteriaDto;
 import ru.semka.bookository.server.rest.dto.book.BookDetailsUiDto;
 import ru.semka.bookository.server.rest.dto.book.BookRequestDto;
@@ -94,7 +95,7 @@ class BookControllerTest {
     private BookRequestDto getRequestDto() {
         return new BookRequestDto(
                 "name",
-                "author",
+                List.of(new AuthorRequestDto("a", "b", "c")),
                 "genre",
                 Language.EN,
                 "annotation",

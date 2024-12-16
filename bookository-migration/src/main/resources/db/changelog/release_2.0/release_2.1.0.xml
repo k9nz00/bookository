@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20240929_2328" author="ASemka">
+        <preConditions>
+            <not>
+                <tableExists tableName="author"/>
+            </not>
+        </preConditions>
+        <createTable schemaName="bookository" tableName="author">
+            <column name="id" type="serial"/>
+            <column name="first_name" type="varchar"/>
+            <column name="sur_name" type="varchar"/>
+            <column name="last_name" type="varchar"/>
+        </createTable>
+        <addPrimaryKey schemaName="bookository"
+                       tableName="author"
+                       columnNames="id"
+                       constraintName="author_id_pkey"/>
+        <addUniqueConstraint
+                schemaName="bookository"
+                tableName="author"
+                columnNames="first_name,sur_name,last_name"
+                constraintName="author_qk"
+        />
+    </changeSet>
+
+    <changeSet id="20240929_2340" author="ASemka">
+        <preConditions>
+            <columnExists schemaName="bookository" tableName="book" columnName="author"/>
+        </preConditions>
+        <dropColumn schemaName="bookository" tableName="book" columnName="author"/>
+    </changeSet>
+
+    <changeSet id="20240929_2341" author="ASemka">
+        <preConditions>
+            <not>
+                <tableExists schemaName="bookository" tableName="author_book"/>
+            </not>
+        </preConditions>
+        <createTable schemaName="bookository" tableName="author_book">
+            <column name="book_id" type="int"/>
+            <column name="author_id" type="int"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
