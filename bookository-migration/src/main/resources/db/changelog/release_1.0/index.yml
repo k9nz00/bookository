@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/release_1.0/release_0.0.1.xml
   - include:
       file: db/changelog/release_1.0/release_0.0.2.xml
+  - include:
+      file: db/changelog/release_1.0/release_0.0.3.xml

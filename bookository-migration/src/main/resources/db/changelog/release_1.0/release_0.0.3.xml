@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20241212_1702" author="NSemka">
+        <preConditions>
+            <not>
+                <tableExists schemaName="bookository" tableName="book_genre"/>
+            </not>
+        </preConditions>
+
+        <createTable schemaName="bookository" tableName="book_genre">
+            <column name="id" type="serial"/>
+            <column name="name" type="varchar"/>
+        </createTable>
+        <addPrimaryKey schemaName="bookository"
+                       tableName="book_genre"
+                       columnNames="id"
+                       constraintName="book_genre_id_pkey"/>
+    </changeSet>
+</databaseChangeLog>
