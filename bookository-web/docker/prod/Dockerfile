@@ -1,4 +1,4 @@
-FROM node:16.17-alpine
+FROM node:22.18-alpine
 WORKDIR /app
 
 RUN npm install pm2 -g
@@ -12,6 +12,8 @@ RUN npm install
 COPY ./app .
 
 RUN npm run build
+
+EXPOSE 3000
 
 # on container UP:
 # 1. Generate env file (yarn public-env)
